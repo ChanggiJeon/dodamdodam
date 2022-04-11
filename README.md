@@ -67,16 +67,6 @@
   3. Reset : 과거의 커밋으로 돌아가기(--hard옵션 사용시 저장 내용 다 날라가므로 커밋 먼저 하고, git log로 커밋 번호 알아둬야 함!!)
   4. Stash : temp commit이 필요할 때 사용! (git checkout으로 이동할 때 매우 유용하다.) + git stash apply로 최신 저장 stash불러 올 수 있음. Or git stash list로 확인 후 불러온다.
 
-### 4. 코드 리뷰
-
-- 개요
-- 작업사항
-- 변경로직
-- 변경 전
-- 변경 후
-- 사용방법
-- 기타
-
 
 
 # Jira 컨벤션
