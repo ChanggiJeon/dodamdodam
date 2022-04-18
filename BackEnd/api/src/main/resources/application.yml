@@ -62,5 +62,5 @@ app:
 
 # swagger에서 테스트 할 때의 host
 swagger:
-  #  host: localhost:8185
-  host: j6d106.p.ssafy.io:8185
+  host: localhost:8080
+#  host: j6d106.p.ssafy.io:8185
