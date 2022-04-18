@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">family</string>
+    <string name="app_name">도담도담</string>
+
+    <string name="bot_settingfragment">설정</string>
+    <string name="bot_albumfragment">앨범</string>
+    <string name="bot_calendarfragment">캘린더</string>
+    <string name="bot_chattingfragment">채팅</string>
+    <string name="bot_main_familyfragment">홈</string>
 </resources>
