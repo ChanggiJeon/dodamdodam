@@ -3,10 +3,10 @@
 
 
     <item
-        android:drawable="@drawable/ic_baseline_calendar_month_24"
+        android:drawable="@drawable/ic_baseline_calendar_month"
         android:state_selected="false"/>
     <item
         android:state_selected="true"
-        android:drawable="@drawable/ic_outline_calendar_month_24" />
+        android:drawable="@drawable/ic_outline_calendar_month" />
 
 </selector>

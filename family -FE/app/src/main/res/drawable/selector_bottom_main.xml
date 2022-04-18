@@ -3,10 +3,10 @@
 
 
     <item
-        android:drawable="@drawable/ic_baseline_home_24"
+        android:drawable="@drawable/ic_baseline_home"
         android:state_selected="false"/>
     <item
         android:state_selected="true"
-        android:drawable="@drawable/ic_outline_home_24" />
+        android:drawable="@drawable/ic_outline_home" />
 
 </selector>

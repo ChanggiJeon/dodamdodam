@@ -3,10 +3,10 @@
 
 
     <item
-        android:drawable="@drawable/ic_baseline_message_24"
+        android:drawable="@drawable/ic_baseline_message"
         android:state_selected="false"/>
     <item
         android:state_selected="true"
-        android:drawable="@drawable/ic_outline_message_24" />
+        android:drawable="@drawable/ic_outline_message" />
 
 </selector>
