@@ -1,38 +1,36 @@
 package com.ssafy.dodamdodam.config;
 
-import lombok.NoArgsConstructor;
+import com.ssafy.dodamdodam.config.jwt.JwtAuthenticationFilter;
+import com.ssafy.dodamdodam.config.jwt.JwtProvider;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
-@NoArgsConstructor
+@AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    private final JwtProvider
+    private final JwtProvider jwtProvider;
 
     protected void configure(HttpSecurity http) throws Exception {
         // basic authentication
         http
-            .httpBasic().disable() // BasicAuthenticationFilter 비활성화
-            .csrf().disable() // CsrfFilter 비활성화
-            .sessionManagement()
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS); //토큰 기반 인증(세션 X)
+                .httpBasic().disable() // BasicAuthenticationFilter 비활성화
+                .csrf().disable() // CsrfFilter 비활성화
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS); //토큰 기반 인증(세션 X)
 
         // jwt filter
         http.addFilterBefore(
-                new JwtAuthenticationFilter(),
+                new JwtAuthenticationFilter(jwtProvider),
                 UsernamePasswordAuthenticationFilter.class
-        ).addFilterBefore(
-                new JwtAuthorizationFilter(),
-                BasicAuthenticationFilter.class
         );
 
         // authorization
@@ -40,9 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // /와 /home, /room의 참가, 닉네임 중복확인은 모두에게 허용
                 .antMatchers("/", "/home", "/user/signup").permitAll()
                 .anyRequest().authenticated();
-
     }
-
 
 
     @Override
