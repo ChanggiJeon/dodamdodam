@@ -39,9 +39,22 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-test')
 
 	//querydsl 추가
-	implementation 'com.querydsl:querydsl-jpa'
-	//querydsl 추가
-	implementation 'com.querydsl:querydsl-apt'
+	// QueryDSL
+	implementation "com.querydsl:querydsl-jpa:"
+	annotationProcessor(
+			"javax.persistence:javax.persistence-api",
+			"javax.annotation:javax.annotation-api",
+			"com.querydsl:querydsl-apt:jpa")
+
+}
+
+// QueryDSL
+sourceSets {
+	main {
+		java {
+			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+		}
+	}
 }
 
 tasks.named('test') {
