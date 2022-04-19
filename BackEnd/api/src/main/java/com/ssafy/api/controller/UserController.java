@@ -1,10 +1,9 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.config.jwt.JwtProvider;
-import com.ssafy.api.dto.user.ReIssueTokenDto;
-import com.ssafy.api.dto.user.SignInDto;
-import com.ssafy.api.dto.user.SignUpDto;
+import com.ssafy.api.dto.user.*;
 import com.ssafy.api.entity.User;
+import com.ssafy.api.exception.CustomErrorCode;
 import com.ssafy.api.exception.CustomException;
 import com.ssafy.api.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +40,8 @@ public class UserController {
 
     @PostMapping(value = "signup", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "회원 가입", notes = "<strong>아이디, 패스워드, 이름</strong> 정보를 받아 회원가입 한다.")
-    public ResponseEntity<String> userSignUp(@RequestBody @Valid SignUpDto.Request singUpRequest) {
+    public ResponseEntity<String> userSignUp
+            (@RequestBody @Valid SignUpDto.Request singUpRequest) {
 
         userService.userSignUp(singUpRequest);
 
@@ -50,7 +50,8 @@ public class UserController {
 
     @PostMapping(value = "singin", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "로그인", notes = "<strong>아이디, 패스워드</strong> 정보를 받아 로그인 한다.")
-    public ResponseEntity<SignInDto.Response> userSignUp(@RequestBody @Valid SignInDto.Request signInRequest) {
+    public ResponseEntity<SignInDto.Response> userSignUp
+            (@RequestBody @Valid SignInDto.Request signInRequest) {
 
         User user = userService.findByUserId(signInRequest.getUserId());
 
@@ -79,7 +80,8 @@ public class UserController {
 
     @PostMapping(value = "refresh", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "JWT 토큰 재발급", notes = "<strong>Refresh Token<strong>으로 AccessToken을 재발급 받는다.")
-    public ResponseEntity<ReIssueTokenDto.Response> reissueAccessToken(@RequestBody @Valid HttpServletRequest request) {
+    public ResponseEntity<ReIssueTokenDto.Response> reissueAccessToken
+            (@RequestBody @Valid HttpServletRequest request) {
 
         String refreshToken = request.getHeader("X-Auth-Token");
 
@@ -103,4 +105,49 @@ public class UserController {
 
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
+//    @PostMapping(value = "findId", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @ApiOperation(value = "아이디 찾기", notes = "<strong>회원 정보<strong>로 아이디를 찾는다.")
+//    public ResponseEntity<FindIdDto.Response> findUserIdWithUserInfo
+//            (@RequestBody @Valid FindIdDto.Request request) {
+//
+//        userService.findUserIdWithUserInfo(request);
+//
+//        //refreshToken 만료기간 확인
+//        if (!jwtProvider.validateToken(refreshToken)) {
+//            throw new CustomException(INVALID_TOKEN);
+//        }
+//
+//        User user = userService.findUserByRefreshToken(refreshToken);
+//
+//        String token = jwtProvider.createAccessToken(user);
+//        refreshToken = jwtProvider.createRefreshToken();
+//
+//        user.setRefreshToken(refreshToken);
+//        userService.saveUser(user);
+//
+//        ReIssueTokenDto.Response res = ReIssueTokenDto.Response.builder()
+//                .jwtToken(token)
+//                .refreshToken(refreshToken)
+//                .build();
+//
+//        return new ResponseEntity<>(res, HttpStatus.OK);
+//    }
+
+    @PostMapping(value = "newpassword", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "비밀번호 재설정", notes = "<strong>비밀번호<strong>를 재설정한다.")
+    public ResponseEntity<String> updatePassword
+            (@RequestBody @Valid updatePasswordDto.Request request) {
+
+        User user = userService.findByUserId(request.getUserId());
+
+        if(passwordEncoder.matches(request.getPassword(), user.getPassword())){
+            throw new CustomException(INVALID_REQUEST,"재설정 비밀번호가 기존 비밀번호와 같습니다!");
+        }
+        user.updatePassword(passwordEncoder.encode(request.getPassword()));
+        userService.saveUser(user);
+
+        return new ResponseEntity<>("성공!", HttpStatus.OK);
+    }
 }
+

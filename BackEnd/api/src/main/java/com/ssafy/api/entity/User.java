@@ -67,6 +67,10 @@ public class User extends BaseEntity implements UserDetails {
         return Collections.singleton((GrantedAuthority) () -> authority);
     }
 
+    public void updatePassword(String password){
+        this.password = password;
+    }
+
     @Override
     public String getUsername() {
         return this.userId;
