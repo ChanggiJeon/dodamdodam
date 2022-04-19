@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="dodamdodam" target="11" />
+      <module name="dodamdodam.main" target="11" />
+      <module name="dodamdodam.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
