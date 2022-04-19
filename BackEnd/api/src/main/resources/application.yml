@@ -24,7 +24,6 @@ spring:
     generate-ddl: true
     open-in-view: false
 
-
   datasource:
     url: jdbc:mysql://localhost:3306/dodamdodam?serverTimezone=Asia/Seoul
     #    url: jdbc:mysql://j6d106.p.ssafy.io:3307/?serverTimezone=Asia/Seoul

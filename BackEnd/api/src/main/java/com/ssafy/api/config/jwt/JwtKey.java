@@ -16,7 +16,7 @@ public class JwtKey {
             "key3", "Test3"
     );
     private static final String[] KID_SET = SECRET_KEY_SET.keySet().toArray(new String[0]);
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
 
     //랜덤한 KEY값 얻는 메소드
