@@ -5,11 +5,11 @@ refresh_token:
   expiration_time: 15 * 24 * 60 * 60 * 1000
 
 # 기본 로그 레벨 설정
-logging:
-  level:
-    root: warn
-    com.ssafy.api: debug
-    org.hibernate.type.descriptor.sql: warn  # trace
+#logging:
+#  level:
+#    root: debug
+#    com.ssafy.api: debug
+#    org.hibernate.type.descriptor.sql: warn  # trace
 
 spring:
   # JPA 기본 설정
@@ -44,7 +44,9 @@ spring:
         #          location: /home/dev/projects/ssafy/upload
         max-file-size: 100MB
         max-request-size: 100MB
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 server:
   # 프로젝트 환경의 포트 설정
@@ -57,10 +59,5 @@ server:
   max-http-header-size: 3145728
 
 # 푸쉬 알림 전송 시 필요한 firebase json 파일의 위치
-app:
-  firebase-config: ssafy-e6f74-firebase-adminsdk-2911y-cfd0f23f96.json
-
-# swagger에서 테스트 할 때의 host
-swagger:
-  host: localhost:8080
-#  host: j6d106.p.ssafy.io:8185
+#app:
+#  firebase-config: ssafy-e6f74-firebase-adminsdk-2911y-cfd0f23f96.json

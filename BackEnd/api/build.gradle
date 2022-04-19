@@ -49,25 +49,25 @@ dependencies {
 
 	//mysql
 	implementation 'mysql:mysql-connector-java'
-
-	//querydsl 추가
-	// QueryDSL
-	implementation "com.querydsl:querydsl-jpa"
-	annotationProcessor(
-			"javax.persistence:javax.persistence-api",
-			"javax.annotation:javax.annotation-api",
-			"com.querydsl:querydsl-apt")
-
 }
-
-// QueryDSL
-sourceSets {
-	main {
-		java {
-			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
-		}
-	}
-}
+//	//querydsl 추가
+//	// QueryDSL
+//	implementation "com.querydsl:querydsl-jpa"
+//	annotationProcessor(
+//			"javax.persistence:javax.persistence-api",
+//			"javax.annotation:javax.annotation-api",
+//			"com.querydsl:querydsl-apt")
+//
+//}
+//
+//// QueryDSL
+//sourceSets {
+//	main {
+//		java {
+//			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+//		}
+//	}
+//}
 
 tasks.named('test') {
 	useJUnitPlatform()
