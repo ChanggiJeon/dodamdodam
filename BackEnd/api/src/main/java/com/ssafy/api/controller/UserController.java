@@ -1,10 +1,10 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.config.jwt.JwtProvider;
-import com.ssafy.api.dto.SignInDto;
-import com.ssafy.api.dto.SignUpDto;
+import com.ssafy.api.dto.user.ReIssueTokenDto;
+import com.ssafy.api.dto.user.SignInDto;
+import com.ssafy.api.dto.user.SignUpDto;
 import com.ssafy.api.entity.User;
-import com.ssafy.api.exception.CustomErrorCode;
 import com.ssafy.api.exception.CustomException;
 import com.ssafy.api.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -16,10 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static com.ssafy.api.exception.CustomErrorCode.INVALID_REQUEST;
+import static com.ssafy.api.exception.CustomErrorCode.INVALID_TOKEN;
 
 @RestController
 @Slf4j
@@ -33,7 +34,7 @@ public class UserController {
 
     @GetMapping(value = "{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "ID 중복체크", notes = "<strong>아이디</strong>의 사용여부를 확인한다.")
-    public ResponseEntity<?> idCheck(@PathVariable String userId){
+    public ResponseEntity<?> idCheck(@PathVariable String userId) {
         userService.checkId(userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -76,4 +77,30 @@ public class UserController {
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
     }
 
+    @PostMapping(value = "refresh", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "JWT 토큰 재발급", notes = "<strong>Refresh Token<strong>으로 AccessToken을 재발급 받는다.")
+    public ResponseEntity<ReIssueTokenDto.Response> reissueAccessToken(@RequestBody @Valid HttpServletRequest request) {
+
+        String refreshToken = request.getHeader("X-Auth-Token");
+
+        //refreshToken 만료기간 확인
+        if (!jwtProvider.validateToken(refreshToken)) {
+            throw new CustomException(INVALID_TOKEN);
+        }
+
+        User user = userService.findUserByRefreshToken(refreshToken);
+
+        String token = jwtProvider.createAccessToken(user);
+        refreshToken = jwtProvider.createRefreshToken();
+
+        user.setRefreshToken(refreshToken);
+        userService.saveUser(user);
+
+        ReIssueTokenDto.Response res = ReIssueTokenDto.Response.builder()
+                .jwtToken(token)
+                .refreshToken(refreshToken)
+                .build();
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 }

@@ -1,8 +1,7 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.SignUpDto;
+import com.ssafy.api.dto.user.SignUpDto;
 import com.ssafy.api.entity.User;
-import com.ssafy.api.exception.CustomErrorCode;
 import com.ssafy.api.exception.CustomException;
 import com.ssafy.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-import static com.ssafy.api.exception.CustomErrorCode.DUPLICATE_USER_ID;
-import static com.ssafy.api.exception.CustomErrorCode.NO_SUCH_USER;
+import static com.ssafy.api.exception.CustomErrorCode.*;
 
 @Service
 @Slf4j
@@ -49,5 +47,11 @@ public class UserService {
 
     public void checkId(String userId) {
         userRepository.findUserByUserId(userId).orElseThrow(() -> new CustomException(DUPLICATE_USER_ID));
+    }
+
+    public User findUserByRefreshToken(String refreshToken) {
+        User user = userRepository.findUserByRefreshToken(refreshToken)
+                .orElseThrow(() -> new CustomException(INVALID_TOKEN));
+        return user;
     }
 }
