@@ -6,4 +6,9 @@
     <string name="bot_calendarfragment">캘린더</string>
     <string name="bot_chattingfragment">채팅</string>
     <string name="bot_main_familyfragment">홈</string>
+
+    <string name="tab_family">Family</string>
+    <string name="tab_event">Event</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
