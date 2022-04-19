@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/familyFragment">
+
+    <fragment
+        android:id="@+id/familyFragment"
+        android:name="com.ssafy.family.FamilyFragment"
+        android:label="fragment_family"
+        tools:layout="@layout/fragment_family" />
+    <fragment
+        android:id="@+id/eventFragment"
+        android:name="com.ssafy.family.EventFragment"
+        android:label="fragment_event"
+        tools:layout="@layout/fragment_event" />
+    <fragment
+        android:id="@+id/chattingFragment"
+        android:name="com.ssafy.family.ChattingFragment"
+        android:label="fragment_chatting"
+        tools:layout="@layout/fragment_chatting" />
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="com.ssafy.family.CalendarFragment"
+        android:label="fragment_calendar"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/albumFragment"
+        android:name="com.ssafy.family.AlbumFragment"
+        android:label="fragment_album"
+        tools:layout="@layout/fragment_album" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.ssafy.family.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+</navigation>
