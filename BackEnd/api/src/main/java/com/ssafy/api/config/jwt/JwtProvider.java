@@ -1,5 +1,6 @@
 package com.ssafy.api.config.jwt;
 
+import com.ssafy.api.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,6 @@ public class JwtProvider {
     private static int REFRESH_TOKEN_EXPIRATION_TIME;
 
     private final UserDetailsService userDetailsService;
-
 
     // Jwt 토큰 생성
     public String createAccessToken(User user) {

@@ -2,19 +2,18 @@ package com.ssafy.api.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
-@ApiModel("SingUp")
-public class SignUpDto {
+@ApiModel("SingIn")
+public class SignInDto {
 
     @Data
     @AllArgsConstructor
-    @NoArgsConstructor
     public static class Request {
 
         @NotBlank
@@ -27,10 +26,18 @@ public class SignUpDto {
         @ApiModelProperty(value = "비밀번호", required = true, example = "ssafy61!")
         private String password;
 
-        @NotBlank
-        @Size(max = 10, min = 1)
-        @ApiModelProperty(value = "이름", required = true, example = "싸피")
-        private String name;
+    }
 
+    @Builder
+    @AllArgsConstructor
+    public static class Response {
+        private String userId;
+        private String name;
+        @Nullable
+        private LocalDateTime birthday;
+        private String jwtToken;
+        private String refreshToken;
+        @Nullable
+        private String authority;
     }
 }
