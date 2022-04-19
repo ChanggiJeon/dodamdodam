@@ -13,10 +13,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorColor="@drawable/menu_select_color"
-        app:tabTextColor="@color/pink02"
+        app:tabIndicatorColor="@color/pink00"
+        app:tabTextColor="@color/gray01"
         app:tabSelectedTextColor="@color/pink00"
-        app:tabBackground="@color/beige02">
+        app:tabBackground="@drawable/selector_tab">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
