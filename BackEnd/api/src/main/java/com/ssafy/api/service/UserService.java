@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.dto.user.FindIdDto;
 import com.ssafy.api.dto.user.SignUpDto;
 import com.ssafy.api.entity.User;
 import com.ssafy.api.exception.CustomException;
@@ -54,4 +55,8 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(INVALID_TOKEN));
         return user;
     }
+
+//    public void findUserIdWithUserInfo(FindIdDto.Request request) {
+//        queryDSL 써야함!!
+//    }
 }
