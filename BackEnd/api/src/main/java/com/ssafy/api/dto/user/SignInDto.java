@@ -13,11 +13,14 @@ import java.time.LocalDateTime;
 public class SignInDto {
 
     @Data
+    @Builder
+    @NoArgsConstructor
     @AllArgsConstructor
+    @ApiModel(value = "SingIn Request")
     public static class Request {
 
         @NotBlank
-        @Size(max = 20, min = 5)
+        @Size(max = 20, min = 4)
         @ApiModelProperty(value = "아이디", required = true, example = "ssafy")
         private String userId;
 
@@ -28,16 +31,30 @@ public class SignInDto {
 
     }
 
+    @Data
     @Builder
+    @NoArgsConstructor
     @AllArgsConstructor
+    @ApiModel(value = "SingIn Response")
     public static class Response {
+        @ApiModelProperty(value = "아이디", required = true, example = "ssafy")
         private String userId;
+
+        @ApiModelProperty(value = "이름", required = true, example = "싸피")
         private String name;
+
         @Nullable
+        @ApiModelProperty(value = "생일", required = true, example = "ssafy")
         private LocalDateTime birthday;
+
+        @ApiModelProperty(value = "jwt 토큰", required = true, example = "ex123am45ple")
         private String jwtToken;
+
+        @ApiModelProperty(value = "refresh 토큰", required = true, example = "ex123am45ple")
         private String refreshToken;
+
         @Nullable
+        @ApiModelProperty(value = "권한", required = true, example = "ROLE_USER")
         private String authority;
     }
 }

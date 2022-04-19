@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.util.Optional;
+
 import static com.ssafy.api.exception.CustomErrorCode.*;
 
 @Service
@@ -46,8 +48,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void checkId(String userId) {
-        userRepository.findUserByUserId(userId).orElseThrow(() -> new CustomException(DUPLICATE_USER_ID));
+    public Optional<User> checkId(String userId) {
+        return userRepository.findUserByUserId(userId);
     }
 
     public User findUserByRefreshToken(String refreshToken) {

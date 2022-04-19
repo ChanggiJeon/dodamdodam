@@ -1,6 +1,7 @@
 package com.ssafy.api.dto;
 
 import com.ssafy.api.exception.CustomErrorCode;
+import com.ssafy.api.exception.CustomException;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,12 +32,13 @@ public class ErrorResponse {
                 );
     }
 
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorResponse errorResponse) {
+    public static ResponseEntity<ErrorResponse> toResponseEntity(CustomException customException) {
         return ResponseEntity
-                .status(errorResponse.getStatus())
+                .status(customException.getCustomErrorCode().getHttpStatus())
                 .body(ErrorResponse.builder()
-                        .customErrorCode(errorResponse.getCustomErrorCode())
-                        .detailMessage(errorResponse.getDetailMessage())
+                        .customErrorCode(customException.getCustomErrorCode())
+                        .status(customException.getCustomErrorCode().getHttpStatus().value())
+                        .detailMessage(customException.getDetailMessage())
                         .build()
                 );
     }
