@@ -5,29 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ScheduleActivity">
+
     <FrameLayout
         android:id="@+id/schedule_frame"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="@drawable/schedule_box"
-        android:backgroundTint="@color/beige01"
+        android:elevation="20dp"
         app:layout_constraintBottom_toTopOf="@+id/schedule_button_include"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:elevation="20dp">
-        <include
-            android:id="@+id/schedule_top_include"
-            layout="@layout/schedule_top_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="1dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/schedule_top_include">
+
+
     </FrameLayout>
+
+    <include
+        android:id="@+id/schedule_top_include"
+        layout="@layout/schedule_top_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <include
         android:id="@+id/schedule_button_include"
         layout="@layout/schedule_button_list"

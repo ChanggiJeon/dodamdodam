@@ -37,8 +37,8 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="0dp"
-        android:layout_height="65dp"
+        android:layout_width="345dp"
+        android:layout_height="80dp"
         android:layout_marginLeft="33dp"
         android:layout_marginRight="33dp"
         android:layout_marginBottom="50dp"
@@ -52,7 +52,7 @@
         android:layout_width="74dp"
         android:layout_height="61dp"
         android:layout_marginStart="168dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="144dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_arrow_downward_24" />
