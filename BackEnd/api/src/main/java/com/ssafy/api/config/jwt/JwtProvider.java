@@ -58,7 +58,6 @@ public class JwtProvider {
     // Jwt 토큰에서 회원 구별 정보 추출
     public String getUserId(String token) {
         return Jwts.parserBuilder()
-                //키 리졸버로 kid를 추출하고 그에 맞는 key를 가져옴.
                 .setSigningKeyResolver(SigningKeyResolver.instance)
                 .build()
                 .parseClaimsJws(token)
@@ -74,6 +73,7 @@ public class JwtProvider {
 
     // Jwt 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
+        System.out.println(new Date());
         try {
             Jws<Claims> claims = Jwts.parserBuilder().build().parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
