@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/text_and_box"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:id="@+id/family_profile_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
+            android:src="@color/material_dynamic_secondary95"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/family_role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/spoqahansans"
+            android:textColor="@color/pink01"
+            android:text="엄마"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/family_profile_image"
+            app:layout_constraintStart_toStartOf="@+id/family_profile_image"
+            app:layout_constraintTop_toBottomOf="@+id/family_profile_image" />
+
+        <ImageView
+            android:id="@+id/family_status_image"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:scaleType="centerCrop"
+            android:src="@color/material_dynamic_secondary95"
+            app:layout_constraintStart_toEndOf="@+id/family_profile_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/family_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textStyle="bold"
+            android:fontFamily="@font/spoqahansans"
+            android:textColor="@color/pink01"
+            android:text="오늘은 너무 피곤해요"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/family_status_image"
+            app:layout_constraintTop_toTopOf="@+id/family_status_image" />
+
+        <TextView
+            android:id="@+id/family_message_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/spoqahansans"
+            android:maxLines="2"
+            android:text="알림 보내기"
+            android:textColor="@color/pink01"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/family_status_image"
+            app:layout_constraintEnd_toEndOf="@+id/family_status"
+            app:layout_constraintTop_toBottomOf="@+id/family_status" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
