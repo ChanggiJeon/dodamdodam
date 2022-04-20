@@ -16,16 +16,15 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    @Value("${jwt_token.expiration_time}")
-    private static int JWT_TOKEN_EXPIRATION_TIME;
-    @Value("${refresh_token.expiration_time}")
-    private static int REFRESH_TOKEN_EXPIRATION_TIME;
+    private final long JWT_TOKEN_EXPIRATION_TIME = 30 * 60 * 1000;
+    private final long REFRESH_TOKEN_EXPIRATION_TIME = 15 * 24 * 60 * 60 * 1000;
 
     private final UserDetailsService userDetailsService;
 
@@ -73,11 +72,12 @@ public class JwtProvider {
 
     // Jwt 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
-        System.out.println(new Date());
         try {
-            Jws<Claims> claims = Jwts.parserBuilder().build().parseClaimsJws(jwtToken);
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKeyResolver(SigningKeyResolver.instance)
+                    .build().parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

@@ -71,6 +71,9 @@ public class UserService {
 
         LocalDate br = null;
         try {
+            if (list[0].length() != 4 || list[1].length() != 2 || list[2].length() != 2) {
+                throw new CustomException(INVALID_REQUEST);
+            }
             br = LocalDate.of(Integer.parseInt(list[0]), Integer.parseInt(list[1]), Integer.parseInt(list[2]));
         } catch (NumberFormatException | DateTimeException e) {
             throw new CustomException(INVALID_REQUEST);
