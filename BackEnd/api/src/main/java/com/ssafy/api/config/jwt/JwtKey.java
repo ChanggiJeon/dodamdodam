@@ -11,12 +11,12 @@ import java.util.Random;
 public class JwtKey {
 
     private static final Map<String, String> SECRET_KEY_SET = Map.of(
-            "key1", "Test1",
-            "key2", "Test2",
-            "key3", "Test3"
+            "key1", "SsafyTest1AndIwantToGet1prizeFromFinalProjectSoIHAVETOdoWorkVERYHARDefdkentl23kwmflobwWEKLNT3lwmEK",
+            "key2", "e12fwgbsdgh34yhfszetzy45ehjkibn23klhjkeLKKWEN3kn4K#Ekwe92k3nEDknkrn3ktl34lhereksitnour24kdCOdme53kt",
+            "key3", "EL3NGF0DJ4KSF8H983KLK5LSJDG90BU9XDFBK3KKKL34TMLJiohjrngknelkrgn92u34klnklgndklWghtkendKteiMdpet"
     );
     private static final String[] KID_SET = SECRET_KEY_SET.keySet().toArray(new String[0]);
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
 
     //랜덤한 KEY값 얻는 메소드
