@@ -1,8 +1,10 @@
 package com.ssafy.api.exception;
 
-import com.ssafy.api.dto.ErrorDto.ErrorResponse;
+import com.ssafy.api.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -17,32 +19,27 @@ import static com.ssafy.api.exception.CustomErrorCode.INVALID_REQUEST;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ErrorResponse handleCustomException(CustomException e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException e, HttpServletRequest request) {
         log.error("errorCode: {}, url: {}, message: {}", e.getCustomErrorCode(), request.getRequestURI(), e.getDetailMessage());
-        return ErrorResponse.builder()
-                .customErrorCode(e.getCustomErrorCode())
-                .detailMessage(e.getDetailMessage())
-                .build();
+
+        return ErrorResponse.toResponseEntity(e);
     }
 
     @ExceptionHandler(value = {
             HttpRequestMethodNotSupportedException.class,
-            MethodArgumentTypeMismatchException.class
+            MethodArgumentTypeMismatchException.class,
+            MethodArgumentNotValidException.class
     })
-    public ErrorResponse handleRestException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleRestException(Exception e, HttpServletRequest request) {
         log.error("url: {}, message: {}", request.getRequestURI(), e.getMessage());
-        return ErrorResponse.builder()
-                .customErrorCode(INVALID_REQUEST)
-                .detailMessage(INVALID_REQUEST.getMessage())
-                .build();
+
+        return ErrorResponse.toResponseEntity(INVALID_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
-    public ErrorResponse handleException(Exception e, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
         log.error("url: {}, message: {}", request.getRequestURI(), e.getMessage());
-        return ErrorResponse.builder()
-                .customErrorCode(INTERVAL_SERVER_ERROR)
-                .detailMessage(INTERVAL_SERVER_ERROR.getMessage())
-                .build();
+
+        return ErrorResponse.toResponseEntity(INTERVAL_SERVER_ERROR);
     }
 }

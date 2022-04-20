@@ -1,5 +1,6 @@
 package com.ssafy.api.config.jwt;
 
+import com.ssafy.api.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwsHeader;
@@ -9,26 +10,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    @Value("${jwt_token.expiration_time}")
-    private static int JWT_TOKEN_EXPIRATION_TIME;
-    @Value("${refresh_token.expiration_time}")
-    private static int REFRESH_TOKEN_EXPIRATION_TIME;
+    private final long JWT_TOKEN_EXPIRATION_TIME = 30 * 60 * 1000;
+    private final long REFRESH_TOKEN_EXPIRATION_TIME = 15 * 24 * 60 * 60 * 1000;
 
     private final UserDetailsService userDetailsService;
-
 
     // Jwt 토큰 생성
     public String createAccessToken(User user) {
@@ -59,7 +57,6 @@ public class JwtProvider {
     // Jwt 토큰에서 회원 구별 정보 추출
     public String getUserId(String token) {
         return Jwts.parserBuilder()
-                //키 리졸버로 kid를 추출하고 그에 맞는 key를 가져옴.
                 .setSigningKeyResolver(SigningKeyResolver.instance)
                 .build()
                 .parseClaimsJws(token)
@@ -76,9 +73,11 @@ public class JwtProvider {
     // Jwt 토큰의 유효성 + 만료일자 확인
     public boolean validateToken(String jwtToken) {
         try {
-            Jws<Claims> claims = Jwts.parserBuilder().build().parseClaimsJws(jwtToken);
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKeyResolver(SigningKeyResolver.instance)
+                    .build().parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

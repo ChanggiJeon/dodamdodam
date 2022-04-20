@@ -1,9 +1,3 @@
-jwt_token:
-  expiration_time: 30 * 60 * 1000
-
-refresh_token:
-  expiration_time: 15 * 24 * 60 * 60 * 1000
-
 # 기본 로그 레벨 설정
 #logging:
 #  level:
@@ -23,7 +17,6 @@ spring:
       use_sql_comments: true
     generate-ddl: true
     open-in-view: false
-
 
   datasource:
     url: jdbc:mysql://localhost:3306/dodamdodam?serverTimezone=Asia/Seoul

@@ -19,6 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtProvider jwtProvider;
 
     protected void configure(HttpSecurity http) throws Exception {
+
         // basic authentication
         http
                 .httpBasic().disable() // BasicAuthenticationFilter 비활성화
@@ -35,8 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // authorization
         http.authorizeRequests()
                 // /와 /home, /room의 참가, 닉네임 중복확인은 모두에게 허용
-                .antMatchers("/", "/home", "/user/signup").permitAll()
-                .anyRequest().permitAll();
+                .antMatchers("/api/user/{userID}", "/api/user/newpassword", "/api/user/signin", "/api/user/signup").permitAll()
+                .anyRequest().authenticated();
     }
 
 
