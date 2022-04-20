@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/album_photo_recycler"
+        android:id="@+id/add_album_photo_recycler"
         android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginStart="24dp"
@@ -46,10 +46,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.045"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/album_photo_recycler" />
+        app:layout_constraintTop_toBottomOf="@+id/add_album_photo_recycler" />
 
     <DatePicker
-        android:id="@+id/datePicker"
+        android:id="@+id/add_album_datePicker"
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_marginStart="24dp"
@@ -61,17 +61,17 @@
         app:layout_constraintTop_toBottomOf="@+id/add_album_time_text" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/album_tag_recycler"
+        android:id="@+id/add_album_tag_recycler"
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePicker" />
+        app:layout_constraintTop_toBottomOf="@+id/add_album_datePicker" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/album_tag_edit_text"
+        android:id="@+id/add_album_tag_edit_text"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
         android:hint="#태그"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/album_tag_recycler">
+        app:layout_constraintTop_toBottomOf="@+id/add_album_tag_recycler">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="200dp"
@@ -89,7 +89,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/album_tag_edit_button"
+        android:id="@+id/add_album_tag_edit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -99,6 +99,6 @@
         android:text="입력"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/album_tag_edit_text"
-        app:layout_constraintTop_toBottomOf="@+id/album_tag_recycler" />
+        app:layout_constraintStart_toEndOf="@+id/add_album_tag_edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/add_album_tag_recycler" />
 </androidx.constraintlayout.widget.ConstraintLayout>
