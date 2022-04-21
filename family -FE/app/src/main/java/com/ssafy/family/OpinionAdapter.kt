@@ -15,7 +15,7 @@ import com.ssafy.family.databinding.ItemOpinionBinding
 // mainactivity - familyfragment : 우리가족(상태)
 class OpinionAdapter(private val context: Context) : RecyclerView.Adapter<OpinionAdapter.ViewHolder>() {
 
-    private var datas = mutableListOf<Int>(1,2,3)
+    private var datas = mutableListOf<Int>(1,2)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
