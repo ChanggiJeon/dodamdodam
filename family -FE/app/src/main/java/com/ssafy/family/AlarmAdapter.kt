@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.family.databinding.ItemAlarmBinding
 import com.ssafy.family.databinding.ItemFamilyStatusBinding
 
+// mainactivity - familyfragment : 알림 보내기 메시지 리스트
 class AlarmAdapter(private val context: Context) : RecyclerView.Adapter<AlarmAdapter.ViewHolder>() {
 
     private var datas = mutableListOf<Int>(1,2,3,4,5,6,7,8)
