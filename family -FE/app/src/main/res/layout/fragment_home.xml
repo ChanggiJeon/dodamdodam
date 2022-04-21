@@ -13,7 +13,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabIndicatorColor="@color/pink00"
+        app:tabIndicatorColor="@color/gray02"
+        app:tabIndicatorHeight="6dp"
+        app:tabIndicatorGravity="top"
         app:tabTextColor="@color/gray01"
         app:tabSelectedTextColor="@color/pink00"
         app:tabBackground="@drawable/selector_tab">

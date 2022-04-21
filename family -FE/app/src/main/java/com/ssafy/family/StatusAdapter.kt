@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.family.databinding.ItemFamilyStatusBinding
 
-
+// mainactivity - familyfragment : 우리가족(상태)
 class StatusAdapter(private val context: Context) : RecyclerView.Adapter<StatusAdapter.ViewHolder>() {
 
     private var datas = mutableListOf<Int>(1,2,3)
