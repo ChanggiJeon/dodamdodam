@@ -15,5 +15,8 @@
     <string name="main_today_status">우리가족</string>
     <string name="main_today_schedule">오늘의 일정</string>
     <string name="main_add_schedule">등록하기</string>
+    <string name="main_opinion">의견 제시</string>
+    <string name="main_add_opinion">등록</string>
+    <string name="main_event">가족 이벤트 만들기</string>
 
 </resources>

@@ -26,7 +26,10 @@ class EventFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = TodayScheduleAdapter(requireActivity())
-        binding.todayScheduleRecyclerView.adapter = adapter
+        val scheduleAdapter = TodayScheduleAdapter(requireActivity())
+        binding.todayScheduleRecyclerView.adapter = scheduleAdapter
+
+        val opinionAdapter = OpinionAdapter(requireActivity())
+        binding.opinionRecyclerView.adapter = opinionAdapter
     }
 }
