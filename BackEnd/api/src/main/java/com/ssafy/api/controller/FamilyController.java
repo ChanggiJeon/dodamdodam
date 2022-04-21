@@ -8,11 +8,16 @@ import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/family")
 @RequiredArgsConstructor
+@Slf4j
 public class FamilyController {
 
     private final FamilyService familyService;
@@ -33,5 +38,16 @@ public class FamilyController {
                 .code(family.getCode())
                 .build();
         return responseService.getSingleResult(res);
+    }
+
+    @PutMapping("/picture")
+    @ApiOperation(value = "가족 사진 수정", notes = "<strong>가족 사진<stong>을 추가 및 수정한다.")
+    public CommonResult updateFamilyPicture(
+            @RequestParam(value="picture", required=true) MultipartFile picture, HttpServletRequest request) {
+        String path = request.getServletContext().getRealPath("/resources/upload/familyPicture");
+        log.info(path);
+        log.info("file name:" + picture.getOriginalFilename());
+        familyService.updateFamilyPicture(picture, path);
+        return responseService.getSuccessResult();
     }
 }
