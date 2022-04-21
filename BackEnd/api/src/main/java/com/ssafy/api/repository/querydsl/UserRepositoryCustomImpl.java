@@ -1,8 +1,8 @@
 package com.ssafy.api.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.api.entity.QProfile;
-import com.ssafy.api.entity.QUser;
+//import com.ssafy.api.entity.QProfile;
+//import com.ssafy.api.entity.QUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +21,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     @Override
     public String findUserByUserInfo(String name, String familyCode, LocalDate birthday) {
+        return null;
         return jpaQueryFactory.select(user.userId)
                 .from(user)
                 .where(user.name.eq(name).and(user.birthday.eq(birthday)))

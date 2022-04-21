@@ -155,9 +155,6 @@ public class UserController {
     public CommonResult updatePassword
             (@PathVariable String birthday, HttpServletRequest request) {
 
-        String refreshToken = request.getHeader("X-Auth-Token");
-        System.out.println(refreshToken);
-        System.out.println(birthday);
         String token = jwtProvider.resolveToken(request);
         String userId = jwtProvider.getUserId(token);
         log.info("userId: {}, birthday: {}", userId, birthday);
