@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.common.Validate;
 import com.ssafy.api.config.jwt.JwtProvider;
+import com.ssafy.api.dto.req.FindIdReqDto;
 import com.ssafy.api.dto.req.SignInReqDto;
 import com.ssafy.api.dto.req.SignUpReqDto;
 import com.ssafy.api.dto.req.UpdatePasswordReqDto;
@@ -94,11 +95,10 @@ public class UserController {
     }
 
     @PostMapping(value = "refresh")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @ApiOperation(value = "JWT 토큰 재발급", notes = "<strong>Refresh Token<strong>으로 AccessToken을 재발급 받는다.")
-    public SingleResult<ReIssueTokenResDto> reissueAccessToken(HttpServletRequest request) {
+    public SingleResult<ReIssueTokenResDto> reissueAccessToken(@RequestHeader(value = "X-AUTH-TOKEN") String refreshToken) {
 
-        String refreshToken = request.getHeader("X-Auth-Token");
         //refreshToken 만료기간 확인
         if (!jwtProvider.validateToken(refreshToken)) {
             throw new CustomException(INVALID_TOKEN);
@@ -120,33 +120,18 @@ public class UserController {
         return responseService.getSingleResult(res);
     }
 
-//    @PostMapping(value = "findId", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @ApiOperation(value = "아이디 찾기", notes = "<strong>회원 정보<strong>로 아이디를 찾는다.")
-//    public ResponseEntity<FindIdDto.Response> findUserIdWithUserInfo
-//            (@RequestBody @Valid FindIdDto.Request request) {
-//
-//        userService.findUserIdWithUserInfo(request);
-//
-//        //refreshToken 만료기간 확인
-//        if (!jwtProvider.validateToken(refreshToken)) {
-//            throw new CustomException(INVALID_TOKEN);
-//        }
-//
-//        User user = userService.findUserByRefreshToken(refreshToken);
-//
-//        String token = jwtProvider.createAccessToken(user);
-//        refreshToken = jwtProvider.createRefreshToken();
-//
-//        user.setRefreshToken(refreshToken);
-//        userService.saveUser(user);
-//
-//        ReIssueTokenDto.Response res = ReIssueTokenDto.Response.builder()
-//                .jwtToken(token)
-//                .refreshToken(refreshToken)
-//                .build();
-//
-//        return new ResponseEntity<>(res, HttpStatus.OK);
-//    }
+    @PostMapping(value = "findId")
+    @ApiOperation(value = "아이디 찾기", notes = "<strong>회원 정보<strong>로 아이디를 찾는다.")
+    public CommonResult findUserIdWithUserInfo
+            (@RequestBody @Valid FindIdReqDto request) {
+
+        String userId = userService.findUserIdWithUserInfo(request);
+        if (userId == null) {
+            throw new CustomException(NO_SUCH_USER, "입력하신 정보를 다시 확인해주세요.");
+        }
+
+        return responseService.getSuccessResult(userId);
+    }
 
     @PostMapping(value = "newpassword")
     @ApiOperation(value = "비밀번호 재설정", notes = "<strong>비밀번호<strong>를 재설정한다.")
@@ -165,7 +150,7 @@ public class UserController {
     }
 
     @GetMapping(value = "birthday/{birthday}")
-    @ApiOperation(value = "비밀번호 재설정", notes = "<strong>비밀번호<strong>를 재설정한다.")
+    @ApiOperation(value = "생일 정보 업데이트", notes = "<strong>생일<strong>정보를 업데이트 한다.")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     public CommonResult updatePassword
             (@PathVariable String birthday, HttpServletRequest request) {
@@ -175,7 +160,7 @@ public class UserController {
         System.out.println(birthday);
         String token = jwtProvider.resolveToken(request);
         String userId = jwtProvider.getUserId(token);
-        log.info("userId: {}, birthday", userId, birthday);
+        log.info("userId: {}, birthday: {}", userId, birthday);
         userService.updateBirthday(userId, birthday);
 
         return responseService.getSuccessResult();
