@@ -13,7 +13,7 @@ class AlbumActivity : AppCompatActivity() {
         setContentView(binding.root)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         supportFragmentManager.beginTransaction()
-            .replace(R.id.album_frame, AddAlbumFragment())
+            .replace(R.id.album_frame, DetailAlbumFragment())
             .commit()
 
     }
