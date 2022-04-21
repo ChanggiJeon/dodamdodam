@@ -13,8 +13,8 @@ class DetailAlbumCommentAdapter(private val context: Context) : RecyclerView.Ada
     lateinit var itemClickListener: ItemClickListener
     inner class ViewHolder(val binding: DetailAlbumCommentListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(){
-            binding.commentFamilyImg.setImageResource(R.drawable.aa)
-            binding.commentFamilyEmoji.setImageResource(R.drawable.aa)
+            binding.commentFamilyImg.setImageResource(R.drawable.amusing)
+            binding.commentFamilyEmoji.setImageResource(R.drawable.laughing)
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
