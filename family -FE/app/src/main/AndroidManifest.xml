@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Family">
         <activity
+            android:name=".RouletteActivity"
+            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".ScheduleActivity"-->
+<!--            android:exported="false" />-->
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

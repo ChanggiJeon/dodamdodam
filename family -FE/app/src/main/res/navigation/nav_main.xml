@@ -3,18 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/familyFragment">
+    app:startDestination="@id/homeFragment">
+
 
     <fragment
-        android:id="@+id/familyFragment"
-        android:name="com.ssafy.family.FamilyFragment"
-        android:label="fragment_family"
-        tools:layout="@layout/fragment_family" />
-    <fragment
-        android:id="@+id/eventFragment"
-        android:name="com.ssafy.family.EventFragment"
-        android:label="fragment_event"
-        tools:layout="@layout/fragment_event" />
+        android:id="@+id/homeFragment"
+        android:name="com.ssafy.family.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/chattingFragment"
         android:name="com.ssafy.family.ChattingFragment"
@@ -35,4 +31,5 @@
         android:name="com.ssafy.family.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
+
 </navigation>

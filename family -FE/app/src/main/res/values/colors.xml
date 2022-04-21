@@ -8,9 +8,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="pink00">#E38273</color>
+    <color name="pink00">#D1796B</color>
     <color name="pink01">#FFB2A6</color>
     <color name="pink02">#FFC7C7</color>
     <color name="pink03">#FFE2E2</color>
     <color name="beige01">#FFEDDD</color>
+    <color name="beige02">#F8D9BD</color>
+
+    <color name="gray01">#BBAFA5</color>
+    <color name="gray02">#E1DAD3</color>
 </resources>
