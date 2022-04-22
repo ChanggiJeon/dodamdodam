@@ -66,6 +66,10 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, columnDefinition = "varchar(20)")
     private String authority;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton((GrantedAuthority) () -> authority);

@@ -1,12 +1,11 @@
 package com.ssafy.api.entity;
 
-import lombok.*;
-
-import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Builder
 @Getter
@@ -20,12 +19,5 @@ public class Family {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Setter
-    @Column(unique = true)
-    private String code;
-
-    @Setter
-    @Column
-    private String picture;
 
 }
