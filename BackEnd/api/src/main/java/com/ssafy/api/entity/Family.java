@@ -19,5 +19,6 @@ public class Family {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-
+    @Column(name = "code")
+    private String code;
 }
