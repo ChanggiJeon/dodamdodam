@@ -5,7 +5,6 @@ package com.ssafy.api.service;
 import com.ssafy.api.dto.req.ProfileReqDto;
 import com.ssafy.api.dto.req.StatusReqDto;
 import com.ssafy.api.entity.Profile;
-import com.ssafy.api.entity.User;
 import com.ssafy.api.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,8 +50,8 @@ public class ProfileService {
 //
 //    }
     @Transactional(readOnly = false)
-    public Profile updateProfile(String userId, ProfileReqDto profileDto, MultipartFile multipartFile, HttpServletRequest request){
-        Profile profile = profileRepository.findProfileById(userId);
+    public Profile updateProfile(Long userPK, ProfileReqDto profileDto, MultipartFile multipartFile, HttpServletRequest request){
+        Profile profile = profileRepository.findProfileByUserPk(userPK);
         //이미지 originalName, path 수정
 //        profile.updateImageName(profileDto.getProfileImage().getOriginalFilename());
 //        profile.updateImagePath(profileDto.getProfileImage().get);
@@ -65,15 +64,15 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = false)
-    public Profile enrollMission(String userId, String missionContent){
-        Profile profile = profileRepository.findProfileById(userId);
+    public Profile enrollMission(Long userPk, String missionContent){
+        Profile profile = profileRepository.findProfileByUserPk(userPk);
         profile.updateMissionContent(missionContent);
         return profile;
     }
 
     @Transactional(readOnly = false)
-    public Profile updateStatus(String userId, StatusReqDto statusDto){
-        Profile profile = profileRepository.findProfileById(userId);
+    public Profile updateStatus(Long userPk, StatusReqDto statusDto){
+        Profile profile = profileRepository.findProfileByUserPk(userPk);
         profile.updateEmotion(statusDto.getEmotion());
         profile.updateComment(statusDto.getComment());
         return profile;
@@ -142,8 +141,8 @@ public class ProfileService {
     }
 
     @Transactional
-    public String findImage(String userId){
-        Profile profile = profileRepository.findProfileById(userId);
+    public String findImage(Long userPk){
+        Profile profile = profileRepository.findProfileByUserPk(userPk);
         return profile.getImagePath();
     }
 

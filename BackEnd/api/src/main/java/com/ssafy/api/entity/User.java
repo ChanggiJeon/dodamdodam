@@ -8,9 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -19,25 +17,15 @@ import java.util.Collections;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user",
-        indexes = {
-                @Index(columnList = "id"),
-                @Index(columnList = "user_id"),
-                @Index(columnList = "name"),
-                @Index(columnList = "password"),
-                @Index(columnList = "birthday"),
-                @Index(columnList = "fcm_token"),
-                @Index(columnList = "refresh_token"),
-                @Index(columnList = "authority")
-        })
+@Table(name = "user")
 public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long userPk;
 
     @Setter
-    @Column(name = "user_id", nullable = false, unique = true, length = 20)
+    @Column(nullable = false, unique = true, length = 20)
     private String userId;
 
     @Column(nullable = false, length = 10)
@@ -54,12 +42,10 @@ public class User extends BaseEntity implements UserDetails {
 
     @Setter
     @Nullable
-    @Column(name = "fcm_token")
     private String fcmToken;
 
     @Setter
     @Nullable
-    @Column(name = "refresh_token")
     private String refreshToken;
 
     @Setter
@@ -81,7 +67,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userId;
+        return String.valueOf(this.userPk);
     }
 
     @Override

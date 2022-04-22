@@ -30,7 +30,12 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(NO_SUCH_USER));
     }
 
-    @Transactional
+    public User findByUserPk(Long userPk){
+        return userRepository.findUserByUserPk(userPk)
+                .orElseThrow(() -> new CustomException(NO_SUCH_USER));
+    }
+
+    @Transactional()
     public void userSignUp(SignUpReqDto singUpRequest) {
 
         if (userRepository.getByUserId(singUpRequest.getUserId()) != null) {
@@ -64,11 +69,11 @@ public class UserService {
     }
 
     public String findUserIdWithUserInfo(FindIdReqDto request) {
-        return userRepository.findUserByUserInfo(request);
+        return userRepository.findUserIdByUserInfo(request);
     }
 
-    public void updateBirthday(String userId, String birthday) {
-        User user = userRepository.findUserByUserId(userId)
+    public void updateBirthday(Long userPK, String birthday) {
+        User user = userRepository.findUserByUserPk(userPK)
                 .orElseThrow(() -> new CustomException(NO_SUCH_USER));
 
         String[] list = birthday.split("-");

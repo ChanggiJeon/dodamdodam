@@ -119,7 +119,6 @@ public class UserController {
             (@RequestBody @Valid FindIdReqDto request) {
 
         String userId = userService.findUserIdWithUserInfo(request);
-        System.out.println(userId);
         return responseService.getSuccessResult(userId);
     }
 
@@ -146,9 +145,8 @@ public class UserController {
             (@PathVariable String birthday, HttpServletRequest request) {
 
         String token = jwtProvider.resolveToken(request);
-        String userId = jwtProvider.getUserId(token);
-        log.info("userId: {}, birthday: {}", userId, birthday);
-        userService.updateBirthday(userId, birthday);
+        Long userPK = jwtProvider.getUserPk(token);
+        userService.updateBirthday(userPK, birthday);
 
         return responseService.getSuccessResult();
     }

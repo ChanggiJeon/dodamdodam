@@ -77,8 +77,8 @@ public class FamilyService {
 
     public long fromUserIdToFamilyId(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
-        String userId = jwtTokenProvider.getUserId(token);
-        Profile profile = profileRepository.findProfileById(userId);
+        Long userPk = jwtTokenProvider.getUserPk(token);
+        Profile profile = profileRepository.findProfileByUserPk(userPk);
         if (profile == null) {
             throw new CustomException(INVALID_REQUEST, "그룹에 권한이 없습니다.");
         }
