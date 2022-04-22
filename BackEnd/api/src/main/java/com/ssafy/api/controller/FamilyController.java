@@ -39,9 +39,9 @@ public class FamilyController {
     @ApiOperation(value = "가족 그룹 생성")
     public CommonResult createFamily(@RequestBody @Valid FamilyJoinDto familyRequest, HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
-        String userId = jwtTokenProvider.getUserId(token);
-        User user = userService.findByUserId(userId);
-        userService.updateBirthday(userId, familyRequest.getBirthday());
+        Long userPk = jwtTokenProvider.getUserPk(token);
+        User user = userService.findByUserPk(userPk);
+        userService.updateBirthday(userPk, familyRequest.getBirthday());
         Family family = familyService.createFamily();
         familyService.createProfile(family, user, familyRequest);
         return responseService.getSuccessResult("그룹 생성 완료");
@@ -55,9 +55,9 @@ public class FamilyController {
             @RequestBody @Valid FamilyJoinDto familyRequest,
             HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
-        String userId = jwtTokenProvider.getUserId(token);
-        User user = userService.findByUserId(userId);
-        userService.updateBirthday(userId, familyRequest.getBirthday());
+        Long userPk = jwtTokenProvider.getUserPk(token);
+        User user = userService.findByUserPk(userPk);
+        userService.updateBirthday(userPk, familyRequest.getBirthday());
         Family family = familyService.getFamily(familyId);
         familyService.createProfile(family, user, familyRequest);
         return responseService.getSuccessResult("그룹 가입 완료");
@@ -66,7 +66,7 @@ public class FamilyController {
     @GetMapping("/code/check/{code}")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @ApiOperation(value = "가족 코드 검사", notes = "<strong>가족 코드<strong>를 받아 가족 id를 조회한다.")
-    public SingleResult<FamilyIdResDto> checkFamilyCode (@PathVariable String code, HttpServletRequest request) {
+    public SingleResult<FamilyIdResDto> checkFamilyCode(@PathVariable String code, HttpServletRequest request) {
         Family family = familyService.checkCode(code);
         FamilyIdResDto res = FamilyIdResDto.builder()
                 .id(family.getId())
@@ -77,7 +77,7 @@ public class FamilyController {
     @GetMapping("/code")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @ApiOperation(value = "가족 코드 조회", notes = "<strong>가족 id<strong>를 받아 가족 코드를 조회한다.")
-    public SingleResult<FamilyCodeResDto> getFamilyCode (HttpServletRequest request){
+    public SingleResult<FamilyCodeResDto> getFamilyCode(HttpServletRequest request) {
         long familyId = familyService.fromUserIdToFamilyId(request);
         Family family = familyService.getFamily(familyId);
         FamilyCodeResDto res = FamilyCodeResDto.builder()
@@ -90,7 +90,7 @@ public class FamilyController {
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @ApiOperation(value = "가족 사진 수정", notes = "<strong>가족 사진<stong>을 추가 및 수정한다.")
     public CommonResult updateFamilyPicture(
-            @RequestParam(value="picture", required=true) MultipartFile picture, HttpServletRequest request) {
+            @RequestParam(value = "picture", required = true) MultipartFile picture, HttpServletRequest request) {
         long familyId = familyService.fromUserIdToFamilyId(request);
         String path = request.getServletContext().getRealPath("");
         familyService.updateFamilyPicture(familyId, picture, path);
@@ -100,7 +100,7 @@ public class FamilyController {
     @GetMapping("/picture")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @ApiOperation(value = "가족 사진 경로 조회", notes = "<strong>가족 사진 경로<stong>를 조회한다.")
-    public SingleResult<FamilyPictureResDto> getFamilyPicture (HttpServletRequest request) {
+    public SingleResult<FamilyPictureResDto> getFamilyPicture(HttpServletRequest request) {
         long familyId = familyService.fromUserIdToFamilyId(request);
         Family family = familyService.getFamilyPicture(familyId);
         String picture = family.getPicture();
@@ -108,6 +108,8 @@ public class FamilyController {
                 .picture(picture)
                 .build();
         return responseService.getSingleResult(res);
-    };
+    }
+
+    ;
 
 }
