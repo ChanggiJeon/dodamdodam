@@ -52,4 +52,7 @@ dependencies {
 
     //룰렛
     implementation 'com.github.JhDroid:android-roulette-wheel-view:1.0.0'
+
+    //indicator
+    implementation 'com.tbuonomo:dotsindicator:4.2'
 }
