@@ -119,7 +119,7 @@ public class UserController {
             (@RequestBody @Valid FindIdReqDto request) {
 
         String userId = userService.findUserIdWithUserInfo(request);
-
+        System.out.println(userId);
         return responseService.getSuccessResult(userId);
     }
 

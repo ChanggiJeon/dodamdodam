@@ -14,7 +14,6 @@ import javax.transaction.Transactional;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static com.ssafy.api.exception.CustomErrorCode.*;
 
@@ -65,7 +64,7 @@ public class UserService {
     }
 
     public String findUserIdWithUserInfo(FindIdReqDto request) {
-        return userRepository.findUserByUserInfo(request.getName(), request.getFamilyCode() ,request.getBirthday());
+        return userRepository.findUserByUserInfo(request);
     }
 
     public void updateBirthday(String userId, String birthday) {

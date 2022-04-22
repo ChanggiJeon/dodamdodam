@@ -47,9 +47,11 @@ public class ProfileController {
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "프로필 등록", notes = "<strong>프로필 등록</strong>")
     public CommonResult enrollProfile(@ModelAttribute @Valid ProfileReqDto profileRequest,
-                                      @RequestPart(value = "file", required = false)MultipartFile multipartFile, HttpServletRequest request) throws Exception{
+                                      @RequestPart(value = "file", required = false)MultipartFile multipartFile, HttpServletRequest request) {
+
         String token = jwtTokenProvider.resolveToken(request);
         String userId = jwtTokenProvider.getUserId(token);
+        System.out.println(userId);
         User user = userService.findByUserId(userId);
         userService.updateBirthday(userId, profileRequest.getBirthday());
 

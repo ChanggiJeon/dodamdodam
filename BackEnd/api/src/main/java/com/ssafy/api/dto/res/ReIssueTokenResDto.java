@@ -12,9 +12,9 @@ import lombok.*;
 @ApiModel(value = "ReIssueToken Response")
 public class ReIssueTokenResDto {
 
-    @ApiModelProperty(value = "jwt 토큰", required = true, example = "ex123am45ple")
+    @ApiModelProperty(value = "jwt 토큰", example = "ex123am45ple")
     private String jwtToken;
 
-    @ApiModelProperty(value = "refresh 토큰", required = true, example = "ex123am45ple")
+    @ApiModelProperty(value = "refresh 토큰", example = "ex123am45ple")
     private String refreshToken;
 }
