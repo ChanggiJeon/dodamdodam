@@ -7,7 +7,7 @@
         android:id="@+id/circle_1"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:background="@drawable/circle_box"/>
+        android:background="@drawable/box_circle"/>
     <View
         android:id="@+id/close"
         android:layout_width="25dp"

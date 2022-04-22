@@ -53,7 +53,7 @@
         android:layout_marginEnd="32dp"
         android:text=" 2022년 4월 19일 "
         android:backgroundTint="@color/beige01"
-        android:background="@drawable/roulette_box"
+        android:background="@drawable/box_roulette"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/schedule_title" />
 
@@ -64,7 +64,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="150dp"
         android:text=" 2022년 4월 19일 "
-        android:background="@drawable/roulette_box"
+        android:background="@drawable/box_roulette"
         android:backgroundTint="@color/beige01"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/schedule_title" />

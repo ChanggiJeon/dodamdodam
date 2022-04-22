@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/text_and_box"
+        android:background="@drawable/box_text"
         android:layout_marginBottom="12dp">
 
         <ImageView
@@ -17,7 +17,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/text_alarm_box"
+            android:src="@drawable/box_text_alarm"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +42,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/text_alarm_box"
+            android:src="@drawable/box_text_alarm"
             app:layout_constraintStart_toEndOf="@+id/family_profile_image"
             app:layout_constraintTop_toTopOf="parent" />
 
