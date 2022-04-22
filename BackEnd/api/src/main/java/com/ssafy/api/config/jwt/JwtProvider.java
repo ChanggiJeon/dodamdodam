@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -54,18 +53,19 @@ public class JwtProvider {
     }
 
     // Jwt 토큰에서 회원 구별 정보 추출
-    public String getUserId(String token) {
-        return Jwts.parserBuilder()
+    public Long getUserPk(String token) {
+        String userPK = Jwts.parserBuilder()
                 .setSigningKeyResolver(SigningKeyResolver.instance)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+        return Long.parseLong(userPK);
     }
 
     // Jwt 토큰으로 인증 정보를 조회
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(this.getUserPk(token)));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

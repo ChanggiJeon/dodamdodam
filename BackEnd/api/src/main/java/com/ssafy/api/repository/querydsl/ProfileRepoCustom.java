@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ProfileRepoCustom {
 
-    Profile findProfileById(String userId);
+    Profile findProfileByUserPk(Long userPK);
 
     List<MainProfileResDto> getProfileListByFamilyId(Long familyId);
 }

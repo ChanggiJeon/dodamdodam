@@ -2,7 +2,6 @@ package com.ssafy.api.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.dto.req.FindIdReqDto;
-import com.ssafy.api.entity.QFamily;
 import com.ssafy.api.entity.QProfile;
 import com.ssafy.api.entity.QUser;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +15,14 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
 
     QUser user = QUser.user;
     QProfile profile = QProfile.profile;
-    QFamily family = QFamily.family;
 
     @Override
-    public String findUserByUserInfo(FindIdReqDto request) {
+    public String findUserIdByUserInfo(FindIdReqDto request) {
 
         return jpaQueryFactory.select(user.userId)
                 .from(user)
                 .join(profile)
-                .on(user.id.eq(profile.user.id))
+                .on(user.userPk.eq(profile.user.userPk))
                 .where(user.name.eq(request.getName())
                         .and(user.birthday.eq(request.getBirthday()))
                         .and(profile.family.code.eq(request.getFamilyCode())))

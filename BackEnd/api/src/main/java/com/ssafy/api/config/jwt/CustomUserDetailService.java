@@ -15,10 +15,10 @@ public class CustomUserDetailService implements UserDetailsService {
     private final UserService userService;
 
     @Override
-    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userPk) throws UsernameNotFoundException {
         User user = null;
         try {
-            user = userService.findByUserId(userId);
+            user = userService.findByUserPk(Long.parseLong(userPk));
         } catch (Exception e) {
             e.printStackTrace();
         }

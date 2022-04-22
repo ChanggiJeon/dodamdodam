@@ -17,13 +17,12 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
     private final JPAQueryFactory queryFactory;
 
     QProfile profile = QProfile.profile;
-    QFamily family = QFamily.family;
 
     @Override
-    public Profile findProfileById(String userId) {
+    public Profile findProfileByUserPk(Long userPK) {
         return queryFactory
                 .selectFrom(profile)
-                .where(profile.user.userId.eq(userId))
+                .where(profile.user.userPk.eq(userPK))
                 .fetchFirst();
     }
 
@@ -35,11 +34,10 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
                         profile.role,
                         profile.emotion,
                         profile.comment,
-                        profile.user.id.as("userPk")))
+                        profile.user.userPk.as("userPk")))
                 .from(profile)
                 .where(profile.family.id.eq(familyId))
                 .fetch();
-
     }
 
 }
