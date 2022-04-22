@@ -22,7 +22,7 @@ spring:
     url: jdbc:mysql://localhost:3306/dodamdodam?serverTimezone=Asia/Seoul
     #    url: jdbc:mysql://j6d106.p.ssafy.io:3307/?serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
+    username: ssafy
     password: ssafy
     #      password: Ssafy6!
     flyway:
@@ -34,7 +34,7 @@ spring:
       multipart:
         file-size-threshold: 15MB
         # 프로젝트 환경의 upload 파일을 저장할 경로
-        #          location: /home/dev/projects/ssafy/upload
+        location: C:\SSAFY\2_3_Project\S06P31D203\BackEnd\api\src\main\resources\upload
         max-file-size: 100MB
         max-request-size: 100MB
   mvc:
