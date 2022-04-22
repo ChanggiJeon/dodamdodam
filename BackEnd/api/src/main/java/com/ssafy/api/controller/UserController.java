@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import java.util.Optional;
-
 import static com.ssafy.api.exception.CustomErrorCode.*;
 
 @RestController
@@ -44,15 +42,10 @@ public class UserController {
     @ApiOperation(value = "ID 중복체크", notes = "<strong>아이디</strong>의 사용여부를 확인한다.")
     public CommonResult idCheck(@PathVariable String userId) {
         //공백과 특수문자가 안들어 있는상태에서 받았다고 치고 length만 유효성 검사함.
-        if (userId.length() < Validate.USER_ID_MIN.getNumber() ||
-                userId.length() > Validate.USER_ID_MAX.getNumber()) {
-            throw new CustomException(INVALID_REQUEST, "아이디는 4자 이상, 20자 이하여야 합니다.");
-        }
+        idValidate(userId);
 
-        Optional<User> user = userService.checkId(userId);
-        if (user.isPresent()) {
-            throw new CustomException(DUPLICATE_USER_ID);
-        }
+        userService.checkId(userId);
+
         return responseService.getSuccessResult("사용 가능한 아이디입니다.");
     }
 
@@ -126,9 +119,6 @@ public class UserController {
             (@RequestBody @Valid FindIdReqDto request) {
 
         String userId = userService.findUserIdWithUserInfo(request);
-        if (userId == null) {
-            throw new CustomException(NO_SUCH_USER, "입력하신 정보를 다시 확인해주세요.");
-        }
 
         return responseService.getSuccessResult(userId);
     }
@@ -161,5 +151,12 @@ public class UserController {
         userService.updateBirthday(userId, birthday);
 
         return responseService.getSuccessResult();
+    }
+
+    private void idValidate(String userId) {
+        if (userId.length() < Validate.USER_ID_MIN.getNumber() ||
+                userId.length() > Validate.USER_ID_MAX.getNumber()) {
+            throw new CustomException(INVALID_REQUEST, "아이디는 4자 이상, 20자 이하여야 합니다.");
+        }
     }
 }

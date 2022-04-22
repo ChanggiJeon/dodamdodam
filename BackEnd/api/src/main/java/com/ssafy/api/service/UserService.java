@@ -50,8 +50,10 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Optional<User> checkId(String userId) {
-        return userRepository.findUserByUserId(userId);
+    public void checkId(String userId) {
+        if(userRepository.findUserByUserId(userId).isPresent()){
+            throw new CustomException(DUPLICATE_USER_ID);
+        }
     }
 
     /**
