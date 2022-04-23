@@ -1,12 +1,16 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.config.jwt.JwtProvider;
+import com.ssafy.api.dto.req.SuggestionReactionReqDto;
 import com.ssafy.api.dto.res.MainProfileResDto;
+import com.ssafy.api.dto.res.SuggestionReactionListResDto;
+import com.ssafy.api.dto.res.SuggestionReactionResDto;
 import com.ssafy.api.dto.res.SuggestionResDto;
 import com.ssafy.api.service.MainService;
 import com.ssafy.api.service.common.CommonResult;
 import com.ssafy.api.service.common.ListResult;
 import com.ssafy.api.service.common.ResponseService;
+import com.ssafy.api.service.common.SingleResult;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -53,9 +57,17 @@ public class MainController {
 
     @GetMapping("suggestion/{familyId}")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @ApiOperation(value = "의견 제시 생성", notes = "<strong>의견 제시<strong>를 작성한다.")
+    @ApiOperation(value = "의견 리스트 목록", notes = "<strong>의견 제시 리스트<strong>를 조회한다.")
     public ListResult<SuggestionResDto> getSuggestionList(@PathVariable Long familyId) {
 
         return responseService.getListResult(mainService.getSuggestionList(familyId));
+    }
+
+    @PostMapping("suggestion/reaction")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @ApiOperation(value = "의견 리액션", notes = "<strong>의견 제시 리액션<strong>을 등록 혹은 수정한다.")
+    public SingleResult<SuggestionReactionResDto> manageSuggestionReaction(@RequestBody SuggestionReactionReqDto request){
+
+        return responseService.getSingleResult(mainService.manageSuggestionReaction(request));
     }
 }

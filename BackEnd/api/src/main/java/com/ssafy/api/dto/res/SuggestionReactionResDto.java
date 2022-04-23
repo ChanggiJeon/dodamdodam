@@ -10,12 +10,15 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "Main Suggestion Response")
+@ApiModel(value = "Suggestion Reaction Response")
 public class SuggestionReactionResDto {
 
-    @ApiModelProperty(value = "좋아요 여부", example = "true/false")
-    private boolean isLike;
+    @ApiModelProperty(value = "의견 제시 id", example = "1")
+    private Long suggestionId;
 
-    @ApiModelProperty(value = "profilePk", example = "1")
-    private Long profilePk;
+    @ApiModelProperty(value = "좋아요 갯수", example = "2")
+    private Long like;
+
+    @ApiModelProperty(value = "싫어요 갯수", example = "3")
+    private Long dislike;
 }

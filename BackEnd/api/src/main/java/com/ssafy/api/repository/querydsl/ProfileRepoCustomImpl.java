@@ -34,7 +34,7 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
                         profile.role,
                         profile.emotion,
                         profile.comment,
-                        profile.user.userPk.as("userPk")))
+                        profile.user.userPk))
                 .from(profile)
                 .where(profile.family.id.eq(familyId))
                 .fetch();
@@ -44,8 +44,8 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
     public SignInResDto findProfileIdAndFamilyIdByUserPk(Long userPk) {
         return queryFactory
                 .select(Projections.fields(SignInResDto.class,
-                                profile.id,
-                                profile.family.id))
+                        profile.id.as("profileId"),
+                        profile.family.id))
                 .from(profile)
                 .where(profile.user.userPk.eq(userPk))
                 .fetchFirst();

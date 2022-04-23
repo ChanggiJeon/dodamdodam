@@ -76,6 +76,11 @@ public class UserController {
         userService.saveUser(user);
 
         SignInResDto userInfo = userService.findProfileIdAndFamilyId(user.getUserPk());
+
+        if(userInfo == null ){
+            userInfo = new SignInResDto();
+        }
+
         userInfo.setJwtToken(token);
         userInfo.setRefreshToken(refreshToken);
         userInfo.setName(user.getName());

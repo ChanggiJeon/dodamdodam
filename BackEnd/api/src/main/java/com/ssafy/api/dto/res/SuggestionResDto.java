@@ -21,7 +21,6 @@ public class SuggestionResDto {
     @ApiModelProperty(value = "의견 내용", example = "예시입니다.")
     private String text;
 
-    @ApiModelProperty(value = "의견 반응 List", example = "{profilePK :1, isLike: false")
-    private List<SuggestionReactionResDto> suggestionReactions;
+    private List<SuggestionReactionListResDto> suggestionReactions;
 
 }
