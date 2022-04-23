@@ -1,10 +1,8 @@
 package com.ssafy.api.config.jwt;
 
 import com.ssafy.api.entity.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwsHeader;
-import io.jsonwebtoken.Jwts;
+import com.ssafy.api.exception.CustomException;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +14,8 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
+
+import static com.ssafy.api.exception.CustomErrorCode.INVALID_TOKEN;
 
 @Component
 @RequiredArgsConstructor
@@ -81,7 +81,24 @@ public class JwtProvider {
         }
     }
 
+    //만료됐지만 유효한 jwt에서 userPk 빼오기.
+    public Long getUserPkFromExpiredToken(String jwtToken) {
+        try {
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKeyResolver(SigningKeyResolver.instance)
+                    .build().parseClaimsJws(jwtToken);
+            if (claims.getBody().getExpiration().before(new Date())) {
+                throw new CustomException(INVALID_TOKEN);
+            }
+        } catch (ExpiredJwtException e) {
+            return Long.parseLong(e.getClaims().getSubject());
+        } catch (Exception e) {
+            throw new CustomException(INVALID_TOKEN);
+        }
+        return null;
+    }
+
     public String resolveToken(HttpServletRequest req) {
         return req.getHeader("X-AUTH-TOKEN");
     }
+
 }

@@ -41,7 +41,7 @@ public class FamilyController {
         String token = jwtTokenProvider.resolveToken(request);
         Long userPk = jwtTokenProvider.getUserPk(token);
         User user = userService.findByUserPk(userPk);
-        userService.updateBirthday(userPk, familyRequest.getBirthday());
+        userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
         Family family = familyService.createFamily();
         familyService.createProfile(family, user, familyRequest);
         return responseService.getSuccessResult("그룹 생성 완료");
@@ -57,7 +57,7 @@ public class FamilyController {
         String token = jwtTokenProvider.resolveToken(request);
         Long userPk = jwtTokenProvider.getUserPk(token);
         User user = userService.findByUserPk(userPk);
-        userService.updateBirthday(userPk, familyRequest.getBirthday());
+        userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
         Family family = familyService.getFamily(familyId);
         familyService.createProfile(family, user, familyRequest);
         return responseService.getSuccessResult("그룹 가입 완료");

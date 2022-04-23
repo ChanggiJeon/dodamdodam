@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.config.jwt.JwtProvider;
 import com.ssafy.api.dto.req.FindIdReqDto;
 import com.ssafy.api.dto.req.SignUpReqDto;
 import com.ssafy.api.entity.User;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import java.time.DateTimeException;
@@ -24,6 +26,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     public User findByUserId(String userId) {
         return userRepository.findUserByUserId(userId)
@@ -60,21 +63,13 @@ public class UserService {
         }
     }
 
-    /**
-     * 지금은 refreshToken을 DB전체 조회로 찾고 있음 -> 나중에 userId를 특정해서 찾아올 수 있게 바꾸기..
-     */
-    public User findUserByRefreshToken(String refreshToken) {
-        return userRepository.findUserByRefreshToken(refreshToken)
-                .orElseThrow(() -> new CustomException(INVALID_TOKEN));
-    }
-
     public String findUserIdWithUserInfo(FindIdReqDto request) {
         return userRepository.findUserIdByUserInfo(request);
     }
 
-    public void updateBirthday(Long userPK, String birthday) {
-        User user = userRepository.findUserByUserPk(userPK)
-                .orElseThrow(() -> new CustomException(NO_SUCH_USER));
+    public void updateBirthdayWithUserPk(Long userPk, String birthday) {
+
+        User user = this.findByUserPk(userPk);
 
         String[] list = birthday.split("-");
 
@@ -90,4 +85,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public User getUserFromRequest(HttpServletRequest request){
+        return this.findByUserPk(jwtProvider.getUserPk(jwtProvider.resolveToken(request)));
+    }
+
+    public Long getUserPkFromRequest(HttpServletRequest request){
+        return jwtProvider.getUserPk(jwtProvider.resolveToken(request));
+    }
 }

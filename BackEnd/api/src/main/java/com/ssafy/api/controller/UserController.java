@@ -88,18 +88,23 @@ public class UserController {
     }
 
     @PostMapping(value = "refresh")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @ApiOperation(value = "JWT 토큰 재발급", notes = "<strong>Refresh Token<strong>으로 AccessToken을 재발급 받는다.")
-    public SingleResult<ReIssueTokenResDto> reissueAccessToken(@RequestHeader(value = "X-AUTH-TOKEN") String refreshToken) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header"),
+            @ApiImplicitParam(name = "X-AUTH-REFRESH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")
+    })
+    @ApiOperation(value = "JWT 토큰 재발급", notes = "만료된 AccessToken과 Refresh Token으로 AccessToken을 재발급 받는다.")
+    public SingleResult<ReIssueTokenResDto> reissueAccessToken(@RequestHeader(value = "X-AUTH-TOKEN") String token,
+                                                               @RequestHeader(value = "X-AUTH-REFRESH-TOKEN") String refreshToken) {
 
-        //refreshToken 만료기간 확인
-        if (!jwtProvider.validateToken(refreshToken)) {
+        Long userPk = jwtProvider.getUserPkFromExpiredToken(token);
+
+        if (userPk == null || !jwtProvider.validateToken(refreshToken)) {
             throw new CustomException(INVALID_TOKEN);
         }
 
-        User user = userService.findUserByRefreshToken(refreshToken);
+        User user = userService.findByUserPk(userPk);
 
-        String token = jwtProvider.createAccessToken(user);
+        token = jwtProvider.createAccessToken(user);
         refreshToken = jwtProvider.createRefreshToken();
 
         user.setRefreshToken(refreshToken);
@@ -119,6 +124,7 @@ public class UserController {
             (@RequestBody @Valid FindIdReqDto request) {
 
         String userId = userService.findUserIdWithUserInfo(request);
+
         return responseService.getSuccessResult(userId);
     }
 
@@ -133,6 +139,7 @@ public class UserController {
             throw new CustomException(INVALID_REQUEST, "재설정 비밀번호가 기존 비밀번호와 같습니다!");
         }
         user.updatePassword(passwordEncoder.encode(request.getPassword()));
+
         userService.saveUser(user);
 
         return responseService.getSuccessResult();
@@ -144,9 +151,9 @@ public class UserController {
     public CommonResult updatePassword
             (@PathVariable String birthday, HttpServletRequest request) {
 
-        String token = jwtProvider.resolveToken(request);
-        Long userPK = jwtProvider.getUserPk(token);
-        userService.updateBirthday(userPK, birthday);
+        Long userPK = userService.getUserPkFromRequest(request);
+
+        userService.updateBirthdayWithUserPk(userPK, birthday);
 
         return responseService.getSuccessResult();
     }
