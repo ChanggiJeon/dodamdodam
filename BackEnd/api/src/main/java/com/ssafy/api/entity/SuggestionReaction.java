@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "suggestionReaction")
-public class SuggestionReaction {
+public class SuggestionReaction extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +25,8 @@ public class SuggestionReaction {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "suggestion_id")
     private Suggestion suggestion;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
 }

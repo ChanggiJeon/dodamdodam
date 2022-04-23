@@ -32,7 +32,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/api/profile")
 public class ProfileController {
     private final ResponseService responseService;
-    private final JwtProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
     private final ProfileService profileService;
     private final UserService userService;
 
@@ -43,7 +43,7 @@ public class ProfileController {
     public CommonResult enrollProfile(@ModelAttribute @Valid ProfileReqDto profileRequest,
                                       @RequestPart(value = "file", required = false) MultipartFile multipartFile, HttpServletRequest request) {
 
-        User user = userService.getUserFromRequest(request);
+        User user = jwtProvider.getUserFromRequest(request);
 
         userService.updateBirthdayWithUserPk(user.getUserPk(), profileRequest.getBirthday());
 
@@ -68,7 +68,7 @@ public class ProfileController {
     public CommonResult updateProfile(@ModelAttribute @Valid ProfileReqDto profileRequest,
                                       @RequestPart(value = "file", required = false) MultipartFile multipartFile, HttpServletRequest request) {
 
-        Long userPk = userService.getUserPkFromRequest(request);
+        Long userPk = jwtProvider.getUserPkFromRequest(request);
 
         Profile updateResult = profileService.updateProfile(userPk, profileRequest, multipartFile, request);
 
@@ -97,7 +97,7 @@ public class ProfileController {
     @ApiOperation(value = "상태 수정", notes = "<strong>상태 수정</strong>")
     public CommonResult updateStatus(@RequestBody @Valid StatusReqDto statusReqDto, HttpServletRequest request) {
 
-        Long userPk = userService.getUserPkFromRequest(request);
+        Long userPk = jwtProvider.getUserPkFromRequest(request);
 
         Profile status = profileService.updateStatus(userPk, statusReqDto);
 
@@ -111,7 +111,7 @@ public class ProfileController {
     @ApiOperation(value = "프로필이미지 조회", notes = "<strong>프로필 이미지 조회</strong>")
     public SingleResult<String> getProfileImage(HttpServletRequest request) {
 
-        Long userPk = userService.getUserPkFromRequest(request);
+        Long userPk = jwtProvider.getUserPkFromRequest(request);
 
         return responseService.getSingleResult(profileService.findImage(userPk));
     }
