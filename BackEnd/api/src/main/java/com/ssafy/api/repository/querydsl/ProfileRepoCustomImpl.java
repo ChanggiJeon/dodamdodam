@@ -3,8 +3,8 @@ package com.ssafy.api.repository.querydsl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.dto.res.MainProfileResDto;
+import com.ssafy.api.dto.res.SignInResDto;
 import com.ssafy.api.entity.Profile;
-import com.ssafy.api.entity.QFamily;
 import com.ssafy.api.entity.QProfile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -38,6 +38,17 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
                 .from(profile)
                 .where(profile.family.id.eq(familyId))
                 .fetch();
+    }
+
+    @Override
+    public SignInResDto findProfileIdAndFamilyIdByUserPk(Long userPk) {
+        return queryFactory
+                .select(Projections.fields(SignInResDto.class,
+                                profile.id,
+                                profile.family.id))
+                .from(profile)
+                .where(profile.user.userPk.eq(userPk))
+                .fetchFirst();
     }
 
 }

@@ -1,17 +1,17 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.config.jwt.JwtProvider;
 import com.ssafy.api.dto.req.FindIdReqDto;
 import com.ssafy.api.dto.req.SignUpReqDto;
+import com.ssafy.api.dto.res.SignInResDto;
 import com.ssafy.api.entity.User;
 import com.ssafy.api.exception.CustomException;
+import com.ssafy.api.repository.ProfileRepository;
 import com.ssafy.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import java.time.DateTimeException;
@@ -25,8 +25,8 @@ import static com.ssafy.api.exception.CustomErrorCode.*;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
 
     public User findByUserId(String userId) {
         return userRepository.findUserByUserId(userId)
@@ -85,11 +85,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getUserFromRequest(HttpServletRequest request){
-        return this.findByUserPk(jwtProvider.getUserPk(jwtProvider.resolveToken(request)));
-    }
-
-    public Long getUserPkFromRequest(HttpServletRequest request){
-        return jwtProvider.getUserPk(jwtProvider.resolveToken(request));
+    public SignInResDto findProfileIdAndFamilyId(Long userPk) {
+        return profileRepository.findProfileIdAndFamilyIdByUserPk(userPk);
     }
 }

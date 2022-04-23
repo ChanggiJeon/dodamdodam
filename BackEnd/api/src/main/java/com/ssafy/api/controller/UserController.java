@@ -75,14 +75,10 @@ public class UserController {
         user.setRefreshToken(refreshToken);
         userService.saveUser(user);
 
-        SignInResDto userInfo = SignInResDto.builder()
-                .userId(user.getUserId())
-                .birthday(user.getBirthday())
-                .name(user.getName())
-                .authority(user.getAuthority())
-                .jwtToken(token)
-                .refreshToken(refreshToken)
-                .build();
+        SignInResDto userInfo = userService.findProfileIdAndFamilyId(user.getUserPk());
+        userInfo.setJwtToken(token);
+        userInfo.setRefreshToken(refreshToken);
+        userInfo.setName(user.getName());
 
         return responseService.getSingleResult(userInfo);
     }
@@ -151,7 +147,7 @@ public class UserController {
     public CommonResult updatePassword
             (@PathVariable String birthday, HttpServletRequest request) {
 
-        Long userPK = userService.getUserPkFromRequest(request);
+        Long userPK = jwtProvider.getUserPkFromRequest(request);
 
         userService.updateBirthdayWithUserPk(userPK, birthday);
 
