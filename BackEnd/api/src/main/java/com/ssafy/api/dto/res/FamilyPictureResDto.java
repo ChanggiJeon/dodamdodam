@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "FindId Response")
-public class FindIdResDto {
-    private String userId;
+@ApiModel(value = "FamilyPicture Response")
+public class FamilyPictureResDto {
+    private String picture;
 }

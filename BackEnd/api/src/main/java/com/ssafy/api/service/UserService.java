@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.dto.req.FindIdReqDto;
 import com.ssafy.api.dto.req.SignUpReqDto;
 import com.ssafy.api.entity.User;
 import com.ssafy.api.exception.CustomException;
@@ -13,7 +14,6 @@ import javax.transaction.Transactional;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static com.ssafy.api.exception.CustomErrorCode.*;
 
@@ -26,11 +26,16 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public User findByUserId(String userId) {
-        User user = userRepository.findUserByUserId(userId).orElseThrow(() -> new CustomException(NO_SUCH_USER));
-        return user;
+        return userRepository.findUserByUserId(userId)
+                .orElseThrow(() -> new CustomException(NO_SUCH_USER));
     }
 
-    @Transactional
+    public User findByUserPk(Long userPk){
+        return userRepository.findUserByUserPk(userPk)
+                .orElseThrow(() -> new CustomException(NO_SUCH_USER));
+    }
+
+    @Transactional()
     public void userSignUp(SignUpReqDto singUpRequest) {
 
         if (userRepository.getByUserId(singUpRequest.getUserId()) != null) {
@@ -49,38 +54,40 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Optional<User> checkId(String userId) {
-        return userRepository.findUserByUserId(userId);
+    public void checkId(String userId) {
+        if(userRepository.findUserByUserId(userId).isPresent()){
+            throw new CustomException(DUPLICATE_USER_ID);
+        }
     }
 
+    /**
+     * 지금은 refreshToken을 DB전체 조회로 찾고 있음 -> 나중에 userId를 특정해서 찾아올 수 있게 바꾸기..
+     */
     public User findUserByRefreshToken(String refreshToken) {
-        User user = userRepository.findUserByRefreshToken(refreshToken)
+        return userRepository.findUserByRefreshToken(refreshToken)
                 .orElseThrow(() -> new CustomException(INVALID_TOKEN));
-        return user;
     }
 
-//    public void findUserIdWithUserInfo(FindIdDto.Request request) {
-//        queryDSL 써야함!!
-//    }
+    public String findUserIdWithUserInfo(FindIdReqDto request) {
+        return userRepository.findUserIdByUserInfo(request);
+    }
 
-    public void updateBirthday(String userId, String birthday) {
-        User user = userRepository.findUserByUserId(userId)
+    public void updateBirthday(Long userPK, String birthday) {
+        User user = userRepository.findUserByUserPk(userPK)
                 .orElseThrow(() -> new CustomException(NO_SUCH_USER));
 
         String[] list = birthday.split("-");
 
-        LocalDate br = null;
         try {
             if (list[0].length() != 4 || list[1].length() != 2 || list[2].length() != 2) {
                 throw new CustomException(INVALID_REQUEST);
             }
-            br = LocalDate.of(Integer.parseInt(list[0]), Integer.parseInt(list[1]), Integer.parseInt(list[2]));
+            user.setBirthday(LocalDate.of(Integer.parseInt(list[0]), Integer.parseInt(list[1]), Integer.parseInt(list[2])));
         } catch (NumberFormatException | DateTimeException e) {
             throw new CustomException(INVALID_REQUEST);
         }
 
-        user.setBirthday(br);
-
         userRepository.save(user);
     }
+
 }

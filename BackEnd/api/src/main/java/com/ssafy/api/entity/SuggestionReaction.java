@@ -7,22 +7,22 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Builder
+@Entity
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "family")
-public class Family {
+@Table(name = "suggestionReaction")
+public class SuggestionReaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(unique = true)
-    private String code;
+    @Column(nullable = false)
+    private boolean isLike;
 
-    @Column
-    private String picture;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "suggestion_id")
+    private Suggestion suggestion;
 }

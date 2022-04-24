@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.common.Validate;
 import com.ssafy.api.config.jwt.JwtProvider;
+import com.ssafy.api.dto.req.FindIdReqDto;
 import com.ssafy.api.dto.req.SignInReqDto;
 import com.ssafy.api.dto.req.SignUpReqDto;
 import com.ssafy.api.dto.req.UpdatePasswordReqDto;
@@ -24,8 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import java.util.Optional;
-
 import static com.ssafy.api.exception.CustomErrorCode.*;
 
 @RestController
@@ -43,15 +42,10 @@ public class UserController {
     @ApiOperation(value = "ID 중복체크", notes = "<strong>아이디</strong>의 사용여부를 확인한다.")
     public CommonResult idCheck(@PathVariable String userId) {
         //공백과 특수문자가 안들어 있는상태에서 받았다고 치고 length만 유효성 검사함.
-        if (userId.length() < Validate.USER_ID_MIN.getNumber() ||
-                userId.length() > Validate.USER_ID_MAX.getNumber()) {
-            throw new CustomException(INVALID_REQUEST, "아이디는 4자 이상, 20자 이하여야 합니다.");
-        }
+        idValidate(userId);
 
-        Optional<User> user = userService.checkId(userId);
-        if (user.isPresent()) {
-            throw new CustomException(DUPLICATE_USER_ID);
-        }
+        userService.checkId(userId);
+
         return responseService.getSuccessResult("사용 가능한 아이디입니다.");
     }
 
@@ -94,11 +88,10 @@ public class UserController {
     }
 
     @PostMapping(value = "refresh")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @ApiOperation(value = "JWT 토큰 재발급", notes = "<strong>Refresh Token<strong>으로 AccessToken을 재발급 받는다.")
-    public SingleResult<ReIssueTokenResDto> reissueAccessToken(HttpServletRequest request) {
+    public SingleResult<ReIssueTokenResDto> reissueAccessToken(@RequestHeader(value = "X-AUTH-TOKEN") String refreshToken) {
 
-        String refreshToken = request.getHeader("X-Auth-Token");
         //refreshToken 만료기간 확인
         if (!jwtProvider.validateToken(refreshToken)) {
             throw new CustomException(INVALID_TOKEN);
@@ -120,33 +113,14 @@ public class UserController {
         return responseService.getSingleResult(res);
     }
 
-//    @PostMapping(value = "findId", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @ApiOperation(value = "아이디 찾기", notes = "<strong>회원 정보<strong>로 아이디를 찾는다.")
-//    public ResponseEntity<FindIdDto.Response> findUserIdWithUserInfo
-//            (@RequestBody @Valid FindIdDto.Request request) {
-//
-//        userService.findUserIdWithUserInfo(request);
-//
-//        //refreshToken 만료기간 확인
-//        if (!jwtProvider.validateToken(refreshToken)) {
-//            throw new CustomException(INVALID_TOKEN);
-//        }
-//
-//        User user = userService.findUserByRefreshToken(refreshToken);
-//
-//        String token = jwtProvider.createAccessToken(user);
-//        refreshToken = jwtProvider.createRefreshToken();
-//
-//        user.setRefreshToken(refreshToken);
-//        userService.saveUser(user);
-//
-//        ReIssueTokenDto.Response res = ReIssueTokenDto.Response.builder()
-//                .jwtToken(token)
-//                .refreshToken(refreshToken)
-//                .build();
-//
-//        return new ResponseEntity<>(res, HttpStatus.OK);
-//    }
+    @PostMapping(value = "findId")
+    @ApiOperation(value = "아이디 찾기", notes = "<strong>회원 정보<strong>로 아이디를 찾는다.")
+    public CommonResult findUserIdWithUserInfo
+            (@RequestBody @Valid FindIdReqDto request) {
+
+        String userId = userService.findUserIdWithUserInfo(request);
+        return responseService.getSuccessResult(userId);
+    }
 
     @PostMapping(value = "newpassword")
     @ApiOperation(value = "비밀번호 재설정", notes = "<strong>비밀번호<strong>를 재설정한다.")
@@ -165,19 +139,22 @@ public class UserController {
     }
 
     @GetMapping(value = "birthday/{birthday}")
-    @ApiOperation(value = "비밀번호 재설정", notes = "<strong>비밀번호<strong>를 재설정한다.")
+    @ApiOperation(value = "생일 정보 업데이트", notes = "<strong>생일<strong>정보를 업데이트 한다.")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     public CommonResult updatePassword
             (@PathVariable String birthday, HttpServletRequest request) {
 
-        String refreshToken = request.getHeader("X-Auth-Token");
-        System.out.println(refreshToken);
-        System.out.println(birthday);
         String token = jwtProvider.resolveToken(request);
-        String userId = jwtProvider.getUserId(token);
-        log.info("userId: {}, birthday", userId, birthday);
-        userService.updateBirthday(userId, birthday);
+        Long userPK = jwtProvider.getUserPk(token);
+        userService.updateBirthday(userPK, birthday);
 
         return responseService.getSuccessResult();
+    }
+
+    private void idValidate(String userId) {
+        if (userId.length() < Validate.USER_ID_MIN.getNumber() ||
+                userId.length() > Validate.USER_ID_MAX.getNumber()) {
+            throw new CustomException(INVALID_REQUEST, "아이디는 4자 이상, 20자 이하여야 합니다.");
+        }
     }
 }
