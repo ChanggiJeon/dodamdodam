@@ -11,7 +11,7 @@
         android:layout_width="330dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        android:background="@drawable/search_album_box"
+        android:background="@drawable/box_search_album"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
