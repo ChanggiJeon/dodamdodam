@@ -40,7 +40,7 @@ public class FamilyService {
                     key += (rnd.nextInt(10));
                 }
             }
-            if (familyRepository.findByCode(key) == null) {
+            if (familyRepository.findFamilyByCode(key) == null) {
                 break;
             }
         }
@@ -48,6 +48,7 @@ public class FamilyService {
                 .code(key)
                 .build());
     }
+    // profile 생성
     public void createProfile(Family family, User user, FamilyJoinDto familyRequest) {
         Profile profile = Profile.builder()
                 .role(familyRequest.getRole())
@@ -58,16 +59,18 @@ public class FamilyService {
         profileRepository.save(profile);
     }
 
+    // family_id로 Family 객체 조회
     public Family getFamily(long familyId) {
-        Family family = familyRepository.findById(familyId);
+        Family family = familyRepository.findFamilyById(familyId);
         if (family == null) {
             throw new CustomException(INVALID_REQUEST, "해당 그룹이 없습니다.");
         }
         return family;
     }
 
+    // code로 family 조회
     public Family checkCode(String code) {
-        Family family = familyRepository.findByCode(code);
+        Family family = familyRepository.findFamilyByCode(code);
         if (family == null) {
             throw new CustomException(INVALID_REQUEST, "해당 그룹이 없습니다.");
         }
@@ -75,22 +78,27 @@ public class FamilyService {
     }
 
 
-    public long fromUserIdToFamilyId(HttpServletRequest request) {
+    public void familyExistCheck(Long userPK) {
+        if (profileRepository.findProfileByUserPk(userPK) != null) {
+            throw new CustomException(INVALID_REQUEST, "이미 가입된 그룹이 있습니다.");
+        }
+    }
+    public Family fromUserIdToFamilyId(HttpServletRequest request) {
         String token = jwtTokenProvider.resolveToken(request);
         Long userPk = jwtTokenProvider.getUserPk(token);
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         if (profile == null) {
             throw new CustomException(INVALID_REQUEST, "그룹에 권한이 없습니다.");
         }
-        return profile.getFamily().getId();
+        long familyId = profile.getFamily().getId();
+        return familyRepository.findFamilyById(familyId);
     }
 
-    public void updateFamilyPicture(long familyId, MultipartFile picture, String path) {
+    public void updateFamilyPicture(Family family, MultipartFile picture, String path) {
         String originFileName = picture.getOriginalFilename();
         UUID uuid = UUID.randomUUID();
         String saveFileName = "/resources/familyPicture/" + uuid.toString() + "_" + originFileName;
         File dir = new File(path + "/resources/familyPicture");
-        Family family = familyRepository.findById(familyId);
         if(!dir.exists()) {
             dir.mkdirs();
         }
@@ -109,7 +117,4 @@ public class FamilyService {
                 .build());
     }
 
-    public Family getFamilyPicture(long familyId) {
-        return familyRepository.findById(familyId);
-    }
 }
