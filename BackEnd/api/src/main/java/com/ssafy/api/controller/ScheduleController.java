@@ -2,7 +2,7 @@ package com.ssafy.api.controller;
 
 
 import com.ssafy.api.config.jwt.JwtProvider;
-import com.ssafy.api.dto.req.NewScheduleDto;
+import com.ssafy.api.dto.req.NewScheduleReqDto;
 import com.ssafy.api.dto.res.ScheduleDetailResDto;
 import com.ssafy.api.entity.Family;
 import com.ssafy.api.entity.Schedule;
@@ -11,6 +11,7 @@ import com.ssafy.api.service.FamilyService;
 import com.ssafy.api.service.ScheduleService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.common.CommonResult;
+import com.ssafy.api.service.common.ListResult;
 import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
 import io.swagger.annotations.ApiImplicitParam;
@@ -36,11 +37,10 @@ public class ScheduleController {
 
     @PostMapping("/create")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    public CommonResult createSchedule (@RequestBody @Valid NewScheduleDto scheduleReq, HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPk = jwtTokenProvider.getUserPk(token);
+    public CommonResult createSchedule (@RequestBody @Valid NewScheduleReqDto scheduleReq, HttpServletRequest request) {
+        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         User user = userService.findByUserPk(userPk);
-        Family family = familyService.fromUserIdToFamilyId(request);
+        Family family = familyService.fromUserIdToFamily(request);
         scheduleService.createSchedule(scheduleReq, family, user);
         return responseService.getSuccessResult("일정 생성 완료");
     }
@@ -48,8 +48,8 @@ public class ScheduleController {
     @GetMapping("/{scheduleId}")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     public SingleResult<ScheduleDetailResDto> scheduleDetail(@PathVariable long scheduleId, HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamilyId(request);
-        Schedule schedule = scheduleService.getSchedule(scheduleId);
+        Family family = familyService.fromUserIdToFamily(request);
+        Schedule schedule = scheduleService.getSchedule(scheduleId, family);
         ScheduleDetailResDto res = ScheduleDetailResDto.builder()
                 .id(scheduleId)
                 .title(schedule.getTitle())
@@ -65,12 +65,26 @@ public class ScheduleController {
     @PatchMapping("/{scheduleId}")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     public CommonResult updateSchedule(@PathVariable long scheduleId,
-                                       NewScheduleDto scheduleReq,
+                                       NewScheduleReqDto scheduleReq,
                                        HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamilyId(request);
-        Schedule schedule = scheduleService.getSchedule(scheduleId);
+        Family family = familyService.fromUserIdToFamily(request);
+        Schedule schedule = scheduleService.getSchedule(scheduleId, family);
         scheduleService.updateSchedule(schedule, scheduleReq);
         return responseService.getSuccessResult("일정 수정 완료");
     }
+
+    @DeleteMapping("/{scheduleId}")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    public CommonResult deleteSchedule(@PathVariable long scheduleId, HttpServletRequest request) {
+        Family family = familyService.fromUserIdToFamily(request);
+        Schedule schedule = scheduleService.getSchedule(scheduleId, family);
+        scheduleService.deleteSchedule(schedule);
+        return responseService.getSuccessResult("일정 삭제 완료");
+    }
+
+    @GetMapping("/month/{month}")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    public ListResult<>
+
 
 }

@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "Family In Request")
-public class FamilyJoinDto {
+public class FamilyJoinReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)

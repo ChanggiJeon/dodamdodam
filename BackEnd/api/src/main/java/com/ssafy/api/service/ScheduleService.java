@@ -1,6 +1,6 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.dto.req.NewScheduleDto;
+import com.ssafy.api.dto.req.NewScheduleReqDto;
 import com.ssafy.api.entity.Family;
 import com.ssafy.api.entity.Profile;
 import com.ssafy.api.entity.Schedule;
@@ -16,6 +16,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 
 import static com.ssafy.api.exception.CustomErrorCode.INVALID_REQUEST;
+import static com.ssafy.api.exception.CustomErrorCode.NOT_BELONG_FAMILY;
 
 @Service
 @Slf4j
@@ -24,7 +25,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ProfileRepository profileRepository;
 
-    public void createSchedule(NewScheduleDto scheduleReq, Family family, User user) {
+    public void createSchedule(NewScheduleReqDto scheduleReq, Family family, User user) {
         Profile profile = profileRepository.findProfileByUserPk(user.getUserPk());
         LocalDate startDate = stringToLocalDate(scheduleReq.getStartDate());
         LocalDate endDate;
@@ -60,15 +61,17 @@ public class ScheduleService {
         return result;
     }
 
-    public Schedule getSchedule (long scheduleId) {
+    public Schedule getSchedule (long scheduleId, Family family) {
         Schedule schedule = scheduleRepository.findScheduleById(scheduleId);
         if (schedule == null) {
             throw new CustomException(INVALID_REQUEST, "해당 일정이 없습니다.");
+        } else if (schedule.getFamily().getId() != family.getId()) {
+            throw new CustomException(NOT_BELONG_FAMILY);
         }
         return scheduleRepository.findScheduleById(scheduleId);
     }
 
-    public void updateSchedule(Schedule schedule, NewScheduleDto scheduleReq) {
+    public void updateSchedule(Schedule schedule, NewScheduleReqDto scheduleReq) {
         LocalDate startDate = stringToLocalDate(scheduleReq.getStartDate());
         LocalDate endDate;
         if (scheduleReq.getEndDate().length() > 0) {
@@ -81,5 +84,9 @@ public class ScheduleService {
         schedule.setStartDate(startDate);
         schedule.setEndDate(endDate);
         scheduleRepository.save(schedule);
+    }
+
+    public void deleteSchedule(Schedule schedule) {
+        scheduleRepository.delete(schedule);
     }
 }

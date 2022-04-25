@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @ApiModel(value = "ScheduleDetail Response")
 public class ScheduleDetailResDto {
-    private long id;
+    private long scheduleId;
     private String title;
     private String content;
     private String startDate;
