@@ -10,11 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Family">
         <activity
-            android:name=".ui.roulette.RouletteActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="false" />
-<!--        <activity-->
-<!--            android:name=".ScheduleActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".ui.roulette.RouletteActivity"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".ScheduleActivity" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true">
