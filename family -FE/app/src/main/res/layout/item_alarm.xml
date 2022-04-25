@@ -18,7 +18,7 @@
             android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/text_alarm_box"
+            android:background="@drawable/box_text_alarm"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

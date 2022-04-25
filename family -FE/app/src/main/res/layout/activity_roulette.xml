@@ -27,7 +27,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="10dp"
         android:elevation="20dp"
-        android:background="@drawable/roulette_box"
+        android:background="@drawable/box_roulette"
         android:fontFamily="@font/spoqahansans"
         android:gravity="center_horizontal|center_vertical"
         android:clipToOutline="true"
@@ -37,22 +37,23 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="345dp"
-        android:layout_height="80dp"
-        android:layout_marginLeft="33dp"
-        android:layout_marginRight="33dp"
-        android:layout_marginBottom="50dp"
+        android:id="@+id/roulette_family_recycler"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/roulette_allow"
         android:layout_width="74dp"
         android:layout_height="61dp"
         android:layout_marginStart="168dp"
-        android:layout_marginTop="144dp"
+        android:layout_marginTop="124dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_arrow_downward_24" />
@@ -70,5 +71,31 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/roulette_family_add"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintStart_toEndOf="@+id/roulette_family_recycler"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/roulette_start"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/circle_box"
+        android:fontFamily="@font/spoqahansans"
+        android:text="시작"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/roulette_family_recycler"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roulette_allow"
+        app:layout_constraintVertical_bias="0.423" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

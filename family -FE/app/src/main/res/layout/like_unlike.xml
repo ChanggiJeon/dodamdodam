@@ -31,7 +31,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="5dp"
-        android:background="@drawable/circle_box"
+        android:background="@drawable/box_circle"
         app:layout_constraintEnd_toEndOf="@+id/like_icon"
         app:layout_constraintStart_toStartOf="@+id/like_cnt"
         app:layout_constraintTop_toBottomOf="@+id/like_icon" />
@@ -51,7 +51,7 @@
         android:id="@+id/circle_2"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:background="@drawable/circle_box"
+        android:background="@drawable/box_circle"
         app:layout_constraintEnd_toEndOf="@+id/unlike_icon"
         app:layout_constraintStart_toStartOf="@+id/unlike_icon"
         app:layout_constraintTop_toBottomOf="@+id/unlike_icon" />

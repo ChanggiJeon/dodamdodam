@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FamilyRepository extends JpaRepository<Family, Long>, FamilyRepoCustom {
 
-    Family findByCode(String code);
+    Family findFamilyByCode(String code);
 
-    Family findById(long id);
-
+    Family findFamilyById(long id);
 }
