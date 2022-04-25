@@ -26,6 +26,7 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
     private final UserService userService;
+
     @Transactional(readOnly = false)
     public void enrollProfile(Profile profile){
         Profile result = profileRepository.save(profile);
@@ -59,7 +60,6 @@ public class ProfileService {
         profile.updateRole(profileDto.getRole());
         profile.updateNickname(profileDto.getNickname());
 
-        // userService에서 birthday 업데이트?
         return profile;
     }
 
@@ -88,7 +88,7 @@ public class ProfileService {
 //            String rootPath = file.getAbsolutePath().split("src")[0];
 
 //            String savePath = "../"+"profileImg"+separ+today;
-            String savePath = request.getServletContext().getRealPath("/profileImage");
+            String savePath = request.getServletContext().getRealPath("/resources/profileImage");
             log.info(savePath);
             if(!new File(savePath).exists()){
                 try{
@@ -102,7 +102,7 @@ public class ProfileService {
 
             String filePath = savePath+separ+saveFileName;
             multipartFile.transferTo(new File(filePath));
-            profile.updateImagePath("/profileImage/"+saveFileName);
+            profile.updateImagePath("/resources/profileImage/"+saveFileName);
             profile.updateImageName(originFileName);
         }catch (Exception e){
             e.printStackTrace();
@@ -119,7 +119,7 @@ public class ProfileService {
 //            String rootPath = file.getAbsolutePath().split("src")[0];
 
 //            String savePath = "../"+"profileImg"+separ+today;
-            String savePath = request.getServletContext().getRealPath("/profileImage");
+            String savePath = request.getServletContext().getRealPath("/resources/profileImage");
             if(!new File(savePath).exists()){
                 try{
                     new File(savePath).mkdirs();
@@ -132,7 +132,7 @@ public class ProfileService {
 
             String filePath = savePath+separ+saveFileName;
             multipartFile.transferTo(new File(filePath));
-            String realPath = "/profileImage/"+saveFileName;
+            String realPath = "/resources/profileImage/"+saveFileName;
             return realPath+"#"+originFileName;
         }catch (Exception e){
             e.printStackTrace();
@@ -144,6 +144,12 @@ public class ProfileService {
     public String findImage(Long userPk){
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         return profile.getImagePath();
+    }
+
+    @Transactional
+    public Profile findProfileByUserPk(Long userPk){
+        Profile profile = profileRepository.findProfileByUserPk(userPk);
+        return profile;
     }
 
 
