@@ -38,11 +38,11 @@ public class Profile extends BaseEntity {
     private String nickname;
 
     @Nullable
-    @Column( length = 20)
+    @Column(length = 20)
     private String mission_content;
 
     @Nullable
-    @Column( length = 200)
+    @Column(length = 200)
     private String imagePath;
 
     @Nullable
@@ -51,7 +51,7 @@ public class Profile extends BaseEntity {
 
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_pk")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -63,27 +63,27 @@ public class Profile extends BaseEntity {
 //    @JoinColumn(name = "id")
 //    private Profile profileParent;
 
-    public void updateEmotion(String emotion){
-        this.emotion =emotion;
+    public void updateEmotion(String emotion) {
+        this.emotion = emotion;
     }
 
-    public void updateComment(String comment){
+    public void updateComment(String comment) {
         this.comment = comment;
     }
 
-    public void updateRole(String role){
-        this.role=role;
+    public void updateRole(String role) {
+        this.role = role;
     }
 
-    public void updateNickname(String nickname){
+    public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
 
-    public void updateImagePath(String imagePath){
+    public void updateImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
 
-    public void updateImageName(String imageName){
+    public void updateImageName(String imageName) {
         this.imageName = imageName;
     }
 

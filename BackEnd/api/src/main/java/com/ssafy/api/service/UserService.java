@@ -2,8 +2,10 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.dto.req.FindIdReqDto;
 import com.ssafy.api.dto.req.SignUpReqDto;
+import com.ssafy.api.dto.res.SignInResDto;
 import com.ssafy.api.entity.User;
 import com.ssafy.api.exception.CustomException;
+import com.ssafy.api.repository.ProfileRepository;
 import com.ssafy.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import static com.ssafy.api.exception.CustomErrorCode.*;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
 
     public User findByUserId(String userId) {
@@ -60,21 +63,13 @@ public class UserService {
         }
     }
 
-    /**
-     * 지금은 refreshToken을 DB전체 조회로 찾고 있음 -> 나중에 userId를 특정해서 찾아올 수 있게 바꾸기..
-     */
-    public User findUserByRefreshToken(String refreshToken) {
-        return userRepository.findUserByRefreshToken(refreshToken)
-                .orElseThrow(() -> new CustomException(INVALID_TOKEN));
-    }
-
     public String findUserIdWithUserInfo(FindIdReqDto request) {
         return userRepository.findUserIdByUserInfo(request);
     }
 
-    public void updateBirthday(Long userPK, String birthday) {
-        User user = userRepository.findUserByUserPk(userPK)
-                .orElseThrow(() -> new CustomException(NO_SUCH_USER));
+    public void updateBirthdayWithUserPk(Long userPk, String birthday) {
+
+        User user = this.findByUserPk(userPk);
 
         String[] list = birthday.split("-");
 
@@ -90,4 +85,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public SignInResDto findProfileIdAndFamilyId(Long userPk) {
+        return profileRepository.findProfileIdAndFamilyIdByUserPk(userPk);
+    }
 }

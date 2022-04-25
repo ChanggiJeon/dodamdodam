@@ -41,11 +41,11 @@ public class FamilyController {
     public SingleResult<FamilyJoinResDto> createFamily(
             @RequestBody @Valid FamilyJoinDto familyRequest,
             HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPk = jwtTokenProvider.getUserPk(token);
+
+        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
-        userService.updateBirthday(userPk, familyRequest.getBirthday());
+        userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
         Family family = familyService.createFamily();
         familyService.createProfile(family, user, familyRequest);
         FamilyJoinResDto res = FamilyJoinResDto.builder()
@@ -61,10 +61,9 @@ public class FamilyController {
             @PathVariable long familyId,
             @RequestBody @Valid FamilyJoinDto familyRequest,
             HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPk = jwtTokenProvider.getUserPk(token);
+        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         User user = userService.findByUserPk(userPk);
-        userService.updateBirthday(userPk, familyRequest.getBirthday());
+        userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
         Family family = familyService.getFamily(familyId);
         familyService.createProfile(family, user, familyRequest);
         return responseService.getSuccessResult("그룹 가입 완료");
