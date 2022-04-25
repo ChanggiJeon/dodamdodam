@@ -1,4 +1,4 @@
-package com.ssafy.family
+package com.ssafy.family.ui.main.bottomFragment
 
 import android.content.ActivityNotFoundException
 import android.content.ClipData

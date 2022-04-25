@@ -1,4 +1,4 @@
-package com.ssafy.family
+package com.ssafy.family.ui.album
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

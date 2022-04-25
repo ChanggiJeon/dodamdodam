@@ -1,9 +1,10 @@
-package com.ssafy.family
+package com.ssafy.family.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.ssafy.family.R
 import com.ssafy.family.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

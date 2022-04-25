@@ -1,16 +1,15 @@
-package com.ssafy.family
+package com.ssafy.family.ui.main.bottomFragment
 
-import android.R
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.ssafy.family.Adapter.PagerAdapter
 import com.ssafy.family.databinding.FragmentHomeBinding
+import com.ssafy.family.ui.main.EventFragment
+import com.ssafy.family.ui.main.FamilyFragment
 
 
 class HomeFragment : Fragment() {

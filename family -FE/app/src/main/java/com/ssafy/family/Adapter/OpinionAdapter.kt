@@ -1,15 +1,10 @@
-package com.ssafy.family
+package com.ssafy.family.Adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ssafy.family.databinding.ItemFamilyStatusBinding
 import com.ssafy.family.databinding.ItemOpinionBinding
 
 // mainactivity - familyfragment : 우리가족(상태)

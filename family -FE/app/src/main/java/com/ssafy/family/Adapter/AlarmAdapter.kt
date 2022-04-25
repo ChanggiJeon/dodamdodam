@@ -1,17 +1,11 @@
-package com.ssafy.family
+package com.ssafy.family.Adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.family.databinding.ItemAlarmBinding
-import com.ssafy.family.databinding.ItemFamilyStatusBinding
 
 // mainactivity - familyfragment : 알림 보내기 메시지 리스트
 class AlarmAdapter(private val context: Context) : RecyclerView.Adapter<AlarmAdapter.ViewHolder>() {

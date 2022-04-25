@@ -1,4 +1,4 @@
-package com.ssafy.family
+package com.ssafy.family.Adapter
 
 import android.content.Context
 import android.util.Log

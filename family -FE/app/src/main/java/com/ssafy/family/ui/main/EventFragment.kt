@@ -1,11 +1,13 @@
-package com.ssafy.family
+package com.ssafy.family.ui.main
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ssafy.family.Adapter.TodayScheduleAdapter
 import com.ssafy.family.databinding.FragmentEventBinding
+import com.ssafy.family.Adapter.OpinionAdapter
 
 class EventFragment : Fragment() {
 

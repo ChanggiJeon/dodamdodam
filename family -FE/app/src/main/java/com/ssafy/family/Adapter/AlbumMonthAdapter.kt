@@ -1,27 +1,21 @@
-package com.ssafy.family
+package com.ssafy.family.Adapter
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ssafy.family.databinding.ItemAlbumBinding
+import com.ssafy.family.databinding.ItemMonthAlbumBinding
 
-// mainactivity - familyfragment : 알림 보내기 메시지 리스트
-class AlbumAdapter(private val context: Context) : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
+// mainactivity - albumfragment : 월 리스트 (2021.06, 1,2,3 ...)
+class AlbumMonthAdapter(private val context: Context) : RecyclerView.Adapter<AlbumMonthAdapter.ViewHolder>() {
 
     private var datas = mutableListOf<Int>(1,2,3,4,5,6,7,8)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         //val view = LayoutInflater.from(context).inflate(R.layout.item_family_status,parent,false)
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemAlbumBinding.inflate(inflater, parent, false)
+        val binding = ItemMonthAlbumBinding.inflate(inflater, parent, false)
             return ViewHolder(binding)
     }
 
@@ -40,7 +34,12 @@ class AlbumAdapter(private val context: Context) : RecyclerView.Adapter<AlbumAda
 //            }
 //        }
 
-//        itemBinding.executePendingBindings()
+        val itemBinding = holder.binding as ItemMonthAlbumBinding
+        val adapter = AlbumAdapter(context)
+//        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//        itemBinding.albumRecycler.layoutManager = layoutManager
+        itemBinding.albumRecycler.adapter = adapter
+        //itemBinding.executePendingBindings()
 //        holder.itemView.apply{
 //            setOnClickListener{
 ////                val intent = Intent(context, DetailActivity::class.java)

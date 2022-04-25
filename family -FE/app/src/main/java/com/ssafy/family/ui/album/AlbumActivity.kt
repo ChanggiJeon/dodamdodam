@@ -1,8 +1,9 @@
-package com.ssafy.family
+package com.ssafy.family.ui.album
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
+import com.ssafy.family.R
 import com.ssafy.family.databinding.ActivityAlbumBinding
 
 class AlbumActivity : AppCompatActivity() {

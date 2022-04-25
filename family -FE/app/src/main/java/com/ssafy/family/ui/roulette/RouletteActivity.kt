@@ -1,7 +1,6 @@
-package com.ssafy.family
+package com.ssafy.family.ui.roulette
 
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -10,11 +9,10 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jhdroid.view.RotateListener
-import com.ssafy.family.Adapter.DetailAlbumPhotoAdapter
 import com.ssafy.family.Adapter.RouletteFamilyAdapter
+import com.ssafy.family.R
 import com.ssafy.family.databinding.ActivityRouletteBinding
 import java.util.*
 

@@ -1,13 +1,12 @@
-package com.ssafy.family
+package com.ssafy.family.ui.main
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.tabs.TabLayoutMediator
+import com.ssafy.family.Adapter.StatusAdapter
 import com.ssafy.family.databinding.FragmentFamilyBinding
-import com.ssafy.family.databinding.FragmentHomeBinding
 
 class FamilyFragment : Fragment() {
 
