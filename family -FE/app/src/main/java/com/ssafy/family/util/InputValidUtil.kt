@@ -5,20 +5,20 @@ import java.util.*
 private const val TAG = "InputValidUtil_strait"
 object InputValidUtil {
     val nameRegex = "^[가-힣a-zA-Z]{2,20}$".toRegex()
-    val emailRegex = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$".toRegex()
+    val idRegex = "^[0-9a-z]{4,20}".toRegex()
     //영문, 숫자
-    val passRegex1 = "^(?=.*[a-zA-Z])(?=.*[0-9]).{8,14}$".toRegex()
+    val passRegex1 = "^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$".toRegex()
     //영문, 특문
-    val passRegex2 = "^(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,14}$".toRegex()
+    //val passRegex2 = "^(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,14}$".toRegex()
     //특문, 숫자
-    val passRegex3 = "^(?=.*[^a-zA-Z0-9])(?=.*[0-9]).{8,14}$".toRegex()
-    val passRegexes = listOf(passRegex1, passRegex2, passRegex3)
+    //val passRegex3 = "^(?=.*[^a-zA-Z0-9])(?=.*[0-9]).{8,14}$".toRegex()
+    val passRegexes = listOf(passRegex1)
 
     val birthDayRegex = "([0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))".toRegex()
     val phoneRegex = "^\\d{3}\\d{3,4}\\d{4}$".toRegex()
 
-    fun isValidEmail(email: String): Boolean {
-        val result = email.matches(emailRegex)
+    fun isValidId(Id: String): Boolean {
+        val result = Id.matches(idRegex)
         return result
     }
 

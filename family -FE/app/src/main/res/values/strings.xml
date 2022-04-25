@@ -47,7 +47,7 @@
     <string name="sign">회원가입</string>
 
 
-    <string name="emailErrorMessage">올바르지 않은 이메일입니다.</string>
+    <string name="idErrorMessage">올바르지 않은 아이디입니다.</string>
     <string name="nameErrorMessage">올바르지 않은 이름입니다.</string>
     <string name="passwordErrorMessage">올바르지 않은 비밀번호입니다.</string>
     <string name="passwordCheckErrorMessage">입력한 비밀번호와 다릅니다.</string>

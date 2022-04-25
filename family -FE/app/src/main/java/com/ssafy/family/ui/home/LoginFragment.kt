@@ -49,8 +49,8 @@ class LoginFragment : Fragment() {
         }
         binding.loginPageInputID.addTextChangedListener{
             val input = it.toString()
-            if(InputValidUtil.isValidEmail(input)){
-                dismissErrorOnEmail()
+            if(InputValidUtil.isValidId(input)){
+                dismissErrorOnId()
             }
         }
         binding.loginPageInputPW.addTextChangedListener{
@@ -91,15 +91,15 @@ class LoginFragment : Fragment() {
         binding.progressBarLoginFLoading.visibility = View.GONE
     }
     private fun isValidForm(): Boolean {
-        val email = binding.loginPageInputID.text.toString()
+        val id = binding.loginPageInputID.text.toString()
         val pw = binding.loginPageInputPW.text.toString()
         var flag = 1
         // 이메일 유효성 검사
-        if (InputValidUtil.isValidEmail(email)) {
-            dismissErrorOnEmail()
+        if (InputValidUtil.isValidId(id)) {
+            dismissErrorOnId()
         } else {
             flag *= 0
-            setErrorOnEmail()
+            setErrorOnId()
         }
         // 비밀번호 유효성 검사
         if (InputValidUtil.isValidPassword(pw)) {
@@ -111,11 +111,11 @@ class LoginFragment : Fragment() {
         // 전부 통과해야 flag == 1
         return flag == 1
     }
-    private fun setErrorOnEmail() {
-        binding.textInputLayoutLoginFID.error = resources.getString(R.string.emailErrorMessage)
+    private fun setErrorOnId() {
+        binding.textInputLayoutLoginFID.error = resources.getString(R.string.idErrorMessage)
     }
 
-    private fun dismissErrorOnEmail() {
+    private fun dismissErrorOnId() {
         binding.textInputLayoutLoginFID.error = null
     }
 

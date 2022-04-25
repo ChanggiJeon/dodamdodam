@@ -58,19 +58,20 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_loginF_ID"
+        style="@style/TextInputLayoutStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="488dp"
         android:layout_weight="20"
-        android:textStyle="bold"
-        android:textSize="20sp"
         android:hint="@string/ID"
-        style="@style/TextInputLayoutStyle"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:boxStrokeColor="@color/pink01"
         app:hintTextColor="@color/pink01"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="520dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_page_Input_ID"
@@ -78,28 +79,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_loginF_PW"
+        style="@style/TextInputLayoutStyle"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="572dp"
         android:layout_weight="20"
-        android:textStyle="bold"
-        android:textSize="20sp"
         android:hint="@string/PW"
-        app:hintTextColor="@color/pink01"
-        style="@style/TextInputLayoutStyle"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:boxStrokeColor="@color/pink01"
+        app:hintTextColor="@color/pink01"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="580dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_page_Input_PW"
             style="@style/TextInputStyle"
-            android:inputType="textPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
