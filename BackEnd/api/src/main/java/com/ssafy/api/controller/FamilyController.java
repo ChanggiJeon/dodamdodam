@@ -41,8 +41,8 @@ public class FamilyController {
     public SingleResult<FamilyJoinResDto> createFamily(
             @RequestBody @Valid FamilyJoinDto familyRequest,
             HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPk = jwtTokenProvider.getUserPk(token);
+
+        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
         userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
@@ -61,8 +61,7 @@ public class FamilyController {
             @PathVariable long familyId,
             @RequestBody @Valid FamilyJoinDto familyRequest,
             HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPk = jwtTokenProvider.getUserPk(token);
+        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         User user = userService.findByUserPk(userPk);
         userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
         Family family = familyService.getFamily(familyId);
