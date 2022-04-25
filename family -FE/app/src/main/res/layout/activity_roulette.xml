@@ -87,7 +87,7 @@
         android:id="@+id/roulette_start"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:background="@drawable/circle_box"
+        android:background="@drawable/box_circle"
         android:fontFamily="@font/spoqahansans"
         android:text="시작"
         android:textSize="34sp"

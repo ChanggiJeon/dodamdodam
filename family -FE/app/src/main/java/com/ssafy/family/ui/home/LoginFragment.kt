@@ -1,33 +1,31 @@
 package com.ssafy.family.ui.home
 
+
+
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.activityViewModels
 import com.ssafy.family.R
+import com.ssafy.family.data.req.LoginReq
+import com.ssafy.family.databinding.FragmentLoginBinding
+import com.ssafy.family.ui.main.MainActivity
+import com.ssafy.family.util.InputValidUtil
+import com.ssafy.family.util.LoginUtil
+import com.ssafy.family.util.Status
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LoginFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
+    private lateinit var binding: FragmentLoginBinding
+    private val loginViewModel: LoginViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -35,26 +33,98 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+       binding = FragmentLoginBinding.inflate(inflater,container,false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LoginFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+    private fun initView(){
+        binding.loginPageLoginBtn.setOnClickListener {
+            if(isValidForm()){
+                login()
+            }
+        }
+        binding.loginPageInputID.addTextChangedListener{
+            val input = it.toString()
+            if(InputValidUtil.isValidEmail(input)){
+                dismissErrorOnEmail()
+            }
+        }
+        binding.loginPageInputPW.addTextChangedListener{
+            val input = it.toString()
+            if(InputValidUtil.isValidPassword(input)){
+                dismissErrorOnPassword()
+            }
+        }
+        loginViewModel.loginRequestLiveData.observe(requireActivity()){
+            when(it.status){
+                Status.SUCCESS -> {
+                    LoginUtil.setAutoLogin(loginViewModel.isAutoLogin)
+                    LoginUtil.saveUserInfo(it.data!!.dataSet!!)
+                    startActivity(Intent(requireActivity(), MainActivity::class.java))
+                    requireActivity().finish()
+                    dismissLoading()
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireActivity(),it.message!!, Toast.LENGTH_SHORT)
+                    dismissLoading()
+                }
+                Status.LOADING -> {
+                    setLoading()
                 }
             }
+        }
+    }
+    private fun login(){
+        val id = binding.loginPageInputID.text.toString()
+        val pw = binding.loginPageInputPW.text.toString()
+        loginViewModel.Login(LoginReq(id,pw))
+    }
+    private fun setLoading() {
+        binding.progressBarLoginFLoading.visibility = View.VISIBLE
+    }
+
+    private fun dismissLoading() {
+        binding.progressBarLoginFLoading.visibility = View.GONE
+    }
+    private fun isValidForm(): Boolean {
+        val email = binding.loginPageInputID.text.toString()
+        val pw = binding.loginPageInputPW.text.toString()
+        var flag = 1
+        // 이메일 유효성 검사
+        if (InputValidUtil.isValidEmail(email)) {
+            dismissErrorOnEmail()
+        } else {
+            flag *= 0
+            setErrorOnEmail()
+        }
+        // 비밀번호 유효성 검사
+        if (InputValidUtil.isValidPassword(pw)) {
+            dismissErrorOnPassword()
+        } else {
+            flag *= 0
+            setErrorOnPassword()
+        }
+        // 전부 통과해야 flag == 1
+        return flag == 1
+    }
+    private fun setErrorOnEmail() {
+        binding.textInputLayoutLoginFID.error = resources.getString(R.string.emailErrorMessage)
+    }
+
+    private fun dismissErrorOnEmail() {
+        binding.textInputLayoutLoginFID.error = null
+    }
+
+    private fun dismissErrorOnPassword() {
+        binding.textInputLayoutLoginFPW.error = null
+    }
+
+    private fun setErrorOnPassword() {
+        binding.textInputLayoutLoginFPW.error =
+            resources.getString(R.string.passwordErrorMessage)
     }
 }

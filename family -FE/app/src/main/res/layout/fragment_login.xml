@@ -56,36 +56,51 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="415dp"/>
 
-    <EditText
-        android:id="@+id/login_page_Input_ID"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_loginF_ID"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:fontFamily="@font/spoqahansans"
-        android:text="@string/ID"
-        android:textColor="@color/pink01"
+        android:layout_weight="20"
         android:textStyle="bold"
         android:textSize="20sp"
+        android:hint="@string/ID"
+        style="@style/TextInputLayoutStyle"
+        app:boxStrokeColor="@color/pink01"
+        app:hintTextColor="@color/pink01"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="520dp"/>
+        android:layout_marginTop="520dp">
 
-    <EditText
-        android:id="@+id/login_page_Input_PW"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_page_Input_ID"
+            style="@style/TextInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_loginF_PW"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textWebPassword"
-        android:text="@string/password"
-        android:textColor="@color/pink01"
+        android:layout_weight="20"
         android:textStyle="bold"
         android:textSize="20sp"
+        android:hint="@string/PW"
+        app:hintTextColor="@color/pink01"
+        style="@style/TextInputLayoutStyle"
+        app:boxStrokeColor="@color/pink01"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="580dp"/>
+        android:layout_marginTop="580dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_page_Input_PW"
+            style="@style/TextInputStyle"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/login_page_login_btn"
@@ -102,7 +117,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="645dp"/>
+        android:layout_marginTop="655dp"/>
 
     <LinearLayout
         android:id="@+id/login_page_bottom_nav_button_box"
@@ -136,5 +151,14 @@
             android:layout_marginLeft="40dp"/>
 
     </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar_loginF_loading"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

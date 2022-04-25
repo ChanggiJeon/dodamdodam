@@ -32,6 +32,7 @@
     <string name="setting_exit_group">그룹 나가기</string>
     <string name="setting_logout">로그아웃</string>
 
+
     <string name="logout">로그아웃</string>
 
     <string name="Welcome">Welcome</string>
@@ -45,4 +46,16 @@
     <string name="find_user">계정찾기</string>
     <string name="sign">회원가입</string>
 
+
+    <string name="emailErrorMessage">올바르지 않은 이메일입니다.</string>
+    <string name="nameErrorMessage">올바르지 않은 이름입니다.</string>
+    <string name="passwordErrorMessage">올바르지 않은 비밀번호입니다.</string>
+    <string name="passwordCheckErrorMessage">입력한 비밀번호와 다릅니다.</string>
+    <string name="phoneNumberErrorMessage">올바르지 않은 휴대전화번호입니다.</string>
+    <string name="birthdayErrorMessage">올바르지 않은 생년월일입니다.</string>
+    <string name="emailNotCheckedErrorMessage">이메일 중복 검사를 눌러주세요.</string>
+    <string name="genderNotCheckedErrorMessage">성별을 선택해주세요.</string>
+    <string name="networkErrorMessage">네트워크 연결이 불안정합니다.</string>
+    <string name="unknownErrorMessage">알 수 없는 에러입니다.</string>
 </resources>
+
