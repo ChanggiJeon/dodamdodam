@@ -52,7 +52,60 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="415dp"/>
 
+<<<<<<< Updated upstream
     <ImageView
+=======
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_loginF_ID"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="20"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:hint="@string/ID"
+        style="@style/TextInputLayoutStyle"
+        app:boxStrokeColor="@color/pink01"
+        app:hintTextColor="@color/pink01"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="520dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_page_Input_ID"
+            style="@style/TextInputStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_loginF_PW"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="20"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:hint="@string/PW"
+        app:hintTextColor="@color/pink01"
+        style="@style/TextInputLayoutStyle"
+        app:boxStrokeColor="@color/pink01"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="580dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_page_Input_PW"
+            style="@style/TextInputStyle"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+    <TextView
+        android:id="@+id/login_page_login_btn"
+>>>>>>> Stashed changes
         android:layout_width="233dp"
         android:layout_height="55dp"
         android:background="@drawable/roulette_box"
@@ -74,6 +127,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+<<<<<<< Updated upstream
         android:layout_marginTop="655dp"/>
 
+=======
+        android:layout_marginTop="713dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/login_page_sign_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sign"
+            android:fontFamily="@font/spoqahansans"
+            android:textColor="@color/pink01"
+            android:textSize="16dp"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/login_page_find_user_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/find_user"
+            android:fontFamily="@font/spoqahansans"
+            android:textColor="@color/pink01"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="40dp"/>
+
+    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progressBar_loginF_loading"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+>>>>>>> Stashed changes
 </androidx.constraintlayout.widget.ConstraintLayout>
