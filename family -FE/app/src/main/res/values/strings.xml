@@ -22,6 +22,8 @@
     <string name="main_wishtree">위시트리</string>
     <string name="main_surprise">서프라이즈 파티</string>
 
+    <string name="chatting_submit">전송</string>
+
     <string name="album_search">검색</string>
 
     <string name="setting_info_edit">개인정보 변경</string>
@@ -30,9 +32,7 @@
     <string name="setting_exit_group">그룹 나가기</string>
     <string name="setting_logout">로그아웃</string>
 
-<<<<<<< Updated upstream
-</resources>
-=======
+
     <string name="logout">로그아웃</string>
 
     <string name="Welcome">Welcome</string>
@@ -46,6 +46,7 @@
     <string name="find_user">계정찾기</string>
     <string name="sign">회원가입</string>
 
+
     <string name="emailErrorMessage">올바르지 않은 이메일입니다.</string>
     <string name="nameErrorMessage">올바르지 않은 이름입니다.</string>
     <string name="passwordErrorMessage">올바르지 않은 비밀번호입니다.</string>
@@ -57,4 +58,4 @@
     <string name="networkErrorMessage">네트워크 연결이 불안정합니다.</string>
     <string name="unknownErrorMessage">알 수 없는 에러입니다.</string>
 </resources>
->>>>>>> Stashed changes
+
