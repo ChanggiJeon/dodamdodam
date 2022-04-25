@@ -51,11 +51,11 @@ public class ScheduleController {
         Family family = familyService.fromUserIdToFamily(request);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
         ScheduleDetailResDto res = ScheduleDetailResDto.builder()
-                .id(scheduleId)
+                .scheduleId(scheduleId)
                 .title(schedule.getTitle())
                 .content(schedule.getContent())
-                .startDate(schedule.getStartDate().toString())
-                .endDate(schedule.getEndDate().toString())
+                .startDate(schedule.getStartDate())
+                .endDate(schedule.getEndDate())
                 .role(schedule.getRole())
                 .build();
         return responseService.getSingleResult(res);
@@ -82,9 +82,19 @@ public class ScheduleController {
         return responseService.getSuccessResult("일정 삭제 완료");
     }
 
-    @GetMapping("/month/{month}")
+    @GetMapping("/day/{day}")
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    public ListResult<>
+    public ListResult<ScheduleDetailResDto> scheduleListDay(@PathVariable String day, HttpServletRequest request) {
+        Family family = familyService.fromUserIdToFamily(request);
+        return responseService.getListResult(scheduleService.getScheduleListByDay(family, day));
+    }
+
+//    @GetMapping("/day/{month}")
+//    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+//    public ListResult<ScheduleDetailResDto> scheduleListMonth(@PathVariable String month, HttpServletRequest request) {
+//        Family family = familyService.fromUserIdToFamily(request);
+//        return responseService.getListResult(scheduleService.getScheduleListByMonth(family, month));
+//    }
 
 
 }

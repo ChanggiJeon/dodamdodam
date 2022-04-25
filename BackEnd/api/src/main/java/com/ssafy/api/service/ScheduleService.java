@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.dto.req.NewScheduleReqDto;
+import com.ssafy.api.dto.res.ScheduleDetailResDto;
 import com.ssafy.api.entity.Family;
 import com.ssafy.api.entity.Profile;
 import com.ssafy.api.entity.Schedule;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.ssafy.api.exception.CustomErrorCode.INVALID_REQUEST;
 import static com.ssafy.api.exception.CustomErrorCode.NOT_BELONG_FAMILY;
@@ -70,6 +72,37 @@ public class ScheduleService {
         }
         return scheduleRepository.findScheduleById(scheduleId);
     }
+
+
+    public List<ScheduleDetailResDto> getScheduleListByDay (Family family, String day) {
+        String[] dayList = day.split("-");
+        LocalDate result;
+        try {
+            if (dayList[0].length() != 4 || dayList[1].length() != 2 || dayList[2].length() != 2) {
+                throw new CustomException(INVALID_REQUEST, "잘못된 날짜 입력 방식입니다.");
+            }
+            result = LocalDate.of(
+                    Integer.parseInt(dayList[0]),
+                    Integer.parseInt(dayList[1]),
+                    Integer.parseInt(dayList[2]));
+        } catch (NumberFormatException | DateTimeException e) {
+            throw new CustomException(INVALID_REQUEST);
+        }
+        return scheduleRepository.findScheduleByDay(result, family);
+    }
+
+//    public List<ScheduleDetailResDto> getScheduleListByMonth (Family family, String month) {
+//        String[] dayList = month.split("-");
+//        try {
+//            if (dayList[0].length() != 4 || dayList[1].length() != 2) {
+//                throw new CustomException(INVALID_REQUEST, "잘못된 날짜 입력 방식입니다.");
+//            }
+//        } catch (NumberFormatException | DateTimeException e) {
+//            throw new CustomException(INVALID_REQUEST);
+//        }
+//        String result = dayList[1];
+//        return scheduleRepository.findScheduleByMonth(result, family);
+//    }
 
     public void updateSchedule(Schedule schedule, NewScheduleReqDto scheduleReq) {
         LocalDate startDate = stringToLocalDate(scheduleReq.getStartDate());
