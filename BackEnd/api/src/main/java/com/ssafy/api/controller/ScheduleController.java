@@ -89,12 +89,10 @@ public class ScheduleController {
         return responseService.getListResult(scheduleService.getScheduleListByDay(family, day));
     }
 
-//    @GetMapping("/day/{month}")
-//    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-//    public ListResult<ScheduleDetailResDto> scheduleListMonth(@PathVariable String month, HttpServletRequest request) {
-//        Family family = familyService.fromUserIdToFamily(request);
-//        return responseService.getListResult(scheduleService.getScheduleListByMonth(family, month));
-//    }
-
-
+    @GetMapping("/month/{month}")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    public ListResult<ScheduleDetailResDto> scheduleListMonth(@PathVariable String month, HttpServletRequest request) {
+        Family family = familyService.fromUserIdToFamily(request);
+        return responseService.getListResult(scheduleService.getScheduleListByMonth(family, month));
+    }
 }

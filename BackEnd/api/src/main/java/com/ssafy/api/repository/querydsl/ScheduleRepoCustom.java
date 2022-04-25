@@ -7,6 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ScheduleRepoCustom {
-//    List<ScheduleDetailResDto> findScheduleByMonth(LocalDate month, Family family);
+    List<ScheduleDetailResDto> findScheduleByMonth(Integer month, Family family);
     List<ScheduleDetailResDto> findScheduleByDay(LocalDate day, Family family);
 }

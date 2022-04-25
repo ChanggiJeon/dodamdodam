@@ -88,21 +88,29 @@ public class ScheduleService {
         } catch (NumberFormatException | DateTimeException e) {
             throw new CustomException(INVALID_REQUEST);
         }
-        return scheduleRepository.findScheduleByDay(result, family);
+        List<ScheduleDetailResDto> scheduleRes = scheduleRepository.findScheduleByDay(result, family);
+        if (scheduleRes.isEmpty()) {
+            throw new CustomException(INVALID_REQUEST, "해당하는 스케줄이 없습니다.");
+        }
+        return scheduleRes;
     }
 
-//    public List<ScheduleDetailResDto> getScheduleListByMonth (Family family, String month) {
-//        String[] dayList = month.split("-");
-//        try {
-//            if (dayList[0].length() != 4 || dayList[1].length() != 2) {
-//                throw new CustomException(INVALID_REQUEST, "잘못된 날짜 입력 방식입니다.");
-//            }
-//        } catch (NumberFormatException | DateTimeException e) {
-//            throw new CustomException(INVALID_REQUEST);
-//        }
-//        String result = dayList[1];
-//        return scheduleRepository.findScheduleByMonth(result, family);
-//    }
+    public List<ScheduleDetailResDto> getScheduleListByMonth (Family family, String month) {
+        String[] dayList = month.split("-");
+        try {
+            if (dayList[0].length() != 4 || dayList[1].length() != 2) {
+                throw new CustomException(INVALID_REQUEST, "잘못된 날짜 입력 방식입니다.");
+            }
+        } catch (NumberFormatException | DateTimeException e) {
+            throw new CustomException(INVALID_REQUEST);
+        }
+        Integer result = Integer.parseInt(dayList[1]);
+        List<ScheduleDetailResDto> scheduleRes = scheduleRepository.findScheduleByMonth(result, family);
+        if (scheduleRes.isEmpty()) {
+            throw new CustomException(INVALID_REQUEST, "해당하는 스케줄이 없습니다.");
+        }
+        return scheduleRes;
+    }
 
     public void updateSchedule(Schedule schedule, NewScheduleReqDto scheduleReq) {
         LocalDate startDate = stringToLocalDate(scheduleReq.getStartDate());

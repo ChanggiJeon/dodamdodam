@@ -17,24 +17,24 @@ public class ScheduleRepoCustomImpl implements ScheduleRepoCustom{
 
     private final JPAQueryFactory queryFactory;
     QSchedule schedule = QSchedule.schedule;
-//    @Override
-//    public List<ScheduleDetailResDto> findScheduleByMonth(String  month, Family family) {
-//        return queryFactory
-//                .select(Projections.fields(ScheduleDetailResDto.class,
-//                        schedule.title,
-//                        schedule.content,
-//                        schedule.startDate,
-//                        schedule.endDate,
-//                        schedule.role))
-//                .from(schedule)
-//                .where(schedule.family.eq(family).and((schedule.startDate.month().toString() = month)
-//                                .or(schedule.startDate.eq(month)))
-//                                .and(schedule.endDate.after(month)
-//                                        .or(schedule.endDate.eq(month)))))
-//                .fetch();
+    @Override
+    public List<ScheduleDetailResDto> findScheduleByMonth(Integer month, Family family) {
+        return queryFactory
+                .select(Projections.fields(ScheduleDetailResDto.class,
+                        schedule.title,
+                        schedule.content,
+                        schedule.startDate,
+                        schedule.endDate,
+                        schedule.role))
+                .from(schedule)
+                .where(schedule.family.eq(family)
+                        .and((schedule.startDate.month().loe(month))
+                                .and(schedule.endDate.month().goe(month)))
+                )
+                .fetch();
 
 
-//    }
+    }
 
     @Override
     public List<ScheduleDetailResDto> findScheduleByDay(LocalDate day, Family family) {
@@ -48,10 +48,9 @@ public class ScheduleRepoCustomImpl implements ScheduleRepoCustom{
                         schedule.endDate,
                         schedule.role))
                 .from(schedule)
-                .where(schedule.family.eq(family).and((schedule.startDate.before(day)
-                                .or(schedule.startDate.eq(day)))
-                                .and(schedule.endDate.after(day)
-                                        .or(schedule.endDate.eq(day)))))
+                .where(schedule.family.eq(family)
+                        .and((schedule.startDate.loe(day)
+                                .and(schedule.endDate.goe(day)))))
                 .fetch();
 
     }
