@@ -32,23 +32,22 @@ import javax.validation.Valid;
 @RequestMapping(value = "/api/profile")
 public class ProfileController {
     private final ResponseService responseService;
-    private final JwtProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
     private final ProfileService profileService;
     private final UserService userService;
 
 
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "프로필 등록", notes = "<strong>프로필 등록</strong>")
     public CommonResult enrollProfile(@ModelAttribute @Valid ProfileReqDto profileRequest,
-                                      @RequestPart(value = "file", required = false)MultipartFile multipartFile, HttpServletRequest request) {
+                                      @RequestPart(value = "file", required = false) MultipartFile multipartFile, HttpServletRequest request) {
 
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPk = jwtTokenProvider.getUserPk(token);
-        User user = userService.findByUserPk(userPk);
-        userService.updateBirthday(userPk, profileRequest.getBirthday());
+        User user = jwtProvider.getUserFromRequest(request);
 
-        String[] imageInfo  = profileService.enrollImage(multipartFile, request).split("#");
+        userService.updateBirthdayWithUserPk(user.getUserPk(), profileRequest.getBirthday());
+
+        String[] imageInfo = profileService.enrollImage(multipartFile, request).split("#");
         //family코드로 넣을 부분 필요
         Profile profile = Profile.builder()
                 .role(profileRequest.getRole())
@@ -63,18 +62,20 @@ public class ProfileController {
         return responseService.getSuccessResult();
     }
 
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PatchMapping("")
     @ApiOperation(value = "프로필 수정", notes = "<strong>프로필 수정</strong>")
     public CommonResult updateProfile(@ModelAttribute @Valid ProfileReqDto profileRequest,
-                                      @RequestPart(value = "file", required = false)MultipartFile multipartFile, HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPK = jwtTokenProvider.getUserPk(token);
-//        User user = userService.findByUserId(userId);
-        userService.updateBirthday(userPK, profileRequest.getBirthday());
-        Profile updateResult = profileService.updateProfile(userPK, profileRequest, multipartFile, request);
-        userService.updateBirthday(userPK, profileRequest.getBirthday());
+                                      @RequestPart(value = "file", required = false) MultipartFile multipartFile, HttpServletRequest request) {
+
+        Long userPk = jwtProvider.getUserPkFromRequest(request);
+
+        Profile updateResult = profileService.updateProfile(userPk, profileRequest, multipartFile, request);
+
+        userService.updateBirthdayWithUserPk(userPk, profileRequest.getBirthday());
+
         profileService.enrollProfile(updateResult);
+
         return responseService.getSuccessResult();
     }
 
@@ -91,23 +92,27 @@ public class ProfileController {
 //    }
 
 
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @PatchMapping("/status")
     @ApiOperation(value = "상태 수정", notes = "<strong>상태 수정</strong>")
     public CommonResult updateStatus(@RequestBody @Valid StatusReqDto statusReqDto, HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPk = jwtTokenProvider.getUserPk(token);
+
+        Long userPk = jwtProvider.getUserPkFromRequest(request);
+
         Profile status = profileService.updateStatus(userPk, statusReqDto);
+
         profileService.enrollProfile(status);
+
         return responseService.getSuccessResult();
     }
 
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping("/image")
     @ApiOperation(value = "프로필이미지 조회", notes = "<strong>프로필 이미지 조회</strong>")
     public SingleResult<String> getProfileImage(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPk = jwtTokenProvider.getUserPk(token);
+
+        Long userPk = jwtProvider.getUserPkFromRequest(request);
+
         return responseService.getSingleResult(profileService.findImage(userPk));
     }
 
