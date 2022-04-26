@@ -26,6 +26,7 @@ public class AlbumRepoCustomImpl implements AlbumRepoCustom{
                 .from(album)
                 .where(album.family.id.eq(familyId))
                 .leftJoin(album.family, family)
+                .fetchJoin()
                 .orderBy(album.date.desc())
                 .fetch();
     }
@@ -36,35 +37,14 @@ public class AlbumRepoCustomImpl implements AlbumRepoCustom{
         return jpaQueryFactory.select(album)
                 .from(album)
                 .where(album.id.eq(albumId))
+                .leftJoin(album.family, family)
+                .fetchJoin()
                 .fetchOne();
     }
 
-    @Override
-    public List<String> findHashTagsByAlbumId(long albumId) {
-        return jpaQueryFactory.select(hashTag.text)
-                .from(hashTag)
-                .where(hashTag.album.id.eq(albumId))
-                .leftJoin(hashTag.album, album)
-                .fetch();
-    }
 
 
-    @Override
-    public List<Picture> findPicturesByAlbumId(long albumId) {
-        return jpaQueryFactory.select(picture)
-                .from(picture)
-                .where(picture.album.id.eq(albumId))
-                .leftJoin(picture.album, album)
-                .fetch();
-    }
 
-    @Override
-    public Picture findPictureByPictureId(long pictureId) {
-        return jpaQueryFactory.select(picture)
-                .from(picture)
-                .where(picture.id.eq(pictureId))
-                .fetchOne();
-    }
 
 
 }
