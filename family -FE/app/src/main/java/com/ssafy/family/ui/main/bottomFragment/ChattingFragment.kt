@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ssafy.family.Adapter.ChattingAdapter
+import com.ssafy.family.ui.Adapter.ChattingAdapter
 import com.ssafy.family.databinding.FragmentChattingBinding
 
 class ChattingFragment : Fragment() {

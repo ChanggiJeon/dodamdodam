@@ -11,7 +11,7 @@ import android.view.Window
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jhdroid.view.RotateListener
-import com.ssafy.family.Adapter.RouletteFamilyAdapter
+import com.ssafy.family.ui.Adapter.RouletteFamilyAdapter
 import com.ssafy.family.R
 import com.ssafy.family.databinding.ActivityRouletteBinding
 import java.util.*

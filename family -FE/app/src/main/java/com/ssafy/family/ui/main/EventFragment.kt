@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ssafy.family.Adapter.TodayScheduleAdapter
+import com.ssafy.family.ui.Adapter.TodayScheduleAdapter
 import com.ssafy.family.databinding.FragmentEventBinding
-import com.ssafy.family.Adapter.OpinionAdapter
+import com.ssafy.family.ui.Adapter.OpinionAdapter
 
 class EventFragment : Fragment() {
 

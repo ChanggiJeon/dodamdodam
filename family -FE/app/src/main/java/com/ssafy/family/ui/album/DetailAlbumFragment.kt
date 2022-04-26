@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ssafy.family.Adapter.AlbumTagAdapter
-import com.ssafy.family.Adapter.DetailAlbumCommentAdapter
-import com.ssafy.family.Adapter.DetailAlbumEmojiAdapter
-import com.ssafy.family.Adapter.DetailAlbumPhotoAdapter
+import com.ssafy.family.ui.Adapter.AlbumTagAdapter
+import com.ssafy.family.ui.Adapter.DetailAlbumCommentAdapter
+import com.ssafy.family.ui.Adapter.DetailAlbumEmojiAdapter
+import com.ssafy.family.ui.Adapter.DetailAlbumPhotoAdapter
 import com.ssafy.family.databinding.FragmentDetailAlbumBinding
 
 class DetailAlbumFragment : Fragment() {

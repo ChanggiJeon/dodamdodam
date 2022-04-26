@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ssafy.family.Adapter.StatusAdapter
+import com.ssafy.family.ui.Adapter.StatusAdapter
 import com.ssafy.family.databinding.FragmentFamilyBinding
 
 class FamilyFragment : Fragment() {
