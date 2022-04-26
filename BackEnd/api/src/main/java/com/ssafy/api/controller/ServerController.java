@@ -9,11 +9,11 @@ import java.util.Arrays;
 
 @RestController
 @RequiredArgsConstructor
-public class WebRestController {
+public class ServerController {
     private final Environment env;
 
-    @GetMapping("/profile")
-    public String getProfile(){
-        return Arrays.stream(env.getActiveProfiles()).findFirst().orElse("");
+    @GetMapping("/server")
+    public String getProfile() {
+        return Arrays.stream(env.getActiveProfiles()).findFirst().orElse("empty");
     }
 }
