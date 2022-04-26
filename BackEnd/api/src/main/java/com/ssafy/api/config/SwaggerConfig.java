@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
+
 @Configuration
 public class SwaggerConfig {
 
@@ -28,13 +30,14 @@ public class SwaggerConfig {
         localServer.setDescription("local");
         localServer.setUrl("http://localhost:8080");
 
-        Server testServer = new Server();
-        testServer.setDescription("server");
-        testServer.setUrl("http://54.180.0.5");
+        Server awsServer = new Server();
+        awsServer.setDescription("aws");
+        awsServer.setUrl("http://54.180.0.5");
 
         return new OpenAPI()
                 .components(new Components())
-                .info(info);
+                .info(info)
+                .servers(Arrays.asList(localServer, awsServer));
     }
 
 }
