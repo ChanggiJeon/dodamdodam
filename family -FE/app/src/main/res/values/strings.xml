@@ -61,5 +61,11 @@
     <string name="genderNotCheckedErrorMessage">성별을 선택해주세요.</string>
     <string name="networkErrorMessage">네트워크 연결이 불안정합니다.</string>
     <string name="unknownErrorMessage">알 수 없는 에러입니다.</string>
+
+    <string name="save_yourself">\'나\'를 저장하세요!</string>
+    <string name="ask_family_code">가족 코드를 갖고 계신가요?</string>
+    <string name="please_input_family_code">가족 코드를 입력해주세요!</string>
+    <string name="nickname">나의 애칭</string>
+
 </resources>
 
