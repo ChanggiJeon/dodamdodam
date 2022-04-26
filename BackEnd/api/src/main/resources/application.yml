@@ -27,7 +27,6 @@ spring:
     open-in-view: false
 
   datasource:
-    #    url: jdbc:mysql://localhost:3306/dodamdodam?serverTimezone=Asia/Seoul
     url: jdbc:mysql://dodamdodam-database.ck7amfqzdm1n.ap-northeast-2.rds.amazonaws.com:3306/dodamdodam
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ssafy
@@ -44,19 +43,13 @@ spring:
         max-request-size: 100MB
 
 server:
-  # 프로젝트 환경의 포트 설정
   port: 8080
   domain: http://localhost
-  #  domain: http://54.180.0.5
   servlet:
     session:
       timeout: 1440m
   max-http-header-size: 3145728
 
-
-  # 푸쉬 알림 전송 시 필요한 firebase json 파일의 위치
-  #app:
-  #  firebase-config: ssafy-e6f74-firebase-adminsdk-2911y-cfd0f23f96.json
 ---
 spring:
   config:
