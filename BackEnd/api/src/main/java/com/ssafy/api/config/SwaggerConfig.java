@@ -8,6 +8,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,14 @@ public class SwaggerConfig {
                 .termsOfService("http://swagger.io/terms/")
                 .contact(new Contact().name("hanjibung").url("https://blog.jiniworld.me/").email("wjs1724@naver.com"))
                 .license(new License().name("Apache License Version 2.0").url("http://www.apache.org/licenses/LICENSE-2.0"));
+
+        Server localServer = new Server();
+        localServer.setDescription("local");
+        localServer.setUrl("http://localhost:8080");
+
+        Server testServer = new Server();
+        testServer.setDescription("server");
+        testServer.setUrl("http://54.180.0.5");
 
         return new OpenAPI()
                 .components(new Components())
