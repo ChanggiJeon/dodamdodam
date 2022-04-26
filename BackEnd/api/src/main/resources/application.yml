@@ -1,3 +1,9 @@
+jwt_token:
+  expiration_time: 30 * 60 * 1000
+
+refresh_token:
+  expiration_time: 15 * 24 * 60 * 60 * 1000
+
 # 기본 로그 레벨 설정
 #logging:
 #  level:
@@ -6,11 +12,6 @@
 #    org.hibernate.type.descriptor.sql: warn  # trace
 
 spring:
-
-  mvc:
-    pathmatch:
-      matching-strategy: ANT_PATH_MATCHER
-
   # JPA 기본 설정
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -20,49 +21,43 @@ spring:
       format_sql: true
       show_sql: true
       use_sql_comments: true
-      default_batch_fetch_size: 100
-
-
     generate-ddl: true
     open-in-view: false
 
+
   datasource:
-    url: jdbc:mysql://dodamdodam-database.ck7amfqzdm1n.ap-northeast-2.rds.amazonaws.com:3306/dodamdodam
+    url: jdbc:mysql://localhost:3306/dodamdodam?serverTimezone=Asia/Seoul
+    #    url: jdbc:mysql://j6d106.p.ssafy.io:3307/?serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ssafy
-    password: Ssafy61!
+    password: ssafy
+    #      password: Ssafy6!
     flyway:
       enabled: false
-
+    config:
+      activate:
+        on-profile: alpha
     servlet:
       multipart:
         file-size-threshold: 15MB
         # 프로젝트 환경의 upload 파일을 저장할 경로
-        #        location: C:\SSAFY\2_3_Project\S06P31D203\BackEnd\api\src\main\resources\upload
+#                  location: ./upload
         max-file-size: 100MB
         max-request-size: 100MB
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 server:
+  # 프로젝트 환경의 포트 설정
   port: 8080
   domain: http://localhost
+  #  domain: http://j6d106.p.ssafy.io
   servlet:
     session:
       timeout: 1440m
   max-http-header-size: 3145728
 
----
-spring:
-  config:
-    activate:
-      on-profile: set1
-server:
-  port: 8081
-
----
-spring:
-  config:
-    activate:
-      on-profile: set2
-server:
-  port: 8082
-
+# 푸쉬 알림 전송 시 필요한 firebase json 파일의 위치
+#app:
+#  firebase-config: ssafy-e6f74-firebase-adminsdk-2911y-cfd0f23f96.json
