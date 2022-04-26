@@ -6,6 +6,8 @@ package com.ssafy.api.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 
 @Configuration
 @EnableWebMvc
-public class SwaggerConfig {
+public class SwaggerConfig extends WebMvcConfigurationSupport {
     private String version;
     private String title;
 
@@ -29,7 +31,6 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
-                .host("54.180.0.5")
                 .groupName(version)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ssafy.api.controller"))
@@ -49,5 +50,14 @@ public class SwaggerConfig {
                 "Licenses",
                 "www.example.com",
                 new ArrayList<>());
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
