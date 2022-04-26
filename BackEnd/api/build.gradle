@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.ssafy'
-version = '0.0.1-SNAPSHOT-' + new Date().format("yyyyMMddHHmm")
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
