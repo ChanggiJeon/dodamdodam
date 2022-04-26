@@ -6,4 +6,5 @@ import com.ssafy.family.util.Resource
 
 interface AccountRepository {
     suspend fun login(user: LoginReq): Resource<LoginRes>
+    //회원가입
 }

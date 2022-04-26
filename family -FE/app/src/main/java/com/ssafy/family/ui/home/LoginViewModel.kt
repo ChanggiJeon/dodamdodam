@@ -16,9 +16,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(): ViewModel() {
-
-    @Inject private lateinit var accountRepository: AccountRepository
+class LoginViewModel @Inject constructor(private val accountRepository: AccountRepository): ViewModel() {
 
 //    val accountRepository = AccountRepositoryImpl()
     var isAutoLogin = LoginUtil.isAutoLogin()
@@ -33,4 +31,5 @@ class LoginViewModel @Inject constructor(): ViewModel() {
             _loginRequestLiveData.postValue(accountRepository.login(user))
         }
     }
+
 }

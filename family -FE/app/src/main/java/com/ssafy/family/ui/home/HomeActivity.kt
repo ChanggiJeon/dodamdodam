@@ -7,7 +7,9 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.family.R
 import com.ssafy.family.databinding.ActivityHomeBinding
 import com.ssafy.family.ui.schedule.AddScheduleFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {

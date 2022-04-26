@@ -12,7 +12,7 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Family">
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="true" >
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
         <!-- android:name=".ScheduleActivity" -->
         <!-- android:exported="false" /> -->
         <activity
-            android:name=".ui.home.HomeActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"/>
         <service
             android:name=".data.FcmService"
