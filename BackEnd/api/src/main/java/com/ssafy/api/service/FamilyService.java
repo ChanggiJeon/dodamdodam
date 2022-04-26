@@ -1,7 +1,7 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.config.jwt.JwtProvider;
-import com.ssafy.api.dto.req.FamilyJoinDto;
+import com.ssafy.api.dto.req.FamilyJoinReqDto;
 import com.ssafy.api.entity.Family;
 import com.ssafy.api.entity.Profile;
 import com.ssafy.api.entity.User;
@@ -49,10 +49,12 @@ public class FamilyService {
                 .build());
     }
     // profile 생성
-    public void createProfile(Family family, User user, FamilyJoinDto familyRequest) {
+    public void createProfile(Family family, User user, FamilyJoinReqDto familyRequest, String[] imageInfo) {
         Profile profile = Profile.builder()
                 .role(familyRequest.getRole())
                 .nickname(familyRequest.getNickname())
+                .imagePath(imageInfo[0])
+                .imageName(imageInfo[1])
                 .user(user)
                 .family(family)
                 .build();
@@ -83,12 +85,11 @@ public class FamilyService {
             throw new CustomException(INVALID_REQUEST, "이미 가입된 그룹이 있습니다.");
         }
     }
-    public Family fromUserIdToFamilyId(HttpServletRequest request) {
-        String token = jwtTokenProvider.resolveToken(request);
-        Long userPk = jwtTokenProvider.getUserPk(token);
+    public Family fromUserIdToFamily(HttpServletRequest request) {
+        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         if (profile == null) {
-            throw new CustomException(INVALID_REQUEST, "그룹에 권한이 없습니다.");
+            throw new CustomException(INVALID_REQUEST, "소속된 그룹이 없습니다.");
         }
         long familyId = profile.getFamily().getId();
         return familyRepository.findFamilyById(familyId);
@@ -115,6 +116,14 @@ public class FamilyService {
         familyRepository.save(Family.builder()
                 .picture(saveFileName)
                 .build());
+    }
+
+    public void checkFamilyAuthority(HttpServletRequest request) {
+        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
+        Profile profile = profileRepository.findProfileByUserPk(userPk);
+        if (profile == null) {
+            throw new CustomException(INVALID_REQUEST, "그룹에 권한이 없습니다.");
+        }
     }
 
 }
