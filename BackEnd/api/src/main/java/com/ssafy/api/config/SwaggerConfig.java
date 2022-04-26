@@ -29,6 +29,7 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
+                .host("54.180.0.5")
                 .groupName(version)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ssafy.api.controller"))
@@ -49,5 +50,4 @@ public class SwaggerConfig {
                 "www.example.com",
                 new ArrayList<>());
     }
-
 }
