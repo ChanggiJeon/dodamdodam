@@ -1,4 +1,4 @@
-package com.ssafy.family.Adapter
+package com.ssafy.family.ui.Adapter
 
 import android.content.Context
 import android.view.LayoutInflater

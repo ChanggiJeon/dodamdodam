@@ -5,16 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.family.data.repository.AccountRepository
-import com.ssafy.family.data.req.LoginReq
-import com.ssafy.family.data.res.LoginRes
+import com.ssafy.family.data.remote.req.LoginReq
+import com.ssafy.family.data.remote.res.LoginRes
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class LoginViewModel: ViewModel() {
-    val accountRepository = AccountRepository()
+@HiltViewModel
+class LoginViewModel @Inject constructor(): ViewModel() {
+
+    @Inject private lateinit var accountRepository: AccountRepository
+
+//    val accountRepository = AccountRepositoryImpl()
     var isAutoLogin = LoginUtil.isAutoLogin()
 
     private val _loginRequestLiveData = MutableLiveData<Resource<LoginRes>>()

@@ -1,8 +1,7 @@
-package com.ssafy.family.data.api
+package com.ssafy.family.data.remote.api
 
-import com.ssafy.family.data.req.LoginReq
-import com.ssafy.family.data.UserInfo
-import com.ssafy.family.data.res.LoginRes
+import com.ssafy.family.data.remote.req.LoginReq
+import com.ssafy.family.data.remote.res.LoginRes
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

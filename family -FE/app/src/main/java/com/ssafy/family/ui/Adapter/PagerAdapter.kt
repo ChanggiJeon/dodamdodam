@@ -1,4 +1,4 @@
-package com.ssafy.family.Adapter
+package com.ssafy.family.ui.Adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

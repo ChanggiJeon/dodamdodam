@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.ssafy.family.Adapter.AlbumMonthAdapter
+import com.ssafy.family.ui.Adapter.AlbumMonthAdapter
 import com.ssafy.family.databinding.FragmentAlbumBinding
 
 // mainactivity - albumfragment : 월 리스트 (2021.06, 2021,07 ...)
