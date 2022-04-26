@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -52,7 +53,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
     //룰렛
     implementation 'com.github.JhDroid:android-roulette-wheel-view:1.0.0'
 
@@ -99,4 +99,11 @@ dependencies {
     //Hilt
     implementation 'com.google.dagger:hilt-android:2.41'
     kapt 'com.google.dagger:hilt-compiler:2.41'
+
+    //fcm
+    implementation 'com.google.firebase:firebase-messaging:21.1.0'
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+
+    //notibadge
+    implementation 'com.nex3z:notification-badge:1.0.4'
 }

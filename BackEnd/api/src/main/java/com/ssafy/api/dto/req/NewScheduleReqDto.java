@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "Schedule Request")
-public class NewScheduleDto {
+public class NewScheduleReqDto {
 
     @NotBlank
     @Size(max = 20, min = 2)
@@ -35,3 +35,4 @@ public class NewScheduleDto {
     @ApiModelProperty(value = "content", example = "2022-05-27")
     private String  endDate;
 }
+
