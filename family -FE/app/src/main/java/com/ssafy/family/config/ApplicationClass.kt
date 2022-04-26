@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 class ApplicationClass: Application() {
-    val BASE_URL = "http://i6d104.p.ssafy.io:9999"
+    val BASE_URL = "http://54.180.0.5"
     val TIME_OUT = 10000L
     val SP_NAME = "fcm_message"
     companion object {
@@ -43,6 +43,7 @@ class ApplicationClass: Application() {
         livePush= MutableLiveData(readSharedPreference("fcm").size)
     }
 
+
     // 레트로핏 인스턴스를 생성하고, 레트로핏에 각종 설정값들을 지정해줍니다.
     // 연결 타임아웃시간은 5초로 지정이 되어있고, HttpLoggingInterceptor를 붙여서 어떤 요청이 나가고 들어오는지를 보여줍니다.
     fun initRetrofit() {
@@ -62,6 +63,15 @@ class ApplicationClass: Application() {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+    // SP 저장
+    private fun writeSharedPreference(key:String, value:ArrayList<String>){
+        val sp = getSharedPreferences(SP_NAME, MODE_PRIVATE)
+        val editor = sp.edit()
+        val gson = Gson()
+        val json: String = gson.toJson(value)
+        editor.putString(key, json)
+        editor.apply()
     }
     private fun readSharedPreference(key:String): ArrayList<String>{
         val sp = getSharedPreferences(SP_NAME, MODE_PRIVATE)
