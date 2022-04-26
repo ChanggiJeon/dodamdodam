@@ -1,6 +1,6 @@
 package com.ssafy.api.dto.res;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "ScheduleDetail Response")
+@Schema(name = "ScheduleDetail Response")
 public class ScheduleDetailResDto {
     private long scheduleId;
     private String title;

@@ -14,9 +14,10 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.common.CommonResult;
 import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
 @RestController
 @RequestMapping("/api/family")
@@ -38,8 +41,8 @@ public class FamilyController {
     private final JwtProvider jwtTokenProvider;
 
     @PostMapping("/create")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @ApiOperation(value = "가족 그룹 생성")
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "가족 그룹 생성")
     public SingleResult<FamilyJoinResDto> createFamily(
             @ModelAttribute @Valid FamilyJoinReqDto familyRequest,
             @RequestPart(value = "image", required = true) MultipartFile image,
@@ -59,8 +62,8 @@ public class FamilyController {
     }
 
     @PostMapping("/join/{familyId}")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @ApiOperation(value = "가족 그룹 가입")
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "가족 그룹 가입")
     public CommonResult joinFamily(
             @ModelAttribute @Valid FamilyJoinReqDto familyRequest,
             @PathVariable long familyId,
@@ -80,8 +83,8 @@ public class FamilyController {
     }
 
     @GetMapping("/code/check/{code}")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @ApiOperation(value = "가족 코드 검사", notes = "<strong>가족 코드<strong>를 받아 가족 id를 조회한다.")
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "가족 코드 검사", description = "<strong>가족 코드<strong>를 받아 가족 id를 조회한다.")
     public SingleResult<FamilyIdResDto> checkFamilyCode(@PathVariable String code, HttpServletRequest request) {
         Family family = familyService.checkCode(code);
         FamilyIdResDto res = FamilyIdResDto.builder()
@@ -91,8 +94,8 @@ public class FamilyController {
     }
 
     @GetMapping("/code")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @ApiOperation(value = "가족 코드 조회", notes = "<strong>가족 id<strong>를 받아 가족 코드를 조회한다.")
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "가족 코드 조회", description = "<strong>가족 id<strong>를 받아 가족 코드를 조회한다.")
     public SingleResult<FamilyCodeResDto> getFamilyCode(HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         FamilyCodeResDto res = FamilyCodeResDto.builder()
@@ -102,8 +105,8 @@ public class FamilyController {
     }
 
     @PutMapping("/picture")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @ApiOperation(value = "가족 사진 수정", notes = "<strong>가족 사진<stong>을 추가 및 수정한다.")
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "가족 사진 수정", description = "<strong>가족 사진<stong>을 추가 및 수정한다.")
     public CommonResult updateFamilyPicture(
             @RequestParam(value = "picture", required = true) MultipartFile picture, HttpServletRequest request) {
 
@@ -114,8 +117,8 @@ public class FamilyController {
     }
 
     @GetMapping("/picture")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-    @ApiOperation(value = "가족 사진 경로 조회", notes = "<strong>가족 사진 경로<stong>를 조회한다.")
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "가족 사진 경로 조회", description = "<strong>가족 사진 경로<stong>를 조회한다.")
     public SingleResult<FamilyPictureResDto> getFamilyPicture(HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         String picture = family.getPicture();

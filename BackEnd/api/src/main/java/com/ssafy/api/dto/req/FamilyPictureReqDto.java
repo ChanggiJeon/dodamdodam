@@ -1,7 +1,7 @@
 package com.ssafy.api.dto.req;
 
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "FamilyPicture Request")
+@Schema(name = "FamilyPicture Request")
 public class FamilyPictureReqDto {
     @NotNull
     private String picture;

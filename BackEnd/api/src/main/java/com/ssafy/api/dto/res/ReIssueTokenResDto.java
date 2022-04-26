@@ -1,7 +1,6 @@
 package com.ssafy.api.dto.res;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Builder
@@ -9,12 +8,12 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "ReIssueToken Response")
+@Schema(name = "ReIssueToken Response")
 public class ReIssueTokenResDto {
 
-    @ApiModelProperty(value = "jwt 토큰", example = "ex123am45ple")
+    @Schema(name = "jwt 토큰", example = "ex123am45ple")
     private String jwtToken;
 
-    @ApiModelProperty(value = "refresh 토큰", example = "ex123am45ple")
+    @Schema(name = "refresh 토큰", example = "ex123am45ple")
     private String refreshToken;
 }

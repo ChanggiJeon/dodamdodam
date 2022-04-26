@@ -14,9 +14,9 @@ import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.common.CommonResult;
 import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static com.ssafy.api.exception.CustomErrorCode.*;
+import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
 @RestController
 @Slf4j
@@ -39,7 +40,7 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping(value = "{userId}")
-    @ApiOperation(value = "ID 중복체크", notes = "<strong>아이디</strong>의 사용여부를 확인한다.")
+    @Operation(summary = "ID 중복체크", description = "<strong>아이디</strong>의 사용여부를 확인한다.")
     public CommonResult idCheck(@PathVariable String userId) {
         //공백과 특수문자가 안들어 있는상태에서 받았다고 치고 length만 유효성 검사함.
         idValidate(userId);
@@ -50,7 +51,7 @@ public class UserController {
     }
 
     @PostMapping(value = "signup")
-    @ApiOperation(value = "회원 가입", notes = "<strong>아이디, 패스워드, 이름</strong> 정보를 받아 회원가입 한다.")
+    @Operation(summary = "회원 가입", description = "<strong>아이디, 패스워드, 이름</strong> 정보를 받아 회원가입 한다.")
     public CommonResult userSignUp
             (@RequestBody @Valid SignUpReqDto singUpRequest) {
 
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @PostMapping(value = "signin")
-    @ApiOperation(value = "로그인", notes = "<strong>아이디, 패스워드</strong> 정보를 받아 로그인 한다.")
+    @Operation(summary = "로그인", description = "<strong>아이디, 패스워드</strong> 정보를 받아 로그인 한다.")
     public SingleResult<SignInResDto> userSignIn
             (@RequestBody @Valid SignInReqDto signInRequest) {
 
@@ -77,7 +78,7 @@ public class UserController {
 
         SignInResDto userInfo = userService.findProfileIdAndFamilyId(user.getUserPk());
 
-        if(userInfo == null ){
+        if (userInfo == null) {
             userInfo = new SignInResDto();
         }
 
@@ -89,11 +90,11 @@ public class UserController {
     }
 
     @PostMapping(value = "refresh")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header"),
-            @ApiImplicitParam(name = "X-AUTH-REFRESH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")
+    @Parameters({
+            @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER),
+            @Parameter(name = "X-AUTH-REFRESH-TOKEN", description = "JWT Refresh Token", required = true, in = HEADER),
     })
-    @ApiOperation(value = "JWT 토큰 재발급", notes = "만료된 AccessToken과 Refresh Token으로 AccessToken을 재발급 받는다.")
+    @Operation(summary = "JWT 토큰 재발급", description = "만료된 AccessToken과 Refresh Token으로 AccessToken을 재발급 받는다.")
     public SingleResult<ReIssueTokenResDto> reissueAccessToken(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                                @RequestHeader(value = "X-AUTH-REFRESH-TOKEN") String refreshToken) {
 
@@ -120,7 +121,7 @@ public class UserController {
     }
 
     @PostMapping(value = "findId")
-    @ApiOperation(value = "아이디 찾기", notes = "<strong>회원 정보<strong>로 아이디를 찾는다.")
+    @Operation(summary = "아이디 찾기", description = "<strong>회원 정보<strong>로 아이디를 찾는다.")
     public CommonResult findUserIdWithUserInfo
             (@RequestBody @Valid FindIdReqDto request) {
 
@@ -130,7 +131,7 @@ public class UserController {
     }
 
     @PostMapping(value = "newpassword")
-    @ApiOperation(value = "비밀번호 재설정", notes = "<strong>비밀번호<strong>를 재설정한다.")
+    @Operation(summary = "비밀번호 재설정", description = "<strong>비밀번호<strong>를 재설정한다.")
     public CommonResult updatePassword
             (@RequestBody @Valid UpdatePasswordReqDto request) {
 
@@ -147,8 +148,8 @@ public class UserController {
     }
 
     @GetMapping(value = "birthday/{birthday}")
-    @ApiOperation(value = "생일 정보 업데이트", notes = "<strong>생일<strong>정보를 업데이트 한다.")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @Operation(summary = "생일 정보 업데이트", description = "<strong>생일<strong>정보를 업데이트 한다.")
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
     public CommonResult updatePassword
             (@PathVariable String birthday, HttpServletRequest request) {
 
