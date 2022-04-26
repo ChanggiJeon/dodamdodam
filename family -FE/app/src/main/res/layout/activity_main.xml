@@ -7,16 +7,15 @@
     tools:context=".ui.main.MainActivity">
 
 
-    <fragment
+
+    <FrameLayout
         android:id="@+id/main_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/main_bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_main" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/main_bottom_navigation"
@@ -27,6 +26,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/nav_main" />
+        app:menu="@menu/nav_main"
+        >
+
+        <com.nex3z.notificationbadge.NotificationBadge
+            android:id="@+id/badge"
+            nbMaxTextLength="3"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="130dp"
+            android:layout_marginTop="4dp"
+            android:visibility="visible"
+            tools:visibility="visible" />
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
