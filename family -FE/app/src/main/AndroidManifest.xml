@@ -14,16 +14,19 @@
         android:theme="@style/Theme.Family"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.status.StatusActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.startsetting.StartSettingActivity"
             android:exported="false" />
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
         <activity
             android:name=".ui.roulette.RouletteActivity"
