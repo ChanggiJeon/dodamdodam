@@ -78,6 +78,7 @@ management:
       exposure:
         include:
           - "health"
+
 ---
 spring:
   config:
