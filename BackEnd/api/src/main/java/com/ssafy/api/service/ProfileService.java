@@ -4,7 +4,10 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.dto.req.ProfileReqDto;
 import com.ssafy.api.dto.req.StatusReqDto;
+import com.ssafy.api.dto.res.MainProfileResDto;
+import com.ssafy.api.entity.Family;
 import com.ssafy.api.entity.Profile;
+import com.ssafy.api.repository.FamilyRepository;
 import com.ssafy.api.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -26,10 +31,11 @@ public class ProfileService {
 
     private final ProfileRepository profileRepository;
     private final UserService userService;
+    private final FamilyRepository familyRepository;
 
     @Transactional(readOnly = false)
     public void enrollProfile(Profile profile){
-        Profile result = profileRepository.save(profile);
+        profileRepository.save(profile);
     }
 
 //    @Transactional(readOnly = false)
@@ -64,11 +70,27 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = false)
-    public Profile enrollMission(Long userPk, String missionContent){
+    public Profile createMission(Long userPk){
+        Random random = new Random();
         Profile profile = profileRepository.findProfileByUserPk(userPk);
+
+        String[] missionList = {"전화하기", "어깨 주물러드리기", "소원들어주기"};
+        Family family = familyRepository.findFamilyByUserPk(userPk);
+
+        List<MainProfileResDto> familyProfiles =profileRepository.getProfileListByFamilyId(family.getId());
+        int roleRandom = random.nextInt(familyProfiles.size());
+        int missionRandom = random.nextInt(missionList.length);
+        if(familyProfiles.get(roleRandom).getRole()==profile.getRole()){
+            roleRandom = (roleRandom+1)%familyProfiles.size();
+        }
+        String missionTarget = familyProfiles.get(roleRandom).getRole();
+        String missionContent = missionTarget+missionList[missionRandom];
         profile.updateMissionContent(missionContent);
+        profile.updateMissionTarget(missionTarget);
         return profile;
     }
+
+
 
     @Transactional(readOnly = false)
     public Profile updateStatus(Long userPk, StatusReqDto statusDto){

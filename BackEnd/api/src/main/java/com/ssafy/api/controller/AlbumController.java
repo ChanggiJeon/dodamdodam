@@ -42,7 +42,7 @@ public class AlbumController {
     private final UserService userService;
     private final ProfileService profileService;
     private final ResponseService responseService;
-//앨범수정, 앨범 리액션 등록/수정
+//앨범수정, 앨범 검색
 
     @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -71,7 +71,6 @@ public class AlbumController {
     public SingleResult<AlbumDetailResDto> getAlbum(@PathVariable long albumId, HttpServletRequest request) {
         Long userPK = jwtProvider.getUserPkFromRequest(request);
         AlbumPictureListResDto albumPictureListResDto = AlbumPictureListResDto.builder().build();
-        AlbumReactionListResDto albumReactionListResDto = AlbumReactionListResDto.builder().build();
         AlbumHashTagListResDto albumHashTagListResDto = AlbumHashTagListResDto.builder().build();
 
         Album album = albumService.findByAlbum(albumId);
@@ -124,11 +123,40 @@ public class AlbumController {
         return responseService.getSuccessResult();
     }
 
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @DeleteMapping(value = "/{albumId}/reaction", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "앨범 리액션 삭제", notes = "<strong>앨범 리액션 삭제</strong>")
+    public CommonResult deleteReaction(@PathVariable long albumId,
+                                       HttpServletRequest request){
 
+        Long userPK = jwtProvider.getUserPkFromRequest(request);
+        Album album = albumService.findByAlbum(albumId);
+        albumService.deleteAlbumReaction(userPK,album);
+        return responseService.getSuccessResult();
+    }
 
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PatchMapping(value = "/{albumId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "앨범 수정", notes = "<strong>앨범 수정</strong>")
+    public CommonResult updateAlbum(@PathVariable long albumId,@ModelAttribute @Valid AlbumReqDto albumReqDto,
+                                    @RequestParam(value = "file", required = false) List<MultipartFile> multipartFiles,
+                                    HttpServletRequest request){
 
+        Long userPK = jwtProvider.getUserPkFromRequest(request);
+        Album album = albumService.findByAlbum(albumId);
+        albumService.updateAlbum(userPK, album, albumReqDto, multipartFiles, request);
+        return responseService.getSuccessResult();
+    }
 
-
+//    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+//    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ApiOperation(value = "앨범 검색", notes = "<strong>앨범 검색 </strong>")
+//    public ListResult<AlbumResDto> searchAlbum(HttpServletRequest request){
+//
+//
+//
+//        return responseService.getListResult();
+//    }
 
 
 }

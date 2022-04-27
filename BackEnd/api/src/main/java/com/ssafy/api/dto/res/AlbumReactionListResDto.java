@@ -24,6 +24,4 @@ public class AlbumReactionListResDto {
     @ApiModelProperty(value = "역할", example = "예시입니다.")
     private String role;
 
-
-
 }
