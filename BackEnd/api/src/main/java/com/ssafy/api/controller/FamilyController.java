@@ -127,7 +127,4 @@ public class FamilyController {
                 .build();
         return responseService.getSingleResult(res);
     }
-
-    ;
-
 }

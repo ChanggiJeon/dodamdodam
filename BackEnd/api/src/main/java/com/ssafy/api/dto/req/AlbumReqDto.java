@@ -19,12 +19,10 @@ import java.util.List;
 @AllArgsConstructor
 public class AlbumReqDto {
 
-    @NotNull
-    @ApiModelProperty(value = "hashtag", required = true, example = "아들")
-    private List<String> hashTags;
+
     @NotBlank
     @Schema(name = "hashtag", required = true, example = "아들")
-    private List<HashTag> hashTags;
+    private List<String> hashTags;
 
     @NotBlank
     @Size(max = 10, min = 1)
@@ -33,14 +31,12 @@ public class AlbumReqDto {
 
 
 //    @NotEmpty
-//    @ApiModelProperty(value = "앨범 사진", required = true, example = "")
+//    @Schema(value = "앨범 사진", required = true, example = "")
 //    private List<MultipartFile> multipartFiles;
 
     @NotNull
-    @ApiModelProperty(value = "메인사진 index", required = true, example = "")
+    @Schema(name = "메인사진 index", required = true, example = "")
     private int mainIndex;
-
-
 
 
 }

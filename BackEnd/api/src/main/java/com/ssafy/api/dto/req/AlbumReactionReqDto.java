@@ -1,7 +1,7 @@
 package com.ssafy.api.dto.req;
 
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Builder
@@ -10,6 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumReactionReqDto {
-    @ApiModelProperty(value = "emoticon", required = true, example = "아들")
+    @Schema(name = "emoticon", required = true, example = "아들")
     private String emoticon;
 }

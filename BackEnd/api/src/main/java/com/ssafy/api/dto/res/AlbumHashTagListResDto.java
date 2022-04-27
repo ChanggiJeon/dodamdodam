@@ -2,8 +2,7 @@ package com.ssafy.api.dto.res;
 
 
 import com.ssafy.api.entity.HashTag;
-import com.ssafy.api.entity.Picture;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumHashTagListResDto {
-    @ApiModelProperty(value = "해시태그", example = "#여름")
+    @Schema(name = "해시태그", example = "#여름")
     private String text;
 
     public List<AlbumHashTagListResDto> fromEntity(List<HashTag> hashTags){

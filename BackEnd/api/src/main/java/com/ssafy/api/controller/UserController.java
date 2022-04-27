@@ -164,8 +164,8 @@ public class UserController {
         }
     }
     @PostMapping(value = "fcm")
-    @ApiOperation(value = "fcm 토큰 저장", notes = "<strong>fcm토큰<strong> 저장한다.")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @Operation(summary = "fcm 토큰 저장", description = "<strong>fcm토큰<strong> 저장한다.")
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
     public CommonResult updateFcmToken
             (@RequestBody FcmTokenReqDto fcmReq, HttpServletRequest request) {
         Long userPk = jwtProvider.getUserPkFromRequest(request);

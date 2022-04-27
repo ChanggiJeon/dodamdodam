@@ -25,8 +25,10 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-//yml파일 작성 용이
+
+	//yml파일 작성 용이
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
     //health check
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
@@ -40,28 +42,26 @@ dependencies {
     //yml파일 작성 용이
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-//test
+	//test
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation('org.springframework.boot:spring-boot-starter-test')
 
-//swagger
-	implementation 'io.springfox:springfox-swagger2:2.9.2'
-	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+	//swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.6'
 
-//validation
+	//validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-//jwt, security
+	//jwt, security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-//mysql
+	//mysql
 	implementation 'mysql:mysql-connector-java'
-//querydsl 추가
+	//querydsl 추가
 	implementation 'com.querydsl:querydsl-jpa'
 	implementation 'com.querydsl:querydsl-apt'
 	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
