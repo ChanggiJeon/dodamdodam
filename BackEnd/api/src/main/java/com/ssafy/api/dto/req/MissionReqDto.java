@@ -1,8 +1,7 @@
 package com.ssafy.api.dto.req;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -13,11 +12,11 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "Mission Request")
+@Schema(name = "Mission Request")
 public class MissionReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @ApiModelProperty(value = "missionContent", required = true, example = "")
+    @Schema(name = "missionContent", required = true, example = "")
     private String missionContent;
 }

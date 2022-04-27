@@ -1,7 +1,7 @@
 package com.ssafy.api.dto.res;
 
 import com.ssafy.api.entity.Picture;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -13,10 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumPictureListResDto {
-    @ApiModelProperty(value = "메인여부", example = "")
+    @Schema(name = "메인여부", example = "")
     private boolean isMain;
 
-    @ApiModelProperty(value = "사진경로", example = "")
+    @Schema(name = "사진경로", example = "")
     private String imagePath;
 
     public List<AlbumPictureListResDto> fromEntity(List<Picture> pictures){

@@ -1,7 +1,6 @@
 package com.ssafy.api.dto.req;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,12 +13,12 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "FindId Request")
+@Schema(name = "FindId Request")
 public class FindIdReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @ApiModelProperty(value = "이름", required = true, example = "싸피")
+    @Schema(name = "이름", required = true, example = "싸피")
     private String name;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -27,6 +26,6 @@ public class FindIdReqDto {
 
     @NotBlank
     @Size(max = 15, min = 15)
-    @ApiModelProperty(value = "가족 코드", required = true, example = "SSAFYFINALPROJE")
+    @Schema(name = "가족 코드", required = true, example = "SSAFYFINALPROJE")
     private String familyCode;
 }

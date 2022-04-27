@@ -3,53 +3,40 @@
  */
 package com.ssafy.api.config;
 
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-//import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
-
+import java.util.Arrays;
 
 @Configuration
-//@EnableWebMvc
-@EnableSwagger2
 public class SwaggerConfig {
-    private String version;
-    private String title;
 
     @Bean
-    public Docket apiV1() {
-        version = "v1.00";
-        title = "DodamDodam" + version;
+    public OpenAPI openAPI(@Value("${springdoc.version}") String appVersion) {
+        Info info = new Info().title("Demo API").version(appVersion)
+                .description("Spring Boot를 이용한 Demo 웹 애플리케이션 API입니다.")
+                .termsOfService("http://swagger.io/terms/")
+                .contact(new Contact().name("hanjibung").email("wjs1724@naver.com"))
+                .license(new License().name("Apache License Version 2.0").url("http://www.apache.org/licenses/LICENSE-2.0"));
 
-        return new Docket(DocumentationType.SWAGGER_2)
-                .useDefaultResponseMessages(false)
-                .groupName(version)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ssafy.api.controller"))
-                .paths(PathSelectors.ant("/api/**"))
-                .build()
-                .apiInfo(apiInfo(title, version));
+        Server localServer = new Server();
+        localServer.setDescription("local");
+        localServer.setUrl("http://localhost:8080");
 
+        Server awsServer = new Server();
+        awsServer.setDescription("aws");
+        awsServer.setUrl("https://happydodam.com");
+
+        return new OpenAPI()
+                .components(new Components())
+                .info(info)
+                .servers(Arrays.asList(localServer, awsServer));
     }
-
-    private ApiInfo apiInfo(String title, String version) {
-        return new ApiInfo(
-                title,
-                "DodamDodam API",
-                version,
-                "www.example.com",
-                new Contact("Contact Me", "www.example.com", "test@example.com"),
-                "Licenses",
-                "www.example.com",
-                new ArrayList<>());
-    }
-
 }

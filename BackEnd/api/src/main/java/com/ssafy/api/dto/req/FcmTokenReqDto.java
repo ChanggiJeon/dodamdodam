@@ -1,7 +1,6 @@
 package com.ssafy.api.dto.req;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -11,9 +10,9 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "FcmToken Request")
+@Schema(name = "FcmToken Request")
 public class FcmTokenReqDto {
     @NotNull
-    @ApiModelProperty(value = "fcm토큰", required = true, example = "c1~~")
+    @Schema(name = "fcm토큰", required = true, example = "c1~~")
     private String fcmToken;
 }

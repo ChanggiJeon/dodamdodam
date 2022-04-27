@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class HahTagRepoCustomImpl implements HashTagRepoCustom{
+public class HashTagRepoCustomImpl implements HashTagRepoCustom{
     private final JPAQueryFactory jpaQueryFactory;
     QHashTag hashTag = QHashTag.hashTag;
     QAlbum album = QAlbum.album;

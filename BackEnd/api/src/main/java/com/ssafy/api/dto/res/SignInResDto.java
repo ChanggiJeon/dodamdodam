@@ -1,7 +1,6 @@
 package com.ssafy.api.dto.res;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -10,23 +9,23 @@ import org.springframework.lang.Nullable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "SingIn Response")
+@Schema(name = "SingIn Response")
 public class SignInResDto {
 
-    @ApiModelProperty(value = "이름", example = "싸피")
+    @Schema(name = "이름", example = "싸피")
     private String name;
 
-    @ApiModelProperty(value = "accessToken", example = "SSAFYSSAFY12345")
+    @Schema(name = "accessToken", example = "SSAFYSSAFY12345")
     private String jwtToken;
 
-    @ApiModelProperty(value = "refreshToken", example = "1234512345SSAFY")
+    @Schema(name = "refreshToken", example = "1234512345SSAFY")
     private String refreshToken;
 
     @Nullable
-    @ApiModelProperty(value = "profileId", example = "1 / null")
+    @Schema(name = "profileId", example = "1 / null")
     private Long profileId;
 
     @Nullable
-    @ApiModelProperty(value = "familyId", example = "1 /  null")
+    @Schema(name = "familyId", example = "1 /  null")
     private Long familyId;
 }
