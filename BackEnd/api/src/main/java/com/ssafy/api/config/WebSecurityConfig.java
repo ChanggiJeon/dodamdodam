@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 
 @EnableWebSecurity
 @Configuration
@@ -39,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 // /와 /home, /room의 참가, 닉네임 중복확인은 모두에게 허용
                 .antMatchers("/server",
-                        "/api/user/{userID}",
+                        "/api/user/{userId}",
                         "/api/user/newpassword",
                         "/api/user/signin",
                         "/api/user/signup",

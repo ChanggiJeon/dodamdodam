@@ -41,7 +41,7 @@ spring:
         max-request-size: 100MB
 
 springdoc:
-  version: '@project.version@'
+  version: '1.00v'
   api-docs:
     path: /api-docs
   default-consumes-media-type: application/json
@@ -65,10 +65,8 @@ springdoc:
   paths-to-match:
     - /api/**
 
-
 server:
   port: 8080
-  domain: http://localhost
   servlet:
     session:
       timeout: 1440m
