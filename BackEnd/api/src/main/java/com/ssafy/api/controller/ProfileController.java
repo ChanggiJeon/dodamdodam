@@ -79,17 +79,15 @@ public class ProfileController {
         return responseService.getSuccessResult();
     }
 
-//    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
-//    @PatchMapping("/mission")
-//    @ApiOperation(value = "미션 등록", notes = "<strong>미션 등록</strong>")
-//    public CommonResult updateMission(@RequestBody @Valid MissionReqDto missionReqDto, HttpServletRequest request) {
-//        String token = jwtTokenProvider.resolveToken(request);
-//        String userId = jwtTokenProvider.getUserId(token);
-//        Profile mission = profileService.enrollMission(userId, missionReqDto.getMissionContent());
-//        profileService.enrollProfile(mission);
-//
-//        return responseService.getSuccessResult();
-//    }
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @PatchMapping("/mission")
+    @ApiOperation(value = "미션 등록", notes = "<strong>미션 등록</strong>")
+    public CommonResult createMission(HttpServletRequest request) {
+        Long userPk = jwtProvider.getUserPkFromRequest(request);
+        Profile mission = profileService.createMission(userPk);
+        profileService.enrollProfile(mission);
+        return responseService.getSuccessResult();
+    }
 
 
     @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})

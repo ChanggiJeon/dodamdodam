@@ -39,7 +39,7 @@ public class MainService {
 
     public void createSuggestion(String text, Long userPk) {
         Family family = familyRepository.findFamilyByUserPk(userPk);
-
+        System.out.println(family.toString());
         if (family == null) {
             throw new CustomException(INVALID_REQUEST);
         }
