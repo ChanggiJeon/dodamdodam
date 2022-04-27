@@ -32,7 +32,7 @@ public class SwaggerConfig {
 
         Server awsServer = new Server();
         awsServer.setDescription("aws");
-        awsServer.setUrl("https://happydodam.com");
+        awsServer.setUrl("www.happydodam.com");
 
         return new OpenAPI()
                 .components(new Components())
