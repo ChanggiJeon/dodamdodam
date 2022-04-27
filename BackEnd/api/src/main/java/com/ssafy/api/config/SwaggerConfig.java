@@ -23,7 +23,7 @@ public class SwaggerConfig {
         Info info = new Info().title("Demo API").version(appVersion)
                 .description("Spring Boot를 이용한 Demo 웹 애플리케이션 API입니다.")
                 .termsOfService("http://swagger.io/terms/")
-                .contact(new Contact().name("hanjibung").url("https://blog.jiniworld.me/").email("wjs1724@naver.com"))
+                .contact(new Contact().name("hanjibung").email("wjs1724@naver.com"))
                 .license(new License().name("Apache License Version 2.0").url("http://www.apache.org/licenses/LICENSE-2.0"));
 
         Server localServer = new Server();
@@ -32,7 +32,7 @@ public class SwaggerConfig {
 
         Server awsServer = new Server();
         awsServer.setDescription("aws");
-        awsServer.setUrl("http://54.180.0.5");
+        awsServer.setUrl("https://happydodam.com");
 
         return new OpenAPI()
                 .components(new Components())
