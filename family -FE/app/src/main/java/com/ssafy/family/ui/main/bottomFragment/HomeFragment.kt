@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
-import com.ssafy.family.Adapter.PagerAdapter
+import com.ssafy.family.ui.Adapter.PagerAdapter
 import com.ssafy.family.databinding.FragmentHomeBinding
 import com.ssafy.family.ui.main.EventFragment
 import com.ssafy.family.ui.main.FamilyFragment

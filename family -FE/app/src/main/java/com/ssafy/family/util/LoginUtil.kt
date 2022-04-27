@@ -4,7 +4,7 @@ import com.ssafy.family.config.ApplicationClass
 import com.ssafy.family.data.UserInfo
 
 object LoginUtil {
-    val ACCESS_TOKEN = "accessToken"
+    val ACCESS_TOKEN = "jwtToken"
     val REFRESH_TOKEN = "refreshToken"
     val NAME = "name"
     val PROFILE_ID = "profileId"
@@ -31,7 +31,7 @@ object LoginUtil {
 
     fun saveUserInfo(userInfo: UserInfo) {
 
-        preferences.setString(ACCESS_TOKEN, userInfo.accessToken)
+        preferences.setString(ACCESS_TOKEN, userInfo.jwtToken)
         preferences.setString(REFRESH_TOKEN, userInfo.refreshToken)
         preferences.setString(NAME, userInfo.name)
         preferences.setString(PROFILE_ID, userInfo.profileId.toString())

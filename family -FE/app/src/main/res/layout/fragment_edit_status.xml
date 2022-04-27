@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingHorizontal="25dp"
+    tools:context=".ui.status.EditStatusFragment">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/edit_status_family_image"
+        android:layout_width="330dp"
+        android:layout_height="225dp"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/ic_outline_insert_photo" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:fontFamily="@font/spoqahansans"
+        android:gravity="center"
+        android:text="@string/edit_status_guide"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/spoqahansans"
+            android:text="@string/todays_condition"
+            android:textColor="@color/pink01"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linear_layout_edit_status_imoticons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginVertical="15dp"
+                    android:src="@drawable/hushed" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginVertical="15dp"
+                    android:src="@drawable/amusing" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginVertical="15dp"
+                    android:src="@drawable/astonished" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </HorizontalScrollView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/spoqahansans"
+            android:text="@string/todays_message"
+            android:textColor="@color/pink01"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_status_input_todays_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/spoqahansans"
+            android:text="@string/sample_message"
+            android:textColor="@color/gray03"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/edit_status_confirm_btn"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_marginTop="45dp"
+        android:background="@drawable/box_roulette"
+        android:gravity="center"
+        android:text="@string/confirm"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:elevation="5dp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

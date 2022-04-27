@@ -42,6 +42,10 @@ public class Profile extends BaseEntity {
     private String mission_content;
 
     @Nullable
+    @Column(length = 20)
+    private String mission_target;
+
+    @Nullable
     @Column(length = 200)
     private String imagePath;
 
@@ -90,4 +94,6 @@ public class Profile extends BaseEntity {
     public void updateMissionContent(String mission_content) {
         this.mission_content = mission_content;
     }
+
+    public void updateMissionTarget(String mission_target){this.mission_target = mission_target;}
 }
