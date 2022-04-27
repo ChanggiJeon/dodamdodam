@@ -2,10 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.common.Validate;
 import com.ssafy.api.config.jwt.JwtProvider;
-import com.ssafy.api.dto.req.FindIdReqDto;
-import com.ssafy.api.dto.req.SignInReqDto;
-import com.ssafy.api.dto.req.SignUpReqDto;
-import com.ssafy.api.dto.req.UpdatePasswordReqDto;
+import com.ssafy.api.dto.req.*;
 import com.ssafy.api.dto.res.ReIssueTokenResDto;
 import com.ssafy.api.dto.res.SignInResDto;
 import com.ssafy.api.entity.User;
@@ -164,5 +161,15 @@ public class UserController {
                 userId.length() > Validate.USER_ID_MAX.getNumber()) {
             throw new CustomException(INVALID_REQUEST, "아이디는 4자 이상, 20자 이하여야 합니다.");
         }
+    }
+    @PostMapping(value = "fcm")
+    @ApiOperation(value = "fcm 토큰 저장", notes = "<strong>fcm토큰<strong> 저장한다.")
+    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    public CommonResult updateFcmToken
+            (@RequestBody FcmTokenReqDto fcmReq, HttpServletRequest request) {
+        Long userPk = jwtProvider.getUserPkFromRequest(request);
+        User user = userService.findByUserPk(userPk);
+        userService.updateFcmToken(user, fcmReq);
+        return responseService.getSuccessResult();
     }
 }
