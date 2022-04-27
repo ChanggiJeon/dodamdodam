@@ -17,6 +17,9 @@
             android:name=".ui.status.StatusActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.startsetting.StartSettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.home.HomeActivity"
             android:exported="true">
             <intent-filter>

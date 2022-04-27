@@ -67,6 +67,10 @@
     <string name="todays_message">오늘 한마디</string>
     <string name="confirm">확인</string>
     <string name="sample_message">Sample Message</string>
+    <string name="save_yourself">\'나\'를 저장하세요!</string>
+    <string name="ask_family_code">가족 코드를 갖고 계신가요?</string>
+    <string name="please_input_family_code">가족 코드를 입력해주세요!</string>
+    <string name="nickname">나의 애칭</string>
 
 </resources>
 
