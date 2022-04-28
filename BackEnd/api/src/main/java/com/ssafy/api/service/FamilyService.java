@@ -10,6 +10,7 @@ import com.ssafy.api.repository.FamilyRepository;
 import com.ssafy.api.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -85,8 +86,8 @@ public class FamilyService {
             throw new CustomException(INVALID_REQUEST, "이미 가입된 그룹이 있습니다.");
         }
     }
-    public Family fromUserIdToFamily(HttpServletRequest request) {
-        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
+    public Family fromUserIdToFamily(Authentication authentication) {
+        Long userPk = Long.parseLong(authentication.getName());
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         if (profile == null) {
             throw new CustomException(INVALID_REQUEST, "소속된 그룹이 없습니다.");
@@ -119,8 +120,8 @@ public class FamilyService {
         familyRepository.save(family);
     }
 
-    public void checkFamilyAuthority(HttpServletRequest request) {
-        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
+    public void checkFamilyAuthority(Authentication authentication) {
+        Long userPk = Long.parseLong(authentication.getName());
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         if (profile == null) {
             throw new CustomException(INVALID_REQUEST, "그룹에 권한이 없습니다.");

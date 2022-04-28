@@ -1,6 +1,5 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.config.jwt.JwtProvider;
 import com.ssafy.api.dto.req.SuggestionReactionReqDto;
 import com.ssafy.api.dto.res.MainProfileResDto;
 import com.ssafy.api.dto.res.SuggestionReactionResDto;
@@ -16,9 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
@@ -31,16 +29,15 @@ public class MainController {
 
     private final MainService mainService;
     private final ResponseService responseService;
-    private final JwtProvider jwtProvider;
 
     @Operation(summary = "가족 Profile 정보", description = "본인을 제외한 가족의 <strong>profile<strong> 정보를 받는다.",
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "{familyId}")
-    public ListResult<MainProfileResDto> getProfileList(@PathVariable Long familyId, HttpServletRequest request) {
+    public ListResult<MainProfileResDto> getProfileList(@PathVariable Long familyId, Authentication authentication) {
 
-        Long userPk = jwtProvider.getUserPkFromRequest(request);
+        Long userPk = Long.parseLong(authentication.getName());
 
         return responseService.getListResult(mainService.getProfileList(familyId, userPk));
     }
@@ -55,9 +52,9 @@ public class MainController {
     public CommonResult createSuggestion(@org.springframework.web.bind.annotation.RequestBody
                                          @io.swagger.v3.oas.annotations.parameters.RequestBody
                                                  String text,
-                                         HttpServletRequest request) {
+                                         Authentication authentication) {
 
-        Long userPk = jwtProvider.getUserPkFromRequest(request);
+        Long userPk = Long.parseLong(authentication.getName());
 
         mainService.createSuggestion(text, userPk);
 

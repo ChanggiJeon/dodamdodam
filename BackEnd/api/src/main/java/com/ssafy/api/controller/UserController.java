@@ -17,10 +17,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static com.ssafy.api.exception.CustomErrorCode.*;
@@ -163,9 +163,9 @@ public class UserController {
             })
     @GetMapping(value = "birthday/{birthday}")
     public CommonResult updatePassword
-            (@PathVariable String birthday, HttpServletRequest request) {
+            (@PathVariable String birthday, Authentication authentication) {
 
-        Long userPK = jwtProvider.getUserPkFromRequest(request);
+        Long userPK = Long.parseLong(authentication.getName());
 
         userService.updateBirthdayWithUserPk(userPK, birthday);
 
@@ -182,9 +182,9 @@ public class UserController {
             (@org.springframework.web.bind.annotation.RequestBody
              @io.swagger.v3.oas.annotations.parameters.RequestBody
                      FcmTokenReqDto fcmReq,
-             HttpServletRequest request) {
+             Authentication authentication) {
 
-        Long userPk = jwtProvider.getUserPkFromRequest(request);
+        Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         userService.updateFcmToken(user, fcmReq);
         return responseService.getSuccessResult();

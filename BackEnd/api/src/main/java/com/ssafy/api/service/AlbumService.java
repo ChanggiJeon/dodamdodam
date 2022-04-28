@@ -9,6 +9,7 @@ import com.ssafy.api.exception.CustomException;
 import com.ssafy.api.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -160,7 +161,7 @@ public class AlbumService {
 
     @Transactional(readOnly = false)
     public void updateAlbum(long userPk, Album album, AlbumReqDto albumReqDto,
-                            List<MultipartFile> multipartFiles, HttpServletRequest request){
+                            List<MultipartFile> multipartFiles, Authentication authentication, HttpServletRequest request){
         Family family = findFamilyByUserPK(userPk);
         album.updateLocalDate(createDate(albumReqDto.getDate()));
         albumRepository.save(album);

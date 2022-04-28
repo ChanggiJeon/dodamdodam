@@ -21,6 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,7 +41,6 @@ public class FamilyController {
     private final UserService userService;
     private final ProfileService profileService;
     private final ResponseService responseService;
-    private final JwtProvider jwtTokenProvider;
 
     @Operation(summary = "가족 그룹 생성", description = "<strong>가족 그룹</strong>을 생성한다.",
             parameters = {
@@ -49,9 +49,10 @@ public class FamilyController {
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SingleResult<FamilyJoinResDto> createFamily(
             @ModelAttribute @Valid FamilyJoinReqDto familyJoinReqDto,
+            Authentication authentication,
             HttpServletRequest request) {
 
-        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
+        Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
         userService.updateBirthdayWithUserPk(userPk, familyJoinReqDto.getBirthday());
@@ -73,8 +74,9 @@ public class FamilyController {
             @ModelAttribute
             @Valid FamilyJoinReqDto familyRequest,
             @PathVariable long familyId,
+            Authentication authentication,
             HttpServletRequest request) {
-        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
+        Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
         userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
@@ -102,8 +104,8 @@ public class FamilyController {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/code")
-    public SingleResult<FamilyCodeResDto> getFamilyCode(HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamily(request);
+    public SingleResult<FamilyCodeResDto> getFamilyCode(Authentication authentication) {
+        Family family = familyService.fromUserIdToFamily(authentication);
         FamilyCodeResDto res = FamilyCodeResDto.builder()
                 .code(family.getCode())
                 .build();
@@ -116,9 +118,9 @@ public class FamilyController {
             })
     @PutMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult updateFamilyPicture(
-            @RequestParam(value = "picture") MultipartFile picture, HttpServletRequest request) {
+            @RequestParam(value = "picture") MultipartFile picture, Authentication authentication, HttpServletRequest request) {
 
-        Family family = familyService.fromUserIdToFamily(request);
+        Family family = familyService.fromUserIdToFamily(authentication);
         String path = request.getServletContext().getRealPath("");
         familyService.updateFamilyPicture(family, picture, path);
         return responseService.getSuccessResult();
@@ -129,8 +131,8 @@ public class FamilyController {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/picture")
-    public SingleResult<FamilyPictureResDto> getFamilyPicture(HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamily(request);
+    public SingleResult<FamilyPictureResDto> getFamilyPicture(Authentication authentication) {
+        Family family = familyService.fromUserIdToFamily(authentication);
         String picture = family.getPicture();
         FamilyPictureResDto res = FamilyPictureResDto.builder()
                 .picture(picture)

@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,10 +49,10 @@ public class ScheduleController {
     public CommonResult createSchedule(@org.springframework.web.bind.annotation.RequestBody
                                        @io.swagger.v3.oas.annotations.parameters.RequestBody
                                        @Valid NewScheduleReqDto scheduleReq,
-                                       HttpServletRequest request) {
-        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
+                                       Authentication authentication) {
+        Long userPk = Long.parseLong(authentication.getName());;
         User user = userService.findByUserPk(userPk);
-        Family family = familyService.fromUserIdToFamily(request);
+        Family family = familyService.fromUserIdToFamily(authentication);
         scheduleService.createSchedule(scheduleReq, family, user);
         return responseService.getSuccessResult("일정 생성 완료");
     }
@@ -61,8 +62,8 @@ public class ScheduleController {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/{scheduleId}")
-    public SingleResult<ScheduleDetailResDto> scheduleDetail(@PathVariable long scheduleId, HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamily(request);
+    public SingleResult<ScheduleDetailResDto> scheduleDetail(@PathVariable long scheduleId, Authentication authentication) {
+        Family family = familyService.fromUserIdToFamily(authentication);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
         ScheduleDetailResDto res = ScheduleDetailResDto.builder()
                 .scheduleId(scheduleId)
@@ -83,8 +84,8 @@ public class ScheduleController {
     @PatchMapping(value = "/{scheduleId}")
     public CommonResult updateSchedule(@PathVariable long scheduleId,
                                        NewScheduleReqDto scheduleReq,
-                                       HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamily(request);
+                                       Authentication authentication) {
+        Family family = familyService.fromUserIdToFamily(authentication);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
         scheduleService.updateSchedule(schedule, scheduleReq);
         return responseService.getSuccessResult("일정 수정 완료");
@@ -95,8 +96,8 @@ public class ScheduleController {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
     @DeleteMapping(value = "/{scheduleId}")
-    public CommonResult deleteSchedule(@PathVariable long scheduleId, HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamily(request);
+    public CommonResult deleteSchedule(@PathVariable long scheduleId, Authentication authentication) {
+        Family family = familyService.fromUserIdToFamily(authentication);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
         scheduleService.deleteSchedule(schedule);
         return responseService.getSuccessResult("일정 삭제 완료");
@@ -107,8 +108,8 @@ public class ScheduleController {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/day/{day}")
-    public ListResult<ScheduleDetailResDto> scheduleListDay(@PathVariable String day, HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamily(request);
+    public ListResult<ScheduleDetailResDto> scheduleListDay(@PathVariable String day, Authentication authentication) {
+        Family family = familyService.fromUserIdToFamily(authentication);
         return responseService.getListResult(scheduleService.getScheduleListByDay(family, day));
     }
 
@@ -117,8 +118,8 @@ public class ScheduleController {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/month/{month}")
-    public ListResult<ScheduleDetailResDto> scheduleListMonth(@PathVariable String month, HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamily(request);
+    public ListResult<ScheduleDetailResDto> scheduleListMonth(@PathVariable String month, Authentication authentication) {
+        Family family = familyService.fromUserIdToFamily(authentication);
         return responseService.getListResult(scheduleService.getScheduleListByMonth(family, month));
     }
 }
