@@ -7,12 +7,15 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.ssafy.family.config.ApplicationClass.Companion.Id
+import com.ssafy.family.data.ChatData
 import com.ssafy.family.databinding.ItemChattingBinding
 
 // mainactivity - familyfragment : 알림 보내기 메시지 리스트
-class ChattingAdapter(private val context: Context) : RecyclerView.Adapter<ChattingAdapter.ViewHolder>() {
+class ChattingAdapter(private val context: Context, val datas: MutableList<ChatData>) : RecyclerView.Adapter<ChattingAdapter.ViewHolder>() {
 
-    private var datas = mutableListOf<Int>(1,1,2)
+   // private var datas = mutableListOf<ChatData>(1,1,2)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         //val view = LayoutInflater.from(context).inflate(R.layout.item_family_status,parent,false)
@@ -27,12 +30,17 @@ class ChattingAdapter(private val context: Context) : RecyclerView.Adapter<Chatt
 
 //        holder.bind(datas[position])
         val itemBinding = holder.binding as ItemChattingBinding
-        if(datas[position] == 1){
-            itemBinding.ownChatting.visibility = GONE
-            itemBinding.oppChatting.visibility = VISIBLE
-        }else{
+        if(datas[position].id == Id){
             itemBinding.ownChatting.visibility = VISIBLE
             itemBinding.oppChatting.visibility = GONE
+            itemBinding.ownChattingText.text = datas[position].message.toString()
+            itemBinding.ownTimeText.text = datas[position].time.toString()
+        }else{
+            itemBinding.ownChatting.visibility = GONE
+            itemBinding.oppChatting.visibility = VISIBLE
+            itemBinding.oppChattingText.text = datas[position].message.toString()
+            itemBinding.oppTimeText.text = datas[position].time.toString()
+            itemBinding.oppWriterText.text = datas[position].name.toString()
         }
 //        val currentBook = getItemId(position)
 //        val itemBinding = holder.binding as ItemAlarmBinding

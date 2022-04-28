@@ -16,7 +16,7 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Log.d("ddddddd", "onCreate: "+FirebaseMessaging.getInstance().token.result)
+        //Log.d("ddddddd", "onCreate: "+FirebaseMessaging.getInstance().token.result)
         supportFragmentManager.beginTransaction()
             .replace(R.id.home_frame, LoginFragment())
             .commit()
