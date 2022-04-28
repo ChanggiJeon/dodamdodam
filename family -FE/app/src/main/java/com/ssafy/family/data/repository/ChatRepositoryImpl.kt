@@ -1,5 +1,8 @@
 package com.ssafy.family.data.repository
 
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.ssafy.family.data.ChatData
 import com.ssafy.family.data.remote.req.LoginReq
 import com.ssafy.family.data.remote.api.AccountAPI
 import com.ssafy.family.data.remote.res.LoginRes
@@ -9,25 +12,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class AccountRepositoryImpl (
-    private val api: AccountAPI,
+class ChatRepositoryImpl (
     private val ioDispatcher: CoroutineDispatcher,
     private val mainDispatcher: CoroutineDispatcher
-) : AccountRepository{
-//    val accountAPI = ApplicationClass.sRetrofit.create(AccountAPI::class.java)
+) : ChatRepository{
 
-    override suspend fun login(user: LoginReq): Resource<LoginRes> = withContext(ioDispatcher){
+    override suspend fun send(data: ChatData, myRef: DatabaseReference) = withContext(ioDispatcher){
          try{
-            val response = api.login(user)
-            if(response.isSuccessful){
-                Resource.success(response.body()!!)
-            }else{
-                Resource.error(null,"오류")
-            }
+             myRef.push().setValue(data)
         }catch (e:Exception){
             Resource.error(null,"서버와 연결오류")
         }
     }
-    //회원가입
 
 }

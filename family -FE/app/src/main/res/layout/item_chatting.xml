@@ -12,77 +12,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/opp_writer_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/spoqahansans"
-                android:text="엄마는 외출중"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginStart="64dp"/>
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/opp_constraint_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="24dp"
-                >
+                android:layout_marginEnd="8dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/opp_constraint"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/opp_chatting_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@id/opp_constraint_box"
-                    app:layout_constraintEnd_toStartOf="@+id/opp_time_text"
-                    app:layout_constraintStart_toStartOf="@id/opp_constraint_box"
-                    app:layout_constraintTop_toTopOf="@id/opp_constraint_box">
-
-                    <View
-                        android:id="@+id/opp_rectangle_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:background="@drawable/box_chatting_opp"
-                        app:layout_constraintBottom_toBottomOf="@+id/opp_constraint"
-                        app:layout_constraintEnd_toEndOf="@+id/opp_constraint"
-                        app:layout_constraintStart_toStartOf="@+id/opp_constraint"
-                        app:layout_constraintTop_toTopOf="@+id/opp_constraint" />
-
-                    <TextView
-                        android:id="@+id/opp_chatting_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/spoqahansans"
-                        android:maxLines="20"
-                        android:padding="15dp"
-                        android:text="코로나19 정부방침 완화에 따라 건강설문 일정이 변경되었습니다.
-    아래 내용 확인하시어, 출석체크에 혼선이 없도록 꼼꼼히 확인해주시기 바랍니다. "
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/opp_constraint"
-                        app:layout_constraintEnd_toEndOf="@+id/opp_constraint"
-                        app:layout_constraintStart_toStartOf="@+id/opp_constraint"
-                        app:layout_constraintTop_toTopOf="@+id/opp_constraint" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:background="@drawable/box_chatting_opp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/spoqahansans"
+                    android:maxLines="20"
+                    android:padding="15dp"
+                    android:text="코로나19 정부방침  "
+                    android:textAlignment="textStart"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <TextView
                     android:id="@+id/opp_time_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/spoqahansans"
                     android:maxLines="20"
                     android:text="오후 4:41"
                     android:textColor="@color/black"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/opp_constraint_box"
-                    app:layout_constraintEnd_toEndOf="@+id/opp_constraint_box"/>
+                    app:layout_constraintEnd_toEndOf="@+id/opp_chatting_text"
+                    app:layout_constraintTop_toBottomOf="@+id/opp_chatting_text" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -94,6 +62,16 @@
                 android:layout_marginTop="4dp"
                 android:src="@color/gray01"/>
 
+            <TextView
+                android:id="@+id/opp_writer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/spoqahansans"
+                android:text="엄마는 외출중"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginStart="64dp"/>
+
         </FrameLayout>
 
         <FrameLayout
@@ -101,72 +79,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/own_constraint_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="24dp"
-                >
+                android:layout_marginEnd="8dp">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/own_constraint"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/own_chatting_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="@id/own_constraint_box"
-                    app:layout_constraintEnd_toEndOf="@id/own_constraint_box"
-                    app:layout_constraintStart_toEndOf="@+id/own_time_text"
-                    app:layout_constraintTop_toTopOf="@id/own_constraint_box">
-
-                    <View
-                        android:id="@+id/own_rectangle_1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:background="@drawable/box_chatting_opp"
-                        app:layout_constraintBottom_toBottomOf="@+id/own_constraint"
-                        app:layout_constraintEnd_toEndOf="@+id/own_constraint"
-                        app:layout_constraintStart_toStartOf="@+id/own_constraint"
-                        app:layout_constraintTop_toTopOf="@+id/own_constraint" />
-
-                    <TextView
-                        android:id="@+id/own_chatting_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/spoqahansans"
-                        android:maxLines="20"
-                        android:padding="15dp"
-                        android:text="코로나19 정부방침 완화에 따라 건강설문 일정이 변경되었습니다.
+                    android:background="@drawable/box_chatting_opp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/spoqahansans"
+                    android:maxLines="20"
+                    android:padding="15dp"
+                    android:text="코로나19 정부방침 완화에 따라 건강설문 일정이 변경되었습니다.
     아래 내용 확인하시어, 출석체크에 혼선이 없도록 꼼꼼히 확인해주시기 바랍니다. "
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/own_constraint"
-                        app:layout_constraintEnd_toEndOf="@+id/own_constraint"
-                        app:layout_constraintStart_toStartOf="@+id/own_constraint"
-                        app:layout_constraintTop_toTopOf="@+id/own_constraint" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/own_time_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/spoqahansans"
                     android:maxLines="20"
                     android:text="오후 4:41"
                     android:textColor="@color/black"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/own_constraint_box"
-                    app:layout_constraintStart_toStartOf="@+id/own_constraint_box" />
+                    app:layout_constraintStart_toStartOf="@+id/own_chatting_text"
+                    app:layout_constraintTop_toBottomOf="@+id/own_chatting_text" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </FrameLayout>
+
     </FrameLayout>
+
 </layout>
