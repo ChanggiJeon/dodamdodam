@@ -20,10 +20,10 @@ interface AccountAPI {
     suspend fun addFcm(@Body fcmToken:AddFcmReq):Response<BaseResponse>
 
     @POST("/api/user/signup")
-    suspend fun singUp(@Body signUpReq: SignUpReq):Response<BaseResponse>
+    suspend fun signUp(@Body signUpReq: SignUpReq):Response<BaseResponse>
 
     @POST("/api/user/findId")
-    suspend fun findId(@Body findIdRes: findIdReq):Response<BaseResponse>
+    suspend fun findId(@Body findIdReq: findIdReq):Response<BaseResponse>
 
     @POST("/api/user/newpassword")
     suspend fun newPassword(@Body newIdPwReq:LoginReq):Response<BaseResponse>
