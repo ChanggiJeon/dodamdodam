@@ -82,6 +82,7 @@ class SignFragment : Fragment() {
         loginViewModel.idCheckLiveData.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
+                    dismissLoading()
                     Toast.makeText(
                         requireActivity(),
                         getString(R.string.sameIdSuccesMessage),
@@ -89,7 +90,11 @@ class SignFragment : Fragment() {
                     ).show()
                     checkId = true
                 }
+                Status.LOADING -> {
+                    setLoading()
+                }
                 Status.ERROR -> {
+                    dismissLoading()
                     Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -136,15 +141,25 @@ class SignFragment : Fragment() {
         loginViewModel.signUpLiveData.observe(requireActivity()){
             when(it.status){
                 Status.SUCCESS -> {
+                    dismissLoading()
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.home_frame, LoginFragment())
                         .commit()
                 }
+                Status.LOADING -> {
+                    setLoading()
+                }
                 Status.ERROR -> {
+                    dismissLoading()
                     Toast.makeText(requireActivity(), "서버 에러", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
-
+    private fun setLoading() {
+        binding.progressBarLoginFLoading.visibility = View.VISIBLE
+    }
+    private fun dismissLoading() {
+        binding.progressBarLoginFLoading.visibility = View.GONE
+    }
 }

@@ -71,7 +71,7 @@ class FindIdFragment : Fragment() {
             if (InputValidUtil.isValidBirthDay(birthday)) {
                 if (InputValidUtil.isValidName(name)) {
                     if (familycode.length == 15) {
-                        loginViewModel.findId(
+                        findId(
                             findIdReq(
                                 name,
                                 InputValidUtil.makeDay(birthday),
@@ -92,6 +92,7 @@ class FindIdFragment : Fragment() {
         loginViewModel.findLiveData.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
+                    dismissLoading()
                     Log.d("ddddd", "initview: "+it.data)
                     if (it.data!!.message == null) {
                         Toast.makeText(requireActivity(),"입력한 정보에 맞는 아이디가 없습니다", Toast.LENGTH_SHORT).show()
@@ -101,7 +102,11 @@ class FindIdFragment : Fragment() {
                             .commit()
                     }
                 }
+                Status.LOADING -> {
+                    setLoading()
+                }
                 Status.ERROR -> {
+                    dismissLoading()
                     Toast.makeText(requireActivity(), "서버 에러", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -111,5 +116,10 @@ class FindIdFragment : Fragment() {
     private fun findId(findIdReq: findIdReq) {
         loginViewModel.findId(findIdReq)
     }
-
+    private fun setLoading() {
+        binding.progressBarLoginFLoading.visibility = View.VISIBLE
+    }
+    private fun dismissLoading() {
+        binding.progressBarLoginFLoading.visibility = View.GONE
+    }
 }
