@@ -1,10 +1,10 @@
 package com.ssafy.family.util
 
 import com.ssafy.family.config.ApplicationClass
+import com.ssafy.family.config.ApplicationClass.Companion.JWT
 import com.ssafy.family.data.UserInfo
 
 object LoginUtil {
-    val ACCESS_TOKEN = "jwtToken"
     val REFRESH_TOKEN = "refreshToken"
     val NAME = "name"
     val PROFILE_ID = "profileId"
@@ -31,7 +31,7 @@ object LoginUtil {
 
     fun saveUserInfo(userInfo: UserInfo) {
 
-        preferences.setString(ACCESS_TOKEN, userInfo.jwtToken)
+        preferences.setString(JWT, userInfo.jwtToken)
         preferences.setString(REFRESH_TOKEN, userInfo.refreshToken)
         preferences.setString(NAME, userInfo.name)
         preferences.setString(PROFILE_ID, userInfo.profileId.toString())
@@ -39,7 +39,7 @@ object LoginUtil {
     }
 
     fun deleteUserInfo() {
-        preferences.deleteString(ACCESS_TOKEN)
+        preferences.deleteString(JWT)
         preferences.deleteString(REFRESH_TOKEN)
         preferences.deleteString(NAME)
         preferences.deleteString(PROFILE_ID)
@@ -47,7 +47,7 @@ object LoginUtil {
     }
 
     fun getUserInfo(): UserInfo? {
-        val accessToken = preferences.getString(ACCESS_TOKEN)
+        val accessToken = preferences.getString(JWT)
         val refreshToken = preferences.getString(REFRESH_TOKEN)
         val name = preferences.getString(NAME)
         val profileId = preferences.getString(PROFILE_ID)?.toLong()
