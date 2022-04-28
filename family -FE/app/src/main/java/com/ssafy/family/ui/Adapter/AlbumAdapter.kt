@@ -3,14 +3,21 @@ package com.ssafy.family.ui.Adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ssafy.family.R
+import com.ssafy.family.data.remote.res.AlbumRes
+import com.ssafy.family.data.remote.res.AllAlbum
+import com.ssafy.family.databinding.ItemAlarmBinding
 import com.ssafy.family.databinding.ItemAlbumBinding
 
 // mainactivity - familyfragment : 알림 보내기 메시지 리스트
 class AlbumAdapter(private val context: Context) : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
 
-    private var datas = mutableListOf<Int>(1,2,3,4,5,6,7,8)
+    var datas = mutableListOf<AllAlbum>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         //val view = LayoutInflater.from(context).inflate(R.layout.item_family_status,parent,false)
@@ -22,10 +29,10 @@ class AlbumAdapter(private val context: Context) : RecyclerView.Adapter<AlbumAda
     override fun getItemCount(): Int = datas.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        holder.bind(datas[position])
-
-//        val currentBook = getItemId(position)
-//        val itemBinding = holder.binding as ItemAlarmBinding
+        holder.bind(datas[position])
+//
+//        val current = getItemId(position)
+//        val itemBinding = holder.binding as ItemAlbumBinding
 //        itemBinding.familyStatus.setOnClickListener {
 //            if(itemBinding.alarmRecycler.visibility == VISIBLE){
 //                itemBinding.alarmRecycler.visibility = GONE
@@ -46,16 +53,16 @@ class AlbumAdapter(private val context: Context) : RecyclerView.Adapter<AlbumAda
 
     inner class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
 
-//        private val txtName: TextView = itemView.findViewById(R.id.tv_rv_name)
-//        private val txtAge: TextView = itemView.findViewById(R.id.tv_rv_age)
-//        private val imgProfile: ImageView = itemView.findViewById(R.id.img_rv_photo)
-//
-//        fun bind(item: ProfileData) {
-//            txtName.text = item.name
-//            txtAge.text = item.age.toString()
-//            Glide.with(itemView).load(item.img).into(imgProfile)
-//
-//        }
+        private val albumtag: TextView = itemView.findViewById(R.id.album_tag_text)
+        private val albumimg: ImageView = itemView.findViewById(R.id.album_img)
+
+        fun bind(item: AllAlbum) {
+            var Alltag = ""
+            item.hashTags.forEach { Alltag+=it }
+            albumtag.text = Alltag
+            Glide.with(itemView).load(item.mainPicture.path_name).into(albumimg)
+
+        }
     }
 
 

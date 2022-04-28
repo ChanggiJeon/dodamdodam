@@ -5,24 +5,28 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.ssafy.family.R
+import com.ssafy.family.data.remote.res.AlbumRes
 import com.ssafy.family.databinding.ItemMonthAlbumBinding
 
 // mainactivity - albumfragment : 월 리스트 (2021.06, 1,2,3 ...)
-class AlbumMonthAdapter(private val context: Context) : RecyclerView.Adapter<AlbumMonthAdapter.ViewHolder>() {
+class AlbumMonthAdapter(private val context: Context) :
+    RecyclerView.Adapter<AlbumMonthAdapter.ViewHolder>() {
 
-    private var datas = mutableListOf<Int>(1,2,3,4,5,6,7,8)
-
+    var datas = mutableListOf<AlbumRes>()
+    lateinit var AlbumAdapter: AlbumAdapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         //val view = LayoutInflater.from(context).inflate(R.layout.item_family_status,parent,false)
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemMonthAlbumBinding.inflate(inflater, parent, false)
-            return ViewHolder(binding)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int = datas.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        holder.bind(datas[position])
+        holder.bind(datas[position])
 
 //        val currentBook = getItemId(position)
 //        val itemBinding = holder.binding as ItemAlarmBinding
@@ -35,10 +39,10 @@ class AlbumMonthAdapter(private val context: Context) : RecyclerView.Adapter<Alb
 //        }
 
         val itemBinding = holder.binding as ItemMonthAlbumBinding
-        val adapter = AlbumAdapter(context)
+        AlbumAdapter = AlbumAdapter(context)
 //        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 //        itemBinding.albumRecycler.layoutManager = layoutManager
-        itemBinding.albumRecycler.adapter = adapter
+        itemBinding.albumRecycler.adapter = AlbumAdapter
         //itemBinding.executePendingBindings()
 //        holder.itemView.apply{
 //            setOnClickListener{
@@ -54,13 +58,11 @@ class AlbumMonthAdapter(private val context: Context) : RecyclerView.Adapter<Alb
 //        private val txtName: TextView = itemView.findViewById(R.id.tv_rv_name)
 //        private val txtAge: TextView = itemView.findViewById(R.id.tv_rv_age)
 //        private val imgProfile: ImageView = itemView.findViewById(R.id.img_rv_photo)
-//
-//        fun bind(item: ProfileData) {
-//            txtName.text = item.name
-//            txtAge.text = item.age.toString()
-//            Glide.with(itemView).load(item.img).into(imgProfile)
-//
-//        }
+        private val albumrecycler:RecyclerView = itemView.findViewById(R.id.album_recycler)
+        fun bind(item: AlbumRes) {
+            albumrecycler.adapter = AlbumAdapter
+
+        }
     }
 
 
