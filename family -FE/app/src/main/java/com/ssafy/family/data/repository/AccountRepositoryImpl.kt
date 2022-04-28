@@ -33,7 +33,7 @@ class AccountRepositoryImpl(
                     Resource.expired(response.body()!!)
                 }
                 else -> {
-                    Resource.error(null, "오류")
+                    Resource.error(null, response.message())
                 }
             }
         } catch (e: Exception) {
@@ -52,7 +52,7 @@ class AccountRepositoryImpl(
                     Resource.expired(response.body()!!)
                 }
                 else -> {
-                    Resource.error(null, "오류")
+                    Resource.error(null, response.message())
                 }
             }
         } catch (e: Exception) {
@@ -71,7 +71,7 @@ class AccountRepositoryImpl(
                     Resource.expired(response.body()!!)
                 }
                 else -> {
-                    Resource.error(null, "오류")
+                    Resource.error(null, response.message())
                 }
             }
         } catch (e: Exception) {
@@ -90,7 +90,7 @@ class AccountRepositoryImpl(
                     Resource.expired(response.body()!!)
                 }
                 else -> {
-                    Resource.error(null, "오류")
+                    Resource.error(null, response.message())
                 }
             }
         } catch (e: Exception) {
@@ -109,7 +109,7 @@ class AccountRepositoryImpl(
                     Resource.expired(response.body()!!)
                 }
                 else -> {
-                    Resource.error(null, "오류")
+                    Resource.error(null, response.message())
                 }
             }
         } catch (e: Exception) {
@@ -131,7 +131,7 @@ class AccountRepositoryImpl(
                     Resource.expired(response.body()!!)
                 }
                 else -> {
-                    Resource.error(null, "오류")
+                    Resource.error(null, response.message())
                 }
             }
         } catch (e: Exception) {
@@ -150,7 +150,7 @@ class AccountRepositoryImpl(
                     Resource.expired(response.body()!!)
                 }
                 else -> {
-                    Resource.error(null, "오류")
+                    Resource.error(null, response.message())
                 }
             }
         } catch (e: Exception) {

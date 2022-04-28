@@ -2,7 +2,7 @@ package com.ssafy.family.util
 
 import com.ssafy.family.config.ApplicationClass
 import com.ssafy.family.config.ApplicationClass.Companion.JWT
-import com.ssafy.family.data.UserInfo
+import com.ssafy.family.data.remote.res.UserInfo
 
 object LoginUtil {
     val REFRESH_TOKEN = "refreshToken"
