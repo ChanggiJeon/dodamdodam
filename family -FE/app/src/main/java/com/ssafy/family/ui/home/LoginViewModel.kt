@@ -27,9 +27,7 @@ class LoginViewModel @Inject constructor(private val accountRepository: AccountR
 
     fun Login(user:LoginReq) = viewModelScope.launch {
         _loginRequestLiveData.postValue(Resource.loading(null))
-        withContext(Dispatchers.IO){
-            _loginRequestLiveData.postValue(accountRepository.login(user))
-        }
+        _loginRequestLiveData.postValue(accountRepository.login(user))
     }
 
 }

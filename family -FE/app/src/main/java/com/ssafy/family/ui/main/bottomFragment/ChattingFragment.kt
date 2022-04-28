@@ -1,41 +1,44 @@
 package com.ssafy.family.ui.main.bottomFragment
 
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.google.firebase.database.*
+import androidx.fragment.app.viewModels
 import com.ssafy.family.config.ApplicationClass.Companion.Id
 import com.ssafy.family.config.ApplicationClass.Companion.Name
 import com.ssafy.family.data.ChatData
 import com.ssafy.family.databinding.FragmentChattingBinding
 import com.ssafy.family.ui.Adapter.ChattingAdapter
-import dagger.hilt.android.qualifiers.ActivityContext
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.ssafy.family.util.Status
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
+@RequiresApi(Build.VERSION_CODES.O)
 class ChattingFragment : Fragment() {
 
     private lateinit var binding: FragmentChattingBinding
 
-    var database: FirebaseDatabase? = null
-    var myRef: DatabaseReference? = null
-    val datas = mutableListOf<ChatData>()
-    val familyCode = "fam_code"
+    @Inject
+    lateinit var chatViewModelFactory: ChatViewModel.FamilyCodeAssistedFactory
+
+    private val viewModel by viewModels<ChatViewModel> {
+        ChatViewModel.provideFactory(chatViewModelFactory, familyCode)
+    }
+
     lateinit var chattingAdapter:ChattingAdapter
+    val familyCode = "fam_code"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        database = FirebaseDatabase.getInstance()
-        myRef = database!!.getReference("message" + familyCode)
     }
 
     override fun onCreateView(
@@ -46,38 +49,41 @@ class ChattingFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
 
-        var context = requireContext()
-        val childEventListener: ChildEventListener = object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val data = snapshot.getValue(ChatData::class.java)
-                datas.add(data!!)
-                chattingAdapter = ChattingAdapter(context, datas)
-                binding.chattingRecyclerView.adapter = chattingAdapter
-                binding.chattingRecyclerView.smoothScrollToPosition(chattingAdapter.itemCount)
+
+    private fun initView(){
+        val context = requireContext()
+        chattingAdapter = ChattingAdapter(context, mutableListOf())
+        viewModel.initViewModel()
+
+        viewModel.chatLiveData.observe(requireActivity()) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    chattingAdapter.datas = it.data!!
+                    binding.chattingRecyclerView.adapter = chattingAdapter
+                    binding.chattingRecyclerView.smoothScrollToPosition(chattingAdapter.itemCount)
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireActivity(),it.message!!, Toast.LENGTH_SHORT)
+                }
             }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onChildRemoved(snapshot: DataSnapshot) {}
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onCancelled(error: DatabaseError) {}
         }
 
-        myRef!!.addChildEventListener(childEventListener)
-
-        binding.submitButton.setOnClickListener(View.OnClickListener {
+        binding.submitButton.setOnClickListener {
             val message: String = binding.chattingText.text.toString()
             if (message != "") {
                 val now: LocalDateTime = LocalDateTime.now()
-                val nowTime = now.format(DateTimeFormatter.ofPattern("a h시 mm분").withLocale(Locale.forLanguageTag("ko")))
+                val nowTime = now.format(
+                    DateTimeFormatter.ofPattern("a h시 mm분").withLocale(Locale.forLanguageTag("ko"))
+                )
                 val data = ChatData(Id, Name, message, nowTime)
-                myRef!!.push().setValue(data)
+                viewModel.send(data)
                 binding.chattingText.setText("")
-
             }
-        })
+        }
     }
 }

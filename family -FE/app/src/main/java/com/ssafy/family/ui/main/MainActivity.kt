@@ -16,7 +16,9 @@ import com.ssafy.family.databinding.ActivityMainBinding
 import com.ssafy.family.ui.main.bottomFragment.*
 import com.ssafy.family.ui.schedule.AddScheduleFragment
 import com.ssafy.family.util.LoginUtil
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     val SP_NAME = "fcm_message"
