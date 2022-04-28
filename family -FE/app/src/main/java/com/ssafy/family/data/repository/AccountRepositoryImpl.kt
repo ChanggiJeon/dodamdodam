@@ -12,104 +12,146 @@ import com.ssafy.family.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import java.lang.Exception
 
-class AccountRepositoryImpl (
+class AccountRepositoryImpl(
     private val api: AccountAPI,
     private val ioDispatcher: CoroutineDispatcher,
     private val mainDispatcher: CoroutineDispatcher
-) : AccountRepository{
+) : AccountRepository {
 //    val accountAPI = ApplicationClass.sRetrofit.create(AccountAPI::class.java)
 
     override suspend fun login(user: LoginReq): Resource<LoginRes> {
-        return try{
+        return try {
             val response = api.login(user)
-            if(response.isSuccessful){
-                Resource.success(response.body()!!)
-            }else{
-                Resource.error(null,"오류")
+            when {
+                response.isSuccessful -> {
+                    Resource.success(response.body()!!)
+                }
+                response.code() == 403 -> {
+                    Resource.expired(response.body()!!)
+                }
+                else -> {
+                    Resource.error(null, "오류")
+                }
             }
-        }catch (e:Exception){
-            Resource.error(null,"서버와 연결오류")
+        } catch (e: Exception) {
+            Resource.error(null, "서버와 연결오류")
         }
     }
 
     override suspend fun addFcm(fcmToken: AddFcmReq): Resource<BaseResponse> {
-        return try{
+        return try {
             val response = api.addFcm(fcmToken)
-            if(response.isSuccessful){
-                Resource.success(response.body()!!)
-            }else{
-                Resource.error(null,"오류")
+            when {
+                response.isSuccessful -> {
+                    Resource.success(response.body()!!)
+                }
+                response.code() == 403 -> {
+                    Resource.expired(response.body()!!)
+                }
+                else -> {
+                    Resource.error(null, "오류")
+                }
             }
-        }catch (e:Exception){
-            Resource.error(null,"서버와 연결오류")
+        } catch (e: Exception) {
+            Resource.error(null, "서버와 연결오류")
         }
     }
 
     override suspend fun signUp(signUpReq: SignUpReq): Resource<BaseResponse> {
-        return try{
+        return try {
             val response = api.signUp(signUpReq)
-            if(response.isSuccessful){
-                Resource.success(response.body()!!)
-            }else{
-                Resource.error(null,"오류")
+            when {
+                response.isSuccessful -> {
+                    Resource.success(response.body()!!)
+                }
+                response.code() == 403 -> {
+                    Resource.expired(response.body()!!)
+                }
+                else -> {
+                    Resource.error(null, "오류")
+                }
             }
-        }catch (e:Exception){
-            Resource.error(null,"서버와 연결오류")
+        } catch (e: Exception) {
+            Resource.error(null, "서버와 연결오류")
         }
     }
 
     override suspend fun findId(findIdReq: findIdReq): Resource<BaseResponse> {
-        return try{
+        return try {
             val response = api.findId(findIdReq)
-            if(response.isSuccessful){
-                Resource.success(response.body()!!)
-            }else{
-                Resource.error(null,"오류")
+            when {
+                response.isSuccessful -> {
+                    Resource.success(response.body()!!)
+                }
+                response.code() == 403 -> {
+                    Resource.expired(response.body()!!)
+                }
+                else -> {
+                    Resource.error(null, "오류")
+                }
             }
-        }catch (e:Exception){
-            Resource.error(null,"서버와 연결오류")
+        } catch (e: Exception) {
+            Resource.error(null, "서버와 연결오류")
         }
     }
 
     override suspend fun newPassword(newIdPwReq: LoginReq): Resource<BaseResponse> {
-        return try{
+        return try {
             val response = api.newPassword(newIdPwReq)
-            if(response.isSuccessful){
-                Resource.success(response.body()!!)
-            }else{
-                Resource.error(null,"오류")
+            when {
+                response.isSuccessful -> {
+                    Resource.success(response.body()!!)
+                }
+                response.code() == 403 -> {
+                    Resource.expired(response.body()!!)
+                }
+                else -> {
+                    Resource.error(null, "오류")
+                }
             }
-        }catch (e:Exception){
-            Resource.error(null,"서버와 연결오류")
+        } catch (e: Exception) {
+            Resource.error(null, "서버와 연결오류")
         }
     }
 
     override suspend fun idCheck(userId: String): Resource<BaseResponse> {
-        return try{
+        return try {
             val response = api.idCheck(userId)
-            if(response.isSuccessful){
-                Resource.success(response.body()!!)
-            }else if(response.code()==409){
-                Resource.error(null,"중복된 아이디 입니다")
+            when {
+                response.isSuccessful -> {
+                    Resource.success(response.body()!!)
+                }
+                response.code() == 409 -> {
+                    Resource.error(null, "중복된 아이디 입니다")
+                }
+                response.code() == 403 ->{
+                    Resource.expired(response.body()!!)
+                }
+                else -> {
+                    Resource.error(null, "오류")
+                }
             }
-            else{
-                Resource.error(null,"오류")
-            }
-        }catch (e:Exception){
-            Resource.error(null,"서버와 연결오류")
+        } catch (e: Exception) {
+            Resource.error(null, "서버와 연결오류")
         }
     }
 
     override suspend fun updateBirthDay(birthday: String): Resource<BaseResponse> {
-        return try{
+        return try {
             val response = api.updateBirthDay(birthday)
-            if(response.isSuccessful){
-                Resource.success(response.body()!!)
-            }else{
-                Resource.error(null,"오류")
+            when {
+                response.isSuccessful -> {
+                    Resource.success(response.body()!!)
+                }
+                response.code() == 403 -> {
+                    Resource.expired(response.body()!!)
+                }
+                else -> {
+                    Resource.error(null, "오류")
+                }
             }
-        }catch (e:Exception){
-            Resource.error(null,"서버와 연결오류")
+        } catch (e: Exception) {
+            Resource.error(null, "서버와 연결오류")
         }
     }
     //회원가입
