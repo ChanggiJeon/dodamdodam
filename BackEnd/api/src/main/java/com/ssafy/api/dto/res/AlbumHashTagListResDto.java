@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumHashTagListResDto {
-    @Schema(name = "해시태그", example = "#여름")
+    @Schema(description = "해시태그", example = "#여름")
     private String text;
 
     public List<AlbumHashTagListResDto> fromEntity(List<HashTag> hashTags){

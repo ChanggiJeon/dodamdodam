@@ -9,13 +9,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumReactionListResDto {
-    @Schema(name = "이모티콘", example = "예시입니다.")
+    @Schema(description = "이모티콘", example = "예시입니다.")
     private String emoticon;
 
-    @Schema(name = "프로필 사진", example = "예시입니다.")
+    @Schema(description = "프로필 사진", example = "예시입니다.")
     private String imagePath;
 
-    @Schema(name = "역할", example = "예시입니다.")
+    @Schema(description = "역할", example = "예시입니다.")
     private String role;
 
 }

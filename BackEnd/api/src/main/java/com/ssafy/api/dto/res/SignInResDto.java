@@ -12,20 +12,20 @@ import org.springframework.lang.Nullable;
 @Schema(name = "SingIn Response")
 public class SignInResDto {
 
-    @Schema(name = "이름", example = "싸피")
+    @Schema(description = "이름", example = "싸피")
     private String name;
 
-    @Schema(name = "accessToken", example = "SSAFYSSAFY12345")
+    @Schema(description = "엑세스 토큰", example = "SSAFYSSAFY12345")
     private String jwtToken;
 
-    @Schema(name = "refreshToken", example = "1234512345SSAFY")
+    @Schema(description = "리프레쉬 토큰", example = "1234512345SSAFY")
     private String refreshToken;
 
     @Nullable
-    @Schema(name = "profileId", example = "1 / null")
+    @Schema(description = "프로필 id", example = "1 / null")
     private Long profileId;
 
     @Nullable
-    @Schema(name = "familyId", example = "1 /  null")
+    @Schema(description = "가족 id", example = "1 /  null")
     private Long familyId;
 }

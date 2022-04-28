@@ -16,16 +16,16 @@ public class FamilyJoinReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "role", required = true, example = "아들")
+    @Schema(description = "역할", required = true, example = "아들")
     private String role;
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "닉네임", required = true, example = "호랑이")
+    @Schema(description = "닉네임", required = true, example = "호랑이")
     private String nickname;
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "생년월일", required = true, example = "1994-10-25")
+    @Schema(description = "생년월일", required = true, example = "1994-10-25")
     private String birthday;
 }

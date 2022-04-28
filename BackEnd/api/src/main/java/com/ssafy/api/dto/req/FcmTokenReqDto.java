@@ -13,6 +13,6 @@ import javax.validation.constraints.NotNull;
 @Schema(name = "FcmToken Request")
 public class FcmTokenReqDto {
     @NotNull
-    @Schema(name = "fcm토큰", required = true, example = "c1~~")
+    @Schema(description = "fcm토큰", required = true, example = "c1~~")
     private String fcmToken;
 }

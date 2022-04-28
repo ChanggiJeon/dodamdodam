@@ -33,9 +33,6 @@ spring:
 
     flyway:
       enabled: false
-    config:
-      activate:
-        on-profile: alpha
     servlet:
       multipart:
         file-size-threshold: 15MB
@@ -71,9 +68,6 @@ springdoc:
 
 server:
   # 프로젝트 환경의 포트 설정
-  port: 8080
-  domain: http://localhost
-
   servlet:
     session:
       timeout: 1440m

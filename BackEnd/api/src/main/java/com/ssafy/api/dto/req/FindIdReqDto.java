@@ -18,7 +18,7 @@ public class FindIdReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "이름", required = true, example = "싸피")
+    @Schema(description = "이름", required = true, example = "싸피")
     private String name;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -26,6 +26,6 @@ public class FindIdReqDto {
 
     @NotBlank
     @Size(max = 15, min = 15)
-    @Schema(name = "가족 코드", required = true, example = "SSAFYFINALPROJE")
+    @Schema(description = "가족 코드", required = true, example = "SSAFYFINALPROJE")
     private String familyCode;
 }

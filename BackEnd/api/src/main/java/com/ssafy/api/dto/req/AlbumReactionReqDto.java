@@ -10,6 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumReactionReqDto {
-    @Schema(name = "emoticon", required = true, example = "아들")
+    @Schema(description = "이모티콘", required = true, example = "아들")
     private String emoticon;
 }

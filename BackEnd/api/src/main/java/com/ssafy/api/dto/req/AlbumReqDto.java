@@ -21,12 +21,12 @@ public class AlbumReqDto {
 
 
     @NotBlank
-    @Schema(name = "hashtag", required = true, example = "아들")
+    @Schema(description = "해시태그", required = true, example = "아들")
     private List<String> hashTags;
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "앨범날짜", required = true, example = "2022-04-20")
+    @Schema(description = "앨범날짜", required = true, example = "2022-04-20")
     private String date;
 
 
