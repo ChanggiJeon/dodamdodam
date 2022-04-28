@@ -21,7 +21,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI(@Value("${springdoc.version}") String appVersion) {
         Info info = new Info().title("Demo API").version(appVersion)
-                .description("Spring Boot를 이용한 Demo 웹 애플리케이션 API입니다.")
+                .description("SSAFY 구미 2반 D203팀의 DodamDodam Project")
                 .termsOfService("http://swagger.io/terms/")
                 .contact(new Contact().name("hanjibung").email("wjs1724@naver.com"))
                 .license(new License().name("Apache License Version 2.0").url("http://www.apache.org/licenses/LICENSE-2.0"));

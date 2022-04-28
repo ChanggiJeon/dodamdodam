@@ -27,6 +27,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    //S3
+    implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.3.1'
 
     //yml파일 작성 용이
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
