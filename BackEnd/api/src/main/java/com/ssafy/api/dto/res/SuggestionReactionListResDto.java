@@ -1,7 +1,6 @@
 package com.ssafy.api.dto.res;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 
@@ -10,12 +9,12 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "Suggestion Reaction List Response")
+@Schema(name = "Suggestion Reaction List Response")
 public class SuggestionReactionListResDto {
 
-    @ApiModelProperty(value = "좋아요 여부", example = "true/false")
+    @Schema(description = "좋아요 여부", example = "true/false")
     private boolean isLike;
 
-    @ApiModelProperty(value = "profileId", example = "1")
+    @Schema(description = "프로필 id", example = "1")
     private Long profileId;
 }

@@ -1,7 +1,6 @@
 package com.ssafy.api.dto.req;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -12,16 +11,16 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "Status Request")
+@Schema(name = "Status Request")
 public class StatusReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @ApiModelProperty(value = "emotion", required = true, example = "")
+    @Schema(description = "상태", required = true, example = "")
     private String emotion;
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @ApiModelProperty(value = "comment", required = true, example = "")
+    @Schema(description = "오늘의 한마디", required = true, example = "")
     private String comment;
 }

@@ -10,7 +10,6 @@ public interface AlbumRepoCustom {
 
     List<Album> findAlbumByFamilyId(long familyId);
     Album findAlbumByAlbumId(long albumId);
-    List<String> findHashTagsByAlbumId(long albumId);
-    List<Picture> findPicturesByAlbumId(long albumId);
-    Picture findPictureByPictureId(long pictureId);
+
+
 }

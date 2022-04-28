@@ -1,6 +1,7 @@
 HELP.md
 .gradle
 .idea
+application.yml
 
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -36,4 +37,5 @@ out/
 /.nb-gradle/
 
 ### VS Code ###
-.vscode/
+.vscode/!/.gitignore
+

@@ -36,9 +36,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // authorization
         http.authorizeRequests()
                 // /와 /home, /room의 참가, 닉네임 중복확인은 모두에게 허용
-//                .antMatchers("/server", "/api/user/{userID}", "/api/user/newpassword", "/api/user/signin", "/api/user/signup").permitAll()
-                .antMatchers("/api/user/{userID}", "/api/user/newpassword", "/api/user/signin", "/api/user/signup").permitAll()
-                .anyRequest().permitAll();
+                .antMatchers("/server",
+                        "/api/user/{userId}",
+                        "/api/user/newpassword",
+                        "/api/user/signin",
+                        "/api/user/signup",
+                        "/actuator/health",
+                        "/swagger-ui/index.html"
+                ).permitAll()
+                .anyRequest().authenticated();
     }
 
 
@@ -46,8 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // static 디렉터리의 하위 파일 목록은 인증 무시 ( = 항상통과 )
         web.ignoring().antMatchers("/css/**", "/js/**", "/img/**", "/lib/**");
-        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
-                "/swagger-ui.html", "/webjars/**", "/swagger/**");
+        web.ignoring().antMatchers("/api-docs/**", "/swagger-resources/**",
+                "/swagger-ui/**", "/webjars/**", "/swagger/**");
         web.ignoring().antMatchers("/api/user/social", "/api/user/refresh");
     }
 

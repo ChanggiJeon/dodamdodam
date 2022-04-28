@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.dto.req.FcmTokenReqDto;
 import com.ssafy.api.dto.req.FindIdReqDto;
 import com.ssafy.api.dto.req.SignUpReqDto;
 import com.ssafy.api.dto.res.SignInResDto;
@@ -87,5 +88,10 @@ public class UserService {
 
     public SignInResDto findProfileIdAndFamilyId(Long userPk) {
         return profileRepository.findProfileIdAndFamilyIdByUserPk(userPk);
+    }
+
+    public void updateFcmToken(User user, FcmTokenReqDto fcmReq) {
+        user.setFcmToken(fcmReq.getFcmToken());
+        userRepository.save(user);
     }
 }

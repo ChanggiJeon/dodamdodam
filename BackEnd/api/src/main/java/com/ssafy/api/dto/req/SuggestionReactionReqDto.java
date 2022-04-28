@@ -1,7 +1,6 @@
 package com.ssafy.api.dto.req;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
@@ -11,19 +10,19 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "SuggestionReaction Request")
+@Schema(name = "SuggestionReaction Request")
 public class SuggestionReactionReqDto {
 
     @NotBlank
-    @ApiModelProperty(value = "의견 제시 id", required = true, example = "1")
+    @Schema(description = "의견 제시 id", required = true, example = "1")
     private Long suggestionId;
 
     @NotBlank
-    @ApiModelProperty(value = "profileId", required = true, example = "1")
+    @Schema(description = "프로필 id", required = true, example = "1")
     private Long profileId;
 
     @NotBlank
-    @ApiModelProperty(value = "좋아요 여부", required = true, example = "true / false")
+    @Schema(description = "좋아요 여부", required = true, example = "true / false")
     private boolean isLike;
 
 }

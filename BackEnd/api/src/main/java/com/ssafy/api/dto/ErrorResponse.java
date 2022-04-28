@@ -2,7 +2,7 @@ package com.ssafy.api.dto;
 
 import com.ssafy.api.exception.CustomErrorCode;
 import com.ssafy.api.exception.CustomException;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @RequiredArgsConstructor
 @Getter
-@ApiModel("Error")
+@Schema(name = "Error")
 public class ErrorResponse {
 
     private final int status;

@@ -15,8 +15,9 @@ import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
 class ApplicationClass: Application() {
-    //val BASE_URL = "http://i6d104.p.ssafy.io:9999"
-//    val TIME_OUT = 10000L
+
+    val BASE_URL = "http://119.56.162.61:9999"
+    val TIME_OUT = 10000L
     val SP_NAME = "fcm_message"
 
     companion object {

@@ -14,14 +14,17 @@ import com.ssafy.api.service.common.CommonResult;
 import com.ssafy.api.service.common.ListResult;
 import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
 @RestController
 @RequestMapping("/api/schedule")
@@ -36,7 +39,7 @@ public class ScheduleController {
     private final UserService userService;
 
     @PostMapping("/create")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
     public CommonResult createSchedule (@RequestBody @Valid NewScheduleReqDto scheduleReq, HttpServletRequest request) {
         Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         User user = userService.findByUserPk(userPk);
@@ -46,7 +49,7 @@ public class ScheduleController {
     }
 
     @GetMapping("/{scheduleId}")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
     public SingleResult<ScheduleDetailResDto> scheduleDetail(@PathVariable long scheduleId, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
@@ -63,7 +66,7 @@ public class ScheduleController {
     }
 
     @PatchMapping("/{scheduleId}")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
     public CommonResult updateSchedule(@PathVariable long scheduleId,
                                        NewScheduleReqDto scheduleReq,
                                        HttpServletRequest request) {
@@ -74,7 +77,7 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{scheduleId}")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
     public CommonResult deleteSchedule(@PathVariable long scheduleId, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
@@ -83,14 +86,14 @@ public class ScheduleController {
     }
 
     @GetMapping("/day/{day}")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
     public ListResult<ScheduleDetailResDto> scheduleListDay(@PathVariable String day, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         return responseService.getListResult(scheduleService.getScheduleListByDay(family, day));
     }
 
     @GetMapping("/month/{month}")
-    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
     public ListResult<ScheduleDetailResDto> scheduleListMonth(@PathVariable String month, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         return responseService.getListResult(scheduleService.getScheduleListByMonth(family, month));
