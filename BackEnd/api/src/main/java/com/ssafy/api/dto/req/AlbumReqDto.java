@@ -4,6 +4,7 @@ package com.ssafy.api.dto.req;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,7 +18,7 @@ import java.util.List;
 @Schema(description = "DTO Model : AlbumReqDto")
 public class AlbumReqDto {
 
-    @NotBlank
+    @NotNull
     @ArraySchema(schema = @Schema(description = "해시태그", required = true, example = "광화문"))
     private List<String> hashTags;
 
@@ -32,8 +33,8 @@ public class AlbumReqDto {
 //    private List<MultipartFile> multipartFiles;
 
     @NotNull
-    @Schema(name = "메인사진 index", required = true, example = "")
+    @Schema(description = "메인사진 index", required = true, example = "")
     private int mainIndex;
 
-
+    private List<MultipartFile> multipartFiles;
 }

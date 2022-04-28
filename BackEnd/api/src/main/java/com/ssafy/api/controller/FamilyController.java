@@ -48,18 +48,16 @@ public class FamilyController {
             })
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SingleResult<FamilyJoinResDto> createFamily(
-            @ModelAttribute
-            @Valid FamilyJoinReqDto familyRequest,
-            @RequestParam(value = "image") MultipartFile image,
+            @ModelAttribute @Valid FamilyJoinReqDto familyJoinReqDto,
             HttpServletRequest request) {
 
         Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
-        userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
+        userService.updateBirthdayWithUserPk(userPk, familyJoinReqDto.getBirthday());
         Family family = familyService.createFamily();
-        String[] imageInfo = profileService.enrollImage(image, request).split("#");
-        familyService.createProfile(family, user, familyRequest, imageInfo);
+        String[] imageInfo = profileService.enrollImage(familyJoinReqDto.getImage(), request).split("#");
+        familyService.createProfile(family, user, familyJoinReqDto, imageInfo);
         FamilyJoinResDto res = FamilyJoinResDto.builder()
                 .familyId(family.getId())
                 .build();

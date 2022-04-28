@@ -94,10 +94,8 @@ public class AlbumController {
             @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
     })
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public CommonResult createAlbum(@org.springframework.web.bind.annotation.RequestBody
-                                    @io.swagger.v3.oas.annotations.parameters.RequestBody
+    public CommonResult createAlbum(@ModelAttribute
                                     @Valid final AlbumReqDto albumReqDto,
-                                    @RequestParam(value = "file", required = false) List<MultipartFile> multipartFiles,
                                     HttpServletRequest request) {
 
         Long userPK = jwtProvider.getUserPkFromRequest(request);
@@ -108,7 +106,7 @@ public class AlbumController {
                 .family(family)
                 .date(albumService.createDate(albumReqDto.getDate()))
                 .build();
-        albumService.createAlbum(albumReqDto, family, album, multipartFiles, request);
+        albumService.createAlbum(albumReqDto, family, album, albumReqDto.getMultipartFiles(), request);
 
         return responseService.getSuccessResult();
 
