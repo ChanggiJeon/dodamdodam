@@ -15,8 +15,9 @@ import java.util.concurrent.TimeUnit
 
 @HiltAndroidApp
 class ApplicationClass: Application() {
-    //val BASE_URL = "http://i6d104.p.ssafy.io:9999"
-//    val TIME_OUT = 10000L
+
+    val BASE_URL = "http://119.56.162.61:9999"
+    val TIME_OUT = 10000L
     val SP_NAME = "fcm_message"
 
     companion object {
@@ -28,7 +29,13 @@ class ApplicationClass: Application() {
         const val AUTO_LOGIN = "auto_login_flag"
         const val JWT = "JWT"
 
-//        lateinit var sRetrofit: Retrofit
+        const val Id = "100"
+        const val Name = "엄마"
+
+//        const val Id = "101"
+//        const val Name = "아빠"
+
+        //        lateinit var sRetrofit: Retrofit
         lateinit var sSharedPreferences: SharedPreferencesUtil
         lateinit var sContentResolver: ContentResolver
 

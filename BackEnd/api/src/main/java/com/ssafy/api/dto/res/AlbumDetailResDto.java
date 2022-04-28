@@ -14,16 +14,16 @@ import java.util.List;
 public class AlbumDetailResDto {
 //date 해시태그 사진 가족별 리액션
 
-    @Schema(name = "date", example = "")
+    @Schema(description = "날짜", example = "")
     private String date;
 
-    @Schema(name = "사진", example = "")
+    @Schema(description = "사진", example = "")
     private List<AlbumPictureListResDto> pictures;
 
-    @Schema(name = "해시태그", example = "")
+    @Schema(description = "해시태그", example = "")
     private List<AlbumHashTagListResDto> hashTags;
 
-    @Schema(name = "앨범 리액션", example = "")
+    @Schema(description = "앨범 리액션", example = "")
     private List<AlbumReactionListResDto> albumReactions;
 
 

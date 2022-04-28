@@ -12,9 +12,9 @@ import lombok.*;
 @Schema(name = "Suggestion Reaction List Response")
 public class SuggestionReactionListResDto {
 
-    @Schema(name = "좋아요 여부", example = "true/false")
+    @Schema(description = "좋아요 여부", example = "true/false")
     private boolean isLike;
 
-    @Schema(name = "profileId", example = "1")
+    @Schema(description = "프로필 id", example = "1")
     private Long profileId;
 }

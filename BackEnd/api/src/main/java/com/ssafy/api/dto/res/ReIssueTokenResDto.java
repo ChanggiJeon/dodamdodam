@@ -11,9 +11,9 @@ import lombok.*;
 @Schema(name = "ReIssueToken Response")
 public class ReIssueTokenResDto {
 
-    @Schema(name = "jwt 토큰", example = "ex123am45ple")
+    @Schema(description = "jwt 토큰", example = "ex123am45ple")
     private String jwtToken;
 
-    @Schema(name = "refresh 토큰", example = "ex123am45ple")
+    @Schema(description = "refresh 토큰", example = "ex123am45ple")
     private String refreshToken;
 }

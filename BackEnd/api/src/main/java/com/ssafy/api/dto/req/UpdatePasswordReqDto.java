@@ -16,11 +16,11 @@ public class UpdatePasswordReqDto {
 
     @NotBlank
     @Size(max = 20, min = 5)
-    @Schema(name = "아이디", required = true, example = "ssafy")
+    @Schema(description = "아이디", required = true, example = "ssafy")
     private String userId;
 
     @NotBlank
     @Size(max = 20, min = 8)
-    @Schema(name = "비밀번호", required = true, example = "ssafy61!")
+    @Schema(description = "비밀번호", required = true, example = "ssafy61!")
     private String password;
 }

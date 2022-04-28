@@ -20,16 +20,16 @@ public class ProfileReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "role", required = true, example = "아들")
+    @Schema(description = "역할", required = true, example = "아들")
     private String role;
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "닉네임", required = true, example = "싸피")
+    @Schema(description = "닉네임", required = true, example = "싸피")
     private String nickname;
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "생년월일", required = true, example = "1995-08-20")
+    @Schema(description = "생년월일", required = true, example = "1995-08-20")
     private String birthday;
 }

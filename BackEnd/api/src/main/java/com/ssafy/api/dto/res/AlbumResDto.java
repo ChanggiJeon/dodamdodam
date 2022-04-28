@@ -14,10 +14,10 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumResDto {
-    @Schema(name = "앨범", example = "")
+    @Schema(description = "앨범", example = "")
     private Album album;
 
     @Nullable
-    @Schema(name = "메인사진", example = "")
+    @Schema(description = "메인사진", example = "")
     private Picture mainPicture;
 }

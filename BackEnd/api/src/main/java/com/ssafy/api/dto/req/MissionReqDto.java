@@ -17,6 +17,6 @@ public class MissionReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "missionContent", required = true, example = "")
+    @Schema(description = "미션내용", required = true, example = "")
     private String missionContent;
 }

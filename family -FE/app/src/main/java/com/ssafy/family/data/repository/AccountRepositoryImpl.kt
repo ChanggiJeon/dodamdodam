@@ -10,6 +10,8 @@ import com.ssafy.family.data.remote.req.findIdReq
 import com.ssafy.family.data.remote.res.LoginRes
 import com.ssafy.family.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 class AccountRepositoryImpl(
@@ -19,8 +21,9 @@ class AccountRepositoryImpl(
 ) : AccountRepository {
 //    val accountAPI = ApplicationClass.sRetrofit.create(AccountAPI::class.java)
 
-    override suspend fun login(user: LoginReq): Resource<LoginRes> {
-        return try {
+
+    override suspend fun login(user: LoginReq): Resource<LoginRes> = withContext(ioDispatcher){
+         try{
             val response = api.login(user)
             when {
                 response.isSuccessful -> {
@@ -38,8 +41,8 @@ class AccountRepositoryImpl(
         }
     }
 
-    override suspend fun addFcm(fcmToken: AddFcmReq): Resource<BaseResponse> {
-        return try {
+    override suspend fun addFcm(fcmToken: AddFcmReq): Resource<BaseResponse>  = withContext(ioDispatcher){
+        try {
             val response = api.addFcm(fcmToken)
             when {
                 response.isSuccessful -> {
@@ -57,8 +60,8 @@ class AccountRepositoryImpl(
         }
     }
 
-    override suspend fun signUp(signUpReq: SignUpReq): Resource<BaseResponse> {
-        return try {
+    override suspend fun signUp(signUpReq: SignUpReq): Resource<BaseResponse>  = withContext(ioDispatcher){
+        try {
             val response = api.signUp(signUpReq)
             when {
                 response.isSuccessful -> {
@@ -76,8 +79,8 @@ class AccountRepositoryImpl(
         }
     }
 
-    override suspend fun findId(findIdReq: findIdReq): Resource<BaseResponse> {
-        return try {
+    override suspend fun findId(findIdReq: findIdReq): Resource<BaseResponse> = withContext(ioDispatcher) {
+        try {
             val response = api.findId(findIdReq)
             when {
                 response.isSuccessful -> {
@@ -95,8 +98,8 @@ class AccountRepositoryImpl(
         }
     }
 
-    override suspend fun newPassword(newIdPwReq: LoginReq): Resource<BaseResponse> {
-        return try {
+    override suspend fun newPassword(newIdPwReq: LoginReq): Resource<BaseResponse>  = withContext(ioDispatcher){
+        try {
             val response = api.newPassword(newIdPwReq)
             when {
                 response.isSuccessful -> {
@@ -114,8 +117,8 @@ class AccountRepositoryImpl(
         }
     }
 
-    override suspend fun idCheck(userId: String): Resource<BaseResponse> {
-        return try {
+    override suspend fun idCheck(userId: String): Resource<BaseResponse> = withContext(ioDispatcher) {
+        try {
             val response = api.idCheck(userId)
             when {
                 response.isSuccessful -> {
@@ -136,8 +139,8 @@ class AccountRepositoryImpl(
         }
     }
 
-    override suspend fun updateBirthDay(birthday: String): Resource<BaseResponse> {
-        return try {
+    override suspend fun updateBirthDay(birthday: String): Resource<BaseResponse>  = withContext(ioDispatcher){
+        try {
             val response = api.updateBirthDay(birthday)
             when {
                 response.isSuccessful -> {

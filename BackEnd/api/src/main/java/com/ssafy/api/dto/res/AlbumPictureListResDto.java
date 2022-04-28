@@ -13,10 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumPictureListResDto {
-    @Schema(name = "메인여부", example = "")
+    @Schema(description = "메인여부", example = "")
     private boolean isMain;
 
-    @Schema(name = "사진경로", example = "")
+    @Schema(description = "사진경로", example = "")
     private String imagePath;
 
     public List<AlbumPictureListResDto> fromEntity(List<Picture> pictures){

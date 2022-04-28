@@ -12,12 +12,12 @@ import lombok.*;
 @Schema(name = "Suggestion Reaction Response")
 public class SuggestionReactionResDto {
 
-    @Schema(name = "의견 제시 id", example = "1")
+    @Schema(description = "의견 제시 id", example = "1")
     private Long suggestionId;
 
-    @Schema(name = "좋아요 갯수", example = "2")
+    @Schema(description = "좋아요 갯수", example = "2")
     private Long like;
 
-    @Schema(name = "싫어요 갯수", example = "3")
+    @Schema(description = "싫어요 갯수", example = "3")
     private Long dislike;
 }

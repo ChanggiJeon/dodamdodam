@@ -16,11 +16,11 @@ public class StatusReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "emotion", required = true, example = "")
+    @Schema(description = "상태", required = true, example = "")
     private String emotion;
 
     @NotBlank
     @Size(max = 10, min = 1)
-    @Schema(name = "comment", required = true, example = "")
+    @Schema(description = "오늘의 한마디", required = true, example = "")
     private String comment;
 }

@@ -7,15 +7,14 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.ssafy.family.config.ApplicationClass.Companion.Id
+import com.ssafy.family.data.ChatData
 import com.ssafy.family.databinding.ItemChattingBinding
 
-// mainactivity - familyfragment : 알림 보내기 메시지 리스트
-class ChattingAdapter(private val context: Context) : RecyclerView.Adapter<ChattingAdapter.ViewHolder>() {
-
-    private var datas = mutableListOf<Int>(1,1,2)
+// mainactivity - chatfragment : 채팅 리스트
+class ChattingAdapter(private val context: Context, var datas: MutableList<ChatData>) : RecyclerView.Adapter<ChattingAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //val view = LayoutInflater.from(context).inflate(R.layout.item_family_status,parent,false)
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemChattingBinding.inflate(inflater, parent, false)
             return ViewHolder(binding)
@@ -24,49 +23,21 @@ class ChattingAdapter(private val context: Context) : RecyclerView.Adapter<Chatt
     override fun getItemCount(): Int = datas.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-//        holder.bind(datas[position])
         val itemBinding = holder.binding as ItemChattingBinding
-        if(datas[position] == 1){
-            itemBinding.ownChatting.visibility = GONE
-            itemBinding.oppChatting.visibility = VISIBLE
-        }else{
+        if(datas[position].id == Id){
             itemBinding.ownChatting.visibility = VISIBLE
             itemBinding.oppChatting.visibility = GONE
+            itemBinding.ownChattingText.text = datas[position].message.toString()
+            itemBinding.ownTimeText.text = datas[position].time.toString()
+        }else{
+            itemBinding.ownChatting.visibility = GONE
+            itemBinding.oppChatting.visibility = VISIBLE
+            itemBinding.oppChattingText.text = datas[position].message.toString()
+            itemBinding.oppTimeText.text = datas[position].time.toString()
+            itemBinding.oppWriterText.text = datas[position].name.toString()
         }
-//        val currentBook = getItemId(position)
-//        val itemBinding = holder.binding as ItemAlarmBinding
-//        itemBinding.familyStatus.setOnClickListener {
-//            if(itemBinding.alarmRecycler.visibility == VISIBLE){
-//                itemBinding.alarmRecycler.visibility = GONE
-//            }else{
-//                itemBinding.alarmRecycler.visibility = VISIBLE
-//            }
-//        }
-
-//        itemBinding.executePendingBindings()
-//        holder.itemView.apply{
-//            setOnClickListener{
-////                val intent = Intent(context, DetailActivity::class.java)
-////                intent.putExtra("bookId", currentBook.bookId)
-////                ContextCompat.startActivity(context, intent, null)
-//            }
-//        }
     }
 
-    inner class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
-
-//        private val txtName: TextView = itemView.findViewById(R.id.tv_rv_name)
-//        private val txtAge: TextView = itemView.findViewById(R.id.tv_rv_age)
-//        private val imgProfile: ImageView = itemView.findViewById(R.id.img_rv_photo)
-//
-//        fun bind(item: ProfileData) {
-//            txtName.text = item.name
-//            txtAge.text = item.age.toString()
-//            Glide.with(itemView).load(item.img).into(imgProfile)
-//
-//        }
-    }
-
+    inner class ViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {}
 
 }
