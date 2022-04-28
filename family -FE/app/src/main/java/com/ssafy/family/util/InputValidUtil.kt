@@ -1,5 +1,6 @@
 package com.ssafy.family.util
 
+import java.lang.StringBuilder
 import java.util.*
 
 private const val TAG = "InputValidUtil_strait"
@@ -14,7 +15,7 @@ object InputValidUtil {
     //val passRegex3 = "^(?=.*[^a-zA-Z0-9])(?=.*[0-9]).{8,14}$".toRegex()
     val passRegexes = listOf(passRegex1)
 
-    val birthDayRegex = "([0-9]{2}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))".toRegex()
+    val birthDayRegex = "([0-9]{4}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))".toRegex()
     val phoneRegex = "^\\d{3}\\d{3,4}\\d{4}$".toRegex()
 
     fun isValidId(Id: String): Boolean {
@@ -39,21 +40,23 @@ object InputValidUtil {
     // todo: 날짜 계산
     fun isValidBirthDay(birthDay: String): Boolean {
         if(birthDay.matches(birthDayRegex)) {
-            val year = birthDay.substring(0, 2).toInt()
-            val month = birthDay.substring(2, 4).toInt()
-            val day = birthDay.substring(4, 6).toInt()
+            val year = birthDay.substring(0, 4).toInt()
+            val month = birthDay.substring(4, 6).toInt()
+            val day = birthDay.substring(6, 8).toInt()
 
-            var convertedYear = if(year >= 0 && year <= Calendar.getInstance().get(Calendar.YEAR) % 100) {
-                2000 + year
-            } else {
-                1900 + year
-            }
-
-            return isValidDay(convertedYear, month, day)
+            return isValidDay(year, month, day)
         }
         return false
     }
-
+    fun makeDay(birthDay: String):String{
+        val sb = StringBuilder()
+        sb.append(birthDay.substring(0, 4))
+        sb.append("-")
+        sb.append(birthDay.substring(4, 6))
+        sb.append("-")
+        sb.append(birthDay.substring(6, 8))
+        return sb.toString()
+    }
     fun isValidDay(year: Int, month: Int, day: Int): Boolean {
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
 

@@ -1,33 +1,28 @@
 package com.ssafy.family.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.ssafy.family.R
+import com.ssafy.family.data.remote.req.findIdReq
+import com.ssafy.family.databinding.FragmentFindIdBinding
+import com.ssafy.family.util.InputValidUtil
+import com.ssafy.family.util.Status
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FindIdFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class FindIdFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+    lateinit var binding: FragmentFindIdBinding
+    private val loginViewModel by activityViewModels<LoginViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -35,26 +30,96 @@ class FindIdFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_find_id, container, false)
+        binding = FragmentFindIdBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FindIdFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FindIdFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initview()
+    }
+
+    private fun initview() {
+        binding.findIdPageTop.scheduleTitle.text = "뒤로가기"
+        binding.findIdPageTop.topLayout.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.home_frame, LoginFragment())
+                .commit()
+        }
+        binding.findIDPageInputName.addTextChangedListener {
+            val input = it.toString()
+            if (InputValidUtil.isValidName(input)) {
+                binding.findIDPageInputName.error = null
+            }
+        }
+        binding.findIDPageInputBirthday.addTextChangedListener {
+            val input = it.toString()
+            if (InputValidUtil.isValidBirthDay(input)) {
+                binding.findIDPageInputBirthday.error = null
+            }
+        }
+        binding.findIDPageInputFamilyCode.addTextChangedListener {
+            val input = it.toString()
+            if (input.length <= 15) {
+                binding.findIDPageInputFamilyCode.error = null
+            }
+        }
+        binding.findIDPageFindIDBtn.setOnClickListener {
+            val name = binding.findIDPageInputName.text.toString()
+            val birthday = binding.findIDPageInputBirthday.text.toString()
+            val familycode = binding.findIDPageInputFamilyCode.text.toString()
+            if (InputValidUtil.isValidBirthDay(birthday)) {
+                if (InputValidUtil.isValidName(name)) {
+                    if (familycode.length == 15) {
+                        findId(
+                            findIdReq(
+                                name,
+                                InputValidUtil.makeDay(birthday),
+                                familycode
+                            )
+                        )
+                    } else {
+                        binding.findIDPageInputFamilyCode.error =
+                            "올바르지않은 형식입니다. (ex , 15자리의 영문 숫자 코드)"
+                    }
+                } else {
+                    binding.findIDPageInputName.error = ("올바르지않은 형식입니다.(ex 홍길동)")
+                }
+            } else {
+                binding.findIDPageInputBirthday.error = ("올바르지않은 형식입니다.(ex 20220428)")
+            }
+        }
+        loginViewModel.findLiveData.observe(requireActivity()) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    dismissLoading()
+                    Log.d("ddddd", "initview: "+it.data)
+                    if (it.data!!.message == null) {
+                        Toast.makeText(requireActivity(),"입력한 정보에 맞는 아이디가 없습니다", Toast.LENGTH_SHORT).show()
+                    } else {
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.home_frame, FindPwFragment())
+                            .commit()
+                    }
+                }
+                Status.LOADING -> {
+                    setLoading()
+                }
+                Status.ERROR -> {
+                    dismissLoading()
+                    Toast.makeText(requireActivity(), "서버 에러", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    private fun findId(findIdReq: findIdReq) {
+        loginViewModel.findId(findIdReq)
+    }
+    private fun setLoading() {
+        binding.progressBarLoginFLoading.visibility = View.VISIBLE
+    }
+    private fun dismissLoading() {
+        binding.progressBarLoginFLoading.visibility = View.GONE
     }
 }

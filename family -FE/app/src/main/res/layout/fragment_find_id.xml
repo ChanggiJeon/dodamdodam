@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.FindIdFragment">
 
+    <include
+        android:id="@+id/findId_page_top"
+        layout="@layout/schedule_top_list"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/findID_page_logo"
         android:layout_width="300dp"
@@ -121,5 +131,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="590dp"/>
-
+    <ProgressBar
+        android:id="@+id/progressBar_loginF_loading"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
