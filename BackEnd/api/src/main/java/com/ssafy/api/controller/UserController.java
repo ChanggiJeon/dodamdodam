@@ -38,7 +38,7 @@ public class UserController {
     private final ResponseService responseService;
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping(value = "{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "{userId}")
     @Operation(summary = "ID 중복체크", description = "<strong>아이디</strong>의 사용여부를 확인한다.")
     public CommonResult idCheck(@PathVariable String userId) {
 
@@ -95,7 +95,7 @@ public class UserController {
         return responseService.getSingleResult(userInfo);
     }
 
-    @PostMapping(value = "refresh", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "refresh")
     @Parameters({
             @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER),
             @Parameter(name = "X-AUTH-REFRESH-TOKEN", description = "JWT Refresh Token", required = true, in = HEADER),
@@ -161,7 +161,7 @@ public class UserController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "birthday/{birthday}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "birthday/{birthday}")
     public CommonResult updatePassword
             (@PathVariable String birthday, HttpServletRequest request) {
 

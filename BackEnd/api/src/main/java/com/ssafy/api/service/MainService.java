@@ -39,7 +39,7 @@ public class MainService {
 
     public void createSuggestion(String text, Long userPk) {
         Family family = familyRepository.findFamilyByUserPk(userPk);
-        System.out.println(family.toString());
+
         if (family == null) {
             throw new CustomException(INVALID_REQUEST);
         }
@@ -50,7 +50,7 @@ public class MainService {
                     .text(text)
                     .build());
         }else{
-            throw new CustomException(INVALID_REQUEST);
+            throw new CustomException(INVALID_REQUEST, "의견제시는 가족당 최대 3개까지 입니다!");
         }
 
     }

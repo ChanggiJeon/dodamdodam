@@ -68,7 +68,7 @@ public class AlbumController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "{albumId}")
+    @GetMapping(value = "{albumId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public SingleResult<AlbumDetailResDto> getAlbum(@PathVariable long albumId, HttpServletRequest request) {
         Long userPK = jwtProvider.getUserPkFromRequest(request);
         AlbumPictureListResDto albumPictureListResDto = AlbumPictureListResDto.builder().build();

@@ -37,7 +37,7 @@ public class MainController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "{familyId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "{familyId}")
     public ListResult<MainProfileResDto> getProfileList(@PathVariable Long familyId, HttpServletRequest request) {
 
         Long userPk = jwtProvider.getUserPkFromRequest(request);
@@ -47,7 +47,6 @@ public class MainController {
 
 
 //  의견 관련 API
-
     @Operation(summary = "의견 제시 생성", description = "<strong>의견 제시<strong>를 작성한다.",
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
@@ -69,7 +68,7 @@ public class MainController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "suggestion/{familyId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "suggestion/{familyId}")
     public ListResult<SuggestionResDto> getSuggestionList(@PathVariable Long familyId) {
 
         return responseService.getListResult(mainService.getSuggestionList(familyId));
