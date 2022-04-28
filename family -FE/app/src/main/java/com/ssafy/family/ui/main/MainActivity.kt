@@ -15,6 +15,7 @@ import com.ssafy.family.config.ApplicationClass
 import com.ssafy.family.databinding.ActivityMainBinding
 import com.ssafy.family.ui.main.bottomFragment.*
 import com.ssafy.family.ui.schedule.AddScheduleFragment
+import com.ssafy.family.util.LoginUtil
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         moveFragment(HomeFragment())
+        Log.d("ddddd", "onCreate: "+LoginUtil.getUserInfo())
         binding.mainBottomNavigation.setOnItemSelectedListener {
             Log.d("dddd", "onCreate: "+it.itemId)
             Log.d("dddd", "onCreate: "+it.title)
