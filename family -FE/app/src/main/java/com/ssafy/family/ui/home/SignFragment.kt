@@ -1,33 +1,26 @@
 package com.ssafy.family.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.ssafy.family.R
+import com.ssafy.family.data.remote.req.SignUpReq
+import com.ssafy.family.databinding.FragmentSignBinding
+import com.ssafy.family.util.InputValidUtil
+import com.ssafy.family.util.Status
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SignFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SignFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+    lateinit var binding: FragmentSignBinding
+    private var checkId = false
+    private val loginViewModel by activityViewModels<LoginViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
@@ -35,26 +28,123 @@ class SignFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign, container, false)
+        binding = FragmentSignBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SignFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SignFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
+        binding.signPageTop.scheduleTitle.text = "뒤로가기"
+        binding.signPageTop.topLayout.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.home_frame, LoginFragment())
+                .commit()
+        }
+        binding.signPageInputID.addTextChangedListener {
+            val input = it.toString()
+            if (InputValidUtil.isValidId(input)) {
+                binding.signPageInputID.error = null
+            }
+        }
+        binding.signPageInputUsername.addTextChangedListener {
+            val input = it.toString()
+            if (InputValidUtil.isValidName(input)) {
+                binding.signPageInputUsername.error = null
+            }
+        }
+        binding.signPageInputPW.addTextChangedListener {
+            val input = it.toString()
+            if (InputValidUtil.isValidPassword(input)) {
+                binding.signPageInputPW.error = null
+            }
+        }
+        binding.signPageInputPWConfirm.addTextChangedListener {
+            val input = it.toString()
+            if (InputValidUtil.isValidPassword(input)) {
+                if (binding.signPageInputPW.text.toString() == input) {
+                    binding.signPageInputPW.error = null
+                } else {
+                    binding.signPageInputPW.error =
+                        getString(R.string.passwordCheckErrorMessage)
                 }
             }
+        }
+        binding.signPageCheckIDBtn.setOnClickListener {
+            val id = binding.signPageInputID.text.toString()
+            if (InputValidUtil.isValidId(id)) {
+                loginViewModel.idCheck(id)
+            }
+        }
+        loginViewModel.idCheckLiveData.observe(requireActivity()) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.sameIdSuccesMessage),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    checkId = true
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireActivity(), it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        binding.signPageSignBtn.setOnClickListener {
+            val id = binding.signPageInputID.text.toString()
+            val password = binding.signPageInputPW.text.toString()
+            val confirmpassword = binding.signPageInputPWConfirm.text.toString()
+            val name = binding.signPageInputUsername.text.toString()
+            if (checkId) {
+                if (InputValidUtil.isValidPassword(password)) {
+                    if (password == confirmpassword) {
+                        if (InputValidUtil.isValidName(name)) {
+                            loginViewModel.signUp(SignUpReq(id, password, name))
+                        } else {
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.nameErrorMessage),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } else {
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.passwordCheckErrorMessage),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } else {
+                    Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.passwordErrorMessage),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                Toast.makeText(
+                    requireActivity(),
+                    getString(R.string.emailNotCheckedErrorMessage),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        loginViewModel.signUpLiveData.observe(requireActivity()){
+            when(it.status){
+                Status.SUCCESS -> {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.home_frame, LoginFragment())
+                        .commit()
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireActivity(), "서버 에러", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
+
 }
