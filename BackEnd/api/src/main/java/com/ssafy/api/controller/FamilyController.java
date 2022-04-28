@@ -73,14 +73,13 @@ public class FamilyController {
             @ModelAttribute
             @Valid FamilyJoinReqDto familyRequest,
             @PathVariable long familyId,
-            @RequestParam(value = "image") MultipartFile image,
             HttpServletRequest request) {
         Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
         userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
         Family family = familyService.getFamily(familyId);
-        String[] imageInfo = profileService.enrollImage(image, request).split("#");
+        String[] imageInfo = profileService.enrollImage(familyRequest.getImage(), request).split("#");
         familyService.createProfile(family, user, familyRequest, imageInfo);
         return responseService.getSuccessResult("그룹 가입 완료");
     }
@@ -89,7 +88,7 @@ public class FamilyController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "/code/check/{code}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/code/check/{code}")
     public SingleResult<FamilyIdResDto> checkFamilyCode(@PathVariable String code) {
         Family family = familyService.checkCode(code);
         FamilyIdResDto res = FamilyIdResDto.builder()
@@ -102,7 +101,7 @@ public class FamilyController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "/code", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/code")
     public SingleResult<FamilyCodeResDto> getFamilyCode(HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         FamilyCodeResDto res = FamilyCodeResDto.builder()
@@ -129,7 +128,7 @@ public class FamilyController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "/picture", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/picture")
     public SingleResult<FamilyPictureResDto> getFamilyPicture(HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         String picture = family.getPicture();

@@ -104,8 +104,10 @@ public class FamilyService {
             dir.mkdirs();
         }
         try{
+            log.info(family.getPicture());
             if(family.getPicture() != null) {
                 File file = new File(path + family.getPicture());
+                log.info(file.toString());
                 file.delete();
             }
             File file = new File(path + saveFileName);
@@ -113,9 +115,8 @@ public class FamilyService {
         } catch (Exception e){
             throw new CustomException(INVALID_REQUEST, "파일이 없습니다.");
         }
-        familyRepository.save(Family.builder()
-                .picture(saveFileName)
-                .build());
+        family.setPicture(saveFileName);
+        familyRepository.save(family);
     }
 
     public void checkFamilyAuthority(HttpServletRequest request) {

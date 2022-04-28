@@ -44,7 +44,7 @@ public class ScheduleController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create")
     public CommonResult createSchedule(@org.springframework.web.bind.annotation.RequestBody
                                        @io.swagger.v3.oas.annotations.parameters.RequestBody
                                        @Valid NewScheduleReqDto scheduleReq,
@@ -60,7 +60,7 @@ public class ScheduleController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "/{scheduleId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{scheduleId}")
     public SingleResult<ScheduleDetailResDto> scheduleDetail(@PathVariable long scheduleId, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
@@ -80,7 +80,7 @@ public class ScheduleController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @PatchMapping(value = "/{scheduleId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/{scheduleId}")
     public CommonResult updateSchedule(@PathVariable long scheduleId,
                                        NewScheduleReqDto scheduleReq,
                                        HttpServletRequest request) {
@@ -94,7 +94,7 @@ public class ScheduleController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @DeleteMapping(value = "/{scheduleId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{scheduleId}")
     public CommonResult deleteSchedule(@PathVariable long scheduleId, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
@@ -106,7 +106,7 @@ public class ScheduleController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "/day/{day}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/day/{day}")
     public ListResult<ScheduleDetailResDto> scheduleListDay(@PathVariable String day, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         return responseService.getListResult(scheduleService.getScheduleListByDay(family, day));
@@ -116,7 +116,7 @@ public class ScheduleController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "/month/{month}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/month/{month}")
     public ListResult<ScheduleDetailResDto> scheduleListMonth(@PathVariable String month, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         return responseService.getListResult(scheduleService.getScheduleListByMonth(family, month));
