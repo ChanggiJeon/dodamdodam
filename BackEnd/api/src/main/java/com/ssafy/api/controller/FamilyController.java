@@ -48,8 +48,7 @@ public class FamilyController {
             })
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SingleResult<FamilyJoinResDto> createFamily(
-            @org.springframework.web.bind.annotation.RequestBody
-            @io.swagger.v3.oas.annotations.parameters.RequestBody
+            @ModelAttribute
             @Valid FamilyJoinReqDto familyRequest,
             @RequestParam(value = "image") MultipartFile image,
             HttpServletRequest request) {
@@ -73,8 +72,7 @@ public class FamilyController {
             })
     @PostMapping(value = "/join/{familyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult joinFamily(
-            @org.springframework.web.bind.annotation.RequestBody
-            @io.swagger.v3.oas.annotations.parameters.RequestBody
+            @ModelAttribute
             @Valid FamilyJoinReqDto familyRequest,
             @PathVariable long familyId,
             @RequestParam(value = "image") MultipartFile image,
@@ -84,11 +82,8 @@ public class FamilyController {
         familyService.familyExistCheck(userPk);
         userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
         Family family = familyService.getFamily(familyId);
-        log.info("1");
         String[] imageInfo = profileService.enrollImage(image, request).split("#");
-        log.info("2");
         familyService.createProfile(family, user, familyRequest, imageInfo);
-        log.info("3");
         return responseService.getSuccessResult("그룹 가입 완료");
     }
 
