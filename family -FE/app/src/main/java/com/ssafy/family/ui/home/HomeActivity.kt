@@ -21,5 +21,6 @@ class HomeActivity : AppCompatActivity() {
             .replace(R.id.home_frame, LoginFragment())
             .commit()
 
+
     }
 }
