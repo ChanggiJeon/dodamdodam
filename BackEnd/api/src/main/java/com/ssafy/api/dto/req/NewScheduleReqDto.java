@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "Schedule Request")
+@Schema(description = "DTO Model : NewScheduleReqDto")
 public class NewScheduleReqDto {
 
     @NotBlank

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SuggestionReaction Request")
+@Schema(description = "DTO Model : SuggestionReactionReqDto")
 public class SuggestionReactionReqDto {
 
     @NotBlank

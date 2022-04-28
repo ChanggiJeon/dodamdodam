@@ -8,15 +8,12 @@ import com.ssafy.api.entity.Album;
 import com.ssafy.api.dto.res.*;
 import com.ssafy.api.entity.*;
 import com.ssafy.api.service.AlbumService;
-import com.ssafy.api.service.ProfileService;
-import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.common.CommonResult;
 import com.ssafy.api.service.common.ListResult;
 import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,23 +28,23 @@ import java.util.List;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
-@Tag(name = "앨범")
-@RestController
 @Slf4j
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/album")
+@Tag(name = "AlbumController", description = "앨범컨트롤러")
 public class AlbumController {
 
     private final JwtProvider jwtProvider;
     private final AlbumService albumService;
-    private final UserService userService;
-    private final ProfileService profileService;
     private final ResponseService responseService;
 
     //앨범수정, 앨범 검색
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "앨범 전체 조회", description = "<strong>앨범 전체 조회</strong>")
+    @Operation(summary = "앨범 전체 조회", description = "<strong>앨범 전체 조회</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ListResult<AlbumResDto> getAlbums(HttpServletRequest request) {
         Long userPK = jwtProvider.getUserPkFromRequest(request);
         Family family = albumService.findFamilyByUserPK(userPK);
@@ -67,9 +64,11 @@ public class AlbumController {
     }
 
 
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "앨범 상세 조회", description = "<strong>앨범 상세 조회</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
     @GetMapping(value = "{albumId}")
-    @Operation(summary = "앨범 상세 조회", description = "<strong>앨범 상세 조회</strong>")
     public SingleResult<AlbumDetailResDto> getAlbum(@PathVariable long albumId, HttpServletRequest request) {
         Long userPK = jwtProvider.getUserPkFromRequest(request);
         AlbumPictureListResDto albumPictureListResDto = AlbumPictureListResDto.builder().build();
@@ -91,10 +90,13 @@ public class AlbumController {
     }
 
 
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "앨범 등록", description = "<strong>앨범 등록</strong>")
-    public CommonResult createAlbum(@ModelAttribute @Valid AlbumReqDto albumReqDto,
+    @Operation(summary = "앨범 등록", description = "<strong>앨범 등록</strong>", parameters = {
+            @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+    })
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CommonResult createAlbum(@org.springframework.web.bind.annotation.RequestBody
+                                    @io.swagger.v3.oas.annotations.parameters.RequestBody
+                                    @Valid final AlbumReqDto albumReqDto,
                                     @RequestParam(value = "file", required = false) List<MultipartFile> multipartFiles,
                                     HttpServletRequest request) {
 
@@ -113,11 +115,16 @@ public class AlbumController {
     }
 
 
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "앨범 리액션 등록 및 수정", description = "<strong>앨범 리액션 등록 및 수정</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
     @PostMapping(value = "/{albumId}/reaction", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "앨범 리액션 등록 및 수정", description = "<strong>앨범 리액션 등록 및 수정</strong>")
     public CommonResult createReaction(@PathVariable long albumId,
-                                       @RequestBody AlbumReactionReqDto albumReactionReqDto, HttpServletRequest request) {
+                                       @org.springframework.web.bind.annotation.RequestBody
+                                       @io.swagger.v3.oas.annotations.parameters.RequestBody
+                                               AlbumReactionReqDto albumReactionReqDto,
+                                       HttpServletRequest request) {
 
         Long userPK = jwtProvider.getUserPkFromRequest(request);
         Album album = albumService.findByAlbum(albumId);
@@ -126,11 +133,12 @@ public class AlbumController {
     }
 
 
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "앨범 리액션 삭제", description = "<strong>앨범 리액션 삭제</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
     @DeleteMapping(value = "/{albumId}/reaction", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "앨범 리액션 삭제", description = "<strong>앨범 리액션 삭제</strong>")
-    public CommonResult deleteReaction(@PathVariable long albumId,
-                                       HttpServletRequest request) {
+    public CommonResult deleteReaction(@PathVariable long albumId, HttpServletRequest request) {
 
         Long userPK = jwtProvider.getUserPkFromRequest(request);
         Album album = albumService.findByAlbum(albumId);
@@ -138,10 +146,15 @@ public class AlbumController {
         return responseService.getSuccessResult();
     }
 
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @PatchMapping(value = "/{albumId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "앨범 수정", description = "<strong>앨범 수정</strong>")
-    public CommonResult updateAlbum(@PathVariable long albumId, @ModelAttribute @Valid AlbumReqDto albumReqDto,
+    @Operation(summary = "앨범 수정", description = "<strong>앨범 수정</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PatchMapping(value = "/{albumId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CommonResult updateAlbum(@PathVariable long albumId,
+                                    @org.springframework.web.bind.annotation.RequestBody
+                                    @io.swagger.v3.oas.annotations.parameters.RequestBody
+                                    @Valid AlbumReqDto albumReqDto,
                                     @RequestParam(value = "file", required = false) List<MultipartFile> multipartFiles,
                                     HttpServletRequest request) {
 

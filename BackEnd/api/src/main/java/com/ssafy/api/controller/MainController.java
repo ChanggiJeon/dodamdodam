@@ -12,9 +12,10 @@ import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,15 +26,18 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/main")
+@Tag(name = "MainController", description = "메인컨트롤러")
 public class MainController {
 
     private final MainService mainService;
     private final ResponseService responseService;
     private final JwtProvider jwtProvider;
 
-    @GetMapping("{familyId}")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "가족 Profile 정보", description = "본인을 제외한 가족의 <strong>profile<strong> 정보를 받는다.")
+    @Operation(summary = "가족 Profile 정보", description = "본인을 제외한 가족의 <strong>profile<strong> 정보를 받는다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "{familyId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ListResult<MainProfileResDto> getProfileList(@PathVariable Long familyId, HttpServletRequest request) {
 
         Long userPk = jwtProvider.getUserPkFromRequest(request);
@@ -44,10 +48,15 @@ public class MainController {
 
 //  의견 관련 API
 
-    @PostMapping("suggestion")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "의견 제시 생성", description = "<strong>의견 제시<strong>를 작성한다.")
-    public CommonResult createSuggestion(@RequestBody String text, HttpServletRequest request) {
+    @Operation(summary = "의견 제시 생성", description = "<strong>의견 제시<strong>를 작성한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PostMapping(value = "suggestion", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResult createSuggestion(@org.springframework.web.bind.annotation.RequestBody
+                                         @io.swagger.v3.oas.annotations.parameters.RequestBody
+                                                 String text,
+                                         HttpServletRequest request) {
 
         Long userPk = jwtProvider.getUserPkFromRequest(request);
 
@@ -56,17 +65,22 @@ public class MainController {
         return responseService.getSuccessResult("의견 제시가 정상적으로 등록되었습니다.");
     }
 
-    @GetMapping("suggestion/{familyId}")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "의견 리스트 목록", description = "<strong>의견 제시 리스트<strong>를 조회한다.")
+    @Operation(summary = "의견 리스트 목록", description = "<strong>의견 제시 리스트<strong>를 조회한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "suggestion/{familyId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ListResult<SuggestionResDto> getSuggestionList(@PathVariable Long familyId) {
 
         return responseService.getListResult(mainService.getSuggestionList(familyId));
     }
 
-    @PostMapping("suggestion/reaction")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "의견 리액션", description = "<strong>의견 제시 리액션<strong>을 등록 혹은 수정한다.")
+
+    @Operation(summary = "의견 리액션", description = "<strong>의견 제시 리액션<strong>을 등록 혹은 수정한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PostMapping(value = "suggestion/reaction", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SingleResult<SuggestionReactionResDto> manageSuggestionReaction(@RequestBody SuggestionReactionReqDto request) {
 
         return responseService.getSingleResult(mainService.manageSuggestionReaction(request));

@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "SingIn Request")
+@Schema(description = "DTO Model : SignInReqDto")
 public class SignInReqDto {
 
     @NotBlank

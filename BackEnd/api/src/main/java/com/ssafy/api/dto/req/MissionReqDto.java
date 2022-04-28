@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "Mission Request")
+@Schema(description = "DTO Model : MissionReqDto")
 public class MissionReqDto {
 
     @NotBlank

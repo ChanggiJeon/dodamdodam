@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "Family In Request")
+@Schema(description = "DTO Model : FamilyJoinReqDto")
 public class FamilyJoinReqDto {
 
     @NotBlank

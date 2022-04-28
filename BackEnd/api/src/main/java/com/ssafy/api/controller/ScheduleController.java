@@ -14,11 +14,12 @@ import com.ssafy.api.service.common.CommonResult;
 import com.ssafy.api.service.common.ListResult;
 import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +27,11 @@ import javax.validation.Valid;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
-@RestController
-@RequestMapping("/api/schedule")
-@RequiredArgsConstructor
 @Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/schedule")
+@Tag(name = "ScheduleController", description = "일정 컨트롤러")
 public class ScheduleController {
 
     private final ResponseService responseService;
@@ -38,9 +40,15 @@ public class ScheduleController {
     private final FamilyService familyService;
     private final UserService userService;
 
-    @PostMapping("/create")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    public CommonResult createSchedule (@RequestBody @Valid NewScheduleReqDto scheduleReq, HttpServletRequest request) {
+    @Operation(summary = "일정 생성", description = "<strong>일정</strong>을 생성한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResult createSchedule(@org.springframework.web.bind.annotation.RequestBody
+                                       @io.swagger.v3.oas.annotations.parameters.RequestBody
+                                       @Valid NewScheduleReqDto scheduleReq,
+                                       HttpServletRequest request) {
         Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
         User user = userService.findByUserPk(userPk);
         Family family = familyService.fromUserIdToFamily(request);
@@ -48,8 +56,11 @@ public class ScheduleController {
         return responseService.getSuccessResult("일정 생성 완료");
     }
 
-    @GetMapping("/{scheduleId}")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "일정 상세 정보", description = "<strong>일정 상세 정보</strong>를 조회한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "/{scheduleId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SingleResult<ScheduleDetailResDto> scheduleDetail(@PathVariable long scheduleId, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
@@ -65,8 +76,11 @@ public class ScheduleController {
 
     }
 
-    @PatchMapping("/{scheduleId}")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "일정 수정", description = "<strong>일정</strong>을 수정한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PatchMapping(value = "/{scheduleId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public CommonResult updateSchedule(@PathVariable long scheduleId,
                                        NewScheduleReqDto scheduleReq,
                                        HttpServletRequest request) {
@@ -76,8 +90,11 @@ public class ScheduleController {
         return responseService.getSuccessResult("일정 수정 완료");
     }
 
-    @DeleteMapping("/{scheduleId}")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "일정 삭제", description = "<strong>일정</strong>을 삭제한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @DeleteMapping(value = "/{scheduleId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public CommonResult deleteSchedule(@PathVariable long scheduleId, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
@@ -85,15 +102,21 @@ public class ScheduleController {
         return responseService.getSuccessResult("일정 삭제 완료");
     }
 
-    @GetMapping("/day/{day}")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "일자 일정 조회", description = "<strong>일자</strong>로 일정을 조회한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "/day/{day}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ListResult<ScheduleDetailResDto> scheduleListDay(@PathVariable String day, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         return responseService.getListResult(scheduleService.getScheduleListByDay(family, day));
     }
 
-    @GetMapping("/month/{month}")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+    @Operation(summary = "월별 일정 조회", description = "<strong>해당 월</strong>로 일정을 조회한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "/month/{month}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ListResult<ScheduleDetailResDto> scheduleListMonth(@PathVariable String month, HttpServletRequest request) {
         Family family = familyService.fromUserIdToFamily(request);
         return responseService.getListResult(scheduleService.getScheduleListByMonth(family, month));
