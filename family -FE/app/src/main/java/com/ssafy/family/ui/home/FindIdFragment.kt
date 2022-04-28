@@ -94,7 +94,7 @@ class FindIdFragment : Fragment() {
                 Status.SUCCESS -> {
                     Log.d("ddddd", "initview: "+it.data)
                     if (it.data!!.message == null) {
-                        Toast.makeText(requireActivity(),"입력한 정보에 맞는 아이디가 없습니다", Toast.LENGTH_SHORT)
+                        Toast.makeText(requireActivity(),"입력한 정보에 맞는 아이디가 없습니다", Toast.LENGTH_SHORT).show()
                     } else {
                         parentFragmentManager.beginTransaction()
                             .replace(R.id.home_frame, FindPwFragment())
@@ -102,7 +102,7 @@ class FindIdFragment : Fragment() {
                     }
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireActivity(), "서버 에러", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireActivity(), "서버 에러", Toast.LENGTH_SHORT).show()
                 }
             }
         }

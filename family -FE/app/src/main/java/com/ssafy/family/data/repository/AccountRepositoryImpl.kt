@@ -1,5 +1,6 @@
 package com.ssafy.family.data.repository
 
+import com.ssafy.family.R
 import com.ssafy.family.config.BaseResponse
 import com.ssafy.family.data.remote.req.LoginReq
 import com.ssafy.family.data.remote.api.AccountAPI
@@ -88,7 +89,10 @@ class AccountRepositoryImpl (
             val response = api.idCheck(userId)
             if(response.isSuccessful){
                 Resource.success(response.body()!!)
-            }else{
+            }else if(response.code()==409){
+                Resource.error(null,"중복된 아이디 입니다")
+            }
+            else{
                 Resource.error(null,"오류")
             }
         }catch (e:Exception){

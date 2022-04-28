@@ -28,9 +28,9 @@ interface AccountAPI {
     @POST("/api/user/newpassword")
     suspend fun newPassword(@Body newIdPwReq:LoginReq):Response<BaseResponse>
 
-    @GET("/api/user")
+    @GET("/api/user/{userId}")
     suspend fun idCheck(@Query("userId") userId:String):Response<BaseResponse>
 
-    @GET("api/user/birthday")
+    @GET("api/user/birthday/{birthday}")
     suspend fun updateBirthDay(@Query("birthday")birthday:String):Response<BaseResponse>
 }

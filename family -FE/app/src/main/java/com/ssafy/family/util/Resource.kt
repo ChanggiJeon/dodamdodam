@@ -13,5 +13,6 @@ data class Resource<out T>(val status: Status, val data: T?, val message: String
 
         fun <T> expired(data: T): Resource<T> =
             Resource(status = Status.EXPIRED, data = data, message = null)
+
     }
 }
