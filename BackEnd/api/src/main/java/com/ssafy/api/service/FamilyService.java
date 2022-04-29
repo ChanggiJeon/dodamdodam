@@ -5,6 +5,7 @@ import com.ssafy.api.dto.req.FamilyJoinReqDto;
 import com.ssafy.api.entity.Family;
 import com.ssafy.api.entity.Profile;
 import com.ssafy.api.entity.User;
+import com.ssafy.api.exception.CustomErrorCode;
 import com.ssafy.api.exception.CustomException;
 import com.ssafy.api.repository.FamilyRepository;
 import com.ssafy.api.repository.ProfileRepository;
@@ -20,6 +21,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import static com.ssafy.api.exception.CustomErrorCode.INVALID_REQUEST;
+import static com.ssafy.api.exception.CustomErrorCode.NOT_BELONG_FAMILY;
 
 @Service
 @Slf4j
@@ -28,6 +30,7 @@ public class FamilyService {
     private final FamilyRepository familyRepository;
     private final ProfileRepository profileRepository;
     private final JwtProvider jwtTokenProvider;
+
     // 가족 생성 및 프로필 생성
     public Family createFamily() {
         String key;
@@ -36,7 +39,7 @@ public class FamilyService {
             key = "";
             for (int j = 0; j < 15; j++) {
                 if (rnd.nextBoolean()) {
-                    key += ((char)((int)(rnd.nextInt(26)) + 65));
+                    key += ((char) ((int) (rnd.nextInt(26)) + 65));
                 } else {
                     key += (rnd.nextInt(10));
                 }
@@ -49,6 +52,7 @@ public class FamilyService {
                 .code(key)
                 .build());
     }
+
     // profile 생성
     public void createProfile(Family family, User user, FamilyJoinReqDto familyRequest, String[] imageInfo) {
         Profile profile = Profile.builder()
@@ -86,6 +90,7 @@ public class FamilyService {
             throw new CustomException(INVALID_REQUEST, "이미 가입된 그룹이 있습니다.");
         }
     }
+
     public Family fromUserIdToFamily(Authentication authentication) {
         Long userPk = Long.parseLong(authentication.getName());
         Profile profile = profileRepository.findProfileByUserPk(userPk);
@@ -101,19 +106,19 @@ public class FamilyService {
         UUID uuid = UUID.randomUUID();
         String saveFileName = "/resources/familyPicture/" + uuid.toString() + "_" + originFileName;
         File dir = new File(path + "/resources/familyPicture");
-        if(!dir.exists()) {
+        if (!dir.exists()) {
             dir.mkdirs();
         }
-        try{
+        try {
             log.info(family.getPicture());
-            if(family.getPicture() != null) {
+            if (family.getPicture() != null) {
                 File file = new File(path + family.getPicture());
                 log.info(file.toString());
                 file.delete();
             }
             File file = new File(path + saveFileName);
             picture.transferTo(file);
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException(INVALID_REQUEST, "파일이 없습니다.");
         }
         family.setPicture(saveFileName);
@@ -128,4 +133,11 @@ public class FamilyService {
         }
     }
 
+    public Long getFamliyIdByUserPk(Long userPk) {
+        Long familyId = familyRepository.findFamilyIdByUserPk(userPk);
+        if (familyId == null) {
+            throw new CustomException(NOT_BELONG_FAMILY);
+        }
+        return familyId;
+    }
 }

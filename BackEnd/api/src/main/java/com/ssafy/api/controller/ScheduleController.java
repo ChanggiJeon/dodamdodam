@@ -1,7 +1,6 @@
 package com.ssafy.api.controller;
 
 
-import com.ssafy.api.config.jwt.JwtProvider;
 import com.ssafy.api.dto.req.NewScheduleReqDto;
 import com.ssafy.api.dto.res.ScheduleDetailResDto;
 import com.ssafy.api.entity.Family;
@@ -19,11 +18,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
@@ -36,7 +33,6 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 public class ScheduleController {
 
     private final ResponseService responseService;
-    private final JwtProvider jwtTokenProvider;
     private final ScheduleService scheduleService;
     private final FamilyService familyService;
     private final UserService userService;
@@ -50,7 +46,7 @@ public class ScheduleController {
                                        @io.swagger.v3.oas.annotations.parameters.RequestBody
                                        @Valid NewScheduleReqDto scheduleReq,
                                        Authentication authentication) {
-        Long userPk = Long.parseLong(authentication.getName());;
+        Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         Family family = familyService.fromUserIdToFamily(authentication);
         scheduleService.createSchedule(scheduleReq, family, user);

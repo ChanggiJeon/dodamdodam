@@ -18,10 +18,6 @@ public class SuggestionReactionReqDto {
     private Long suggestionId;
 
     @NotBlank
-    @Schema(description = "프로필 id", required = true, example = "1")
-    private Long profileId;
-
-    @NotBlank
     @Schema(description = "좋아요 여부", required = true, example = "true / false")
     private boolean isLike;
 

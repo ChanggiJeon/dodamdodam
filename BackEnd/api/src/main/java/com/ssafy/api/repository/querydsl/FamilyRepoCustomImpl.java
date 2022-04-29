@@ -8,6 +8,8 @@ import com.ssafy.api.entity.QUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class FamilyRepoCustomImpl implements FamilyRepoCustom {
@@ -26,6 +28,18 @@ public class FamilyRepoCustomImpl implements FamilyRepoCustom {
                 .on(family.id.eq(profile.family.id))
                 .join(user)
                 .on(profile.user.userPk.eq(user.userPk))
+                .where(user.userPk.eq(userPk))
+                .fetchFirst();
+    }
+
+    @Override
+    public Long findFamilyIdByUserPk(Long userPk) {
+        return jpaQueryFactory.select(family.id)
+                .from(user)
+                .join(profile)
+                .on(user.userPk.eq(profile.id))
+                .join(family)
+                .on(profile.id.eq(family.id))
                 .where(user.userPk.eq(userPk))
                 .fetchFirst();
     }

@@ -34,7 +34,6 @@ import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 @Tag(name = "ProfileController", description = "프로필 컨트롤러")
 public class ProfileController {
     private final ResponseService responseService;
-    private final JwtProvider jwtProvider;
     private final ProfileService profileService;
     private final UserService userService;
 

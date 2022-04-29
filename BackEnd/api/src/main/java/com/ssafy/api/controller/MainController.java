@@ -34,25 +34,22 @@ public class MainController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "{familyId}")
-    public ListResult<MainProfileResDto> getProfileList(@PathVariable Long familyId, Authentication authentication) {
+    @GetMapping(value = "profileList")
+    public ListResult<MainProfileResDto> getProfileList(Authentication authentication) {
 
         Long userPk = Long.parseLong(authentication.getName());
 
-        return responseService.getListResult(mainService.getProfileList(familyId, userPk));
+        return responseService.getListResult(mainService.getProfileList(userPk));
     }
 
 
-//  의견 관련 API
+    //  의견 관련 API
     @Operation(summary = "의견 제시 생성", description = "<strong>의견 제시<strong>를 작성한다.",
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @PostMapping(value = "suggestion", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CommonResult createSuggestion(@org.springframework.web.bind.annotation.RequestBody
-                                         @io.swagger.v3.oas.annotations.parameters.RequestBody
-                                                 String text,
-                                         Authentication authentication) {
+    @PostMapping(value = "suggestion")
+    public CommonResult createSuggestion(@RequestParam String text, Authentication authentication) {
 
         Long userPk = Long.parseLong(authentication.getName());
 
@@ -61,14 +58,30 @@ public class MainController {
         return responseService.getSuccessResult("의견 제시가 정상적으로 등록되었습니다.");
     }
 
+
+    @Operation(summary = "의견 제시 삭제", description = "<strong>의견 제시<strong>를 삭제한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @DeleteMapping(value = "{suggestionId}")
+    public CommonResult deleteSuggestion(@PathVariable Long suggestionId, Authentication authentication) {
+
+        Long userPk = Long.parseLong(authentication.getName());
+
+        mainService.deleteSuggestion(suggestionId, userPk);
+
+        return responseService.getSuccessResult("의견 제시가 정상적으로 삭제되었습니다.");
+    }
+
+
     @Operation(summary = "의견 리스트 목록", description = "<strong>의견 제시 리스트<strong>를 조회한다.",
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "suggestion/{familyId}")
-    public ListResult<SuggestionResDto> getSuggestionList(@PathVariable Long familyId) {
-
-        return responseService.getListResult(mainService.getSuggestionList(familyId));
+    @GetMapping(value = "suggestionList")
+    public ListResult<SuggestionResDto> getSuggestionList(Authentication authentication) {
+        Long userPk = Long.parseLong(authentication.getName());
+        return responseService.getListResult(mainService.getSuggestionList(userPk));
     }
 
 
@@ -77,8 +90,13 @@ public class MainController {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
     @PostMapping(value = "suggestion/reaction", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public SingleResult<SuggestionReactionResDto> manageSuggestionReaction(@RequestBody SuggestionReactionReqDto request) {
+    public SingleResult<SuggestionReactionResDto> manageSuggestionReaction(
+            @RequestBody SuggestionReactionReqDto request,
+            Authentication authentication
+    ) {
 
-        return responseService.getSingleResult(mainService.manageSuggestionReaction(request));
+        return responseService.getSingleResult(
+                mainService.manageSuggestionReaction(request, Long.parseLong(authentication.getName()))
+        );
     }
 }

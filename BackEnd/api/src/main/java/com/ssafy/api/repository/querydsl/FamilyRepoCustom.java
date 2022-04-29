@@ -6,4 +6,7 @@ public interface FamilyRepoCustom {
 
     Family findFamilyByUserPk(Long userPk);
 
+    Long findFamilyIdByUserPk(Long userPk);
+
+
 }

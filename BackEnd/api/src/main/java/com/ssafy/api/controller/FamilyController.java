@@ -65,7 +65,7 @@ public class FamilyController {
         return responseService.getSingleResult(res);
     }
 
-    @Operation(summary = "가족 그룹 가입", description = "<strong>가족 그룹<strong을 가입한다.",
+    @Operation(summary = "가족 그룹 가입", description = "<strong>가족 그룹<strong>을 가입한다.",
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
@@ -137,6 +137,7 @@ public class FamilyController {
         FamilyPictureResDto res = FamilyPictureResDto.builder()
                 .picture(picture)
                 .build();
+
         return responseService.getSingleResult(res);
     }
 }

@@ -20,6 +20,12 @@ public class SuggestionResDto {
     @Schema(description = "의견 내용", example = "예시입니다.")
     private String text;
 
+    @Schema(description = "좋아요 갯수", example = "1")
+    private Long likeCount;
+
+    @Schema(description = "싫어요 갯수", example = "1")
+    private Long dislikeCount;
+
     private List<SuggestionReactionListResDto> suggestionReactions;
 
 }

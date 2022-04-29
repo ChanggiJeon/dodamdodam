@@ -14,11 +14,11 @@ public class SuggestionReaction extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Setter
     @Column(nullable = false)
-    private boolean isLike;
+    private Boolean isLike;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "suggestion_id")
