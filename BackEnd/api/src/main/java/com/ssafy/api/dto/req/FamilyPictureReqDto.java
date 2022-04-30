@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "FamilyPicture Request")
+@Schema(description = "DTO Model : FamilyPictureReqDto")
 public class FamilyPictureReqDto {
     @NotNull
     private String picture;

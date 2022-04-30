@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "Status Request")
+@Schema(description = "DTO Model : StatusReqDto")
 public class StatusReqDto {
 
     @NotBlank

@@ -16,10 +16,12 @@ import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,64 +30,68 @@ import javax.validation.Valid;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
-@RestController
-@RequestMapping("/api/family")
-@RequiredArgsConstructor
 @Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/family")
+@Tag(name = "FamilyController", description = "가족컨트롤러")
 public class FamilyController {
 
     private final FamilyService familyService;
     private final UserService userService;
     private final ProfileService profileService;
     private final ResponseService responseService;
-    private final JwtProvider jwtTokenProvider;
 
-    @PostMapping("/create")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "가족 그룹 생성")
+    @Operation(summary = "가족 그룹 생성", description = "<strong>가족 그룹</strong>을 생성한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SingleResult<FamilyJoinResDto> createFamily(
-            @ModelAttribute @Valid FamilyJoinReqDto familyRequest,
-            @RequestPart(value = "image", required = true) MultipartFile image,
+            @ModelAttribute @Valid FamilyJoinReqDto familyJoinReqDto,
+            Authentication authentication,
             HttpServletRequest request) {
 
-        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
+        Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
-        userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
+        userService.updateBirthdayWithUserPk(userPk, familyJoinReqDto.getBirthday());
         Family family = familyService.createFamily();
-        String[] imageInfo = profileService.enrollImage(image, request).split("#");
-        familyService.createProfile(family, user, familyRequest, imageInfo);
+        String[] imageInfo = profileService.enrollImage(familyJoinReqDto.getImage(), request).split("#");
+        familyService.createProfile(family, user, familyJoinReqDto, imageInfo);
         FamilyJoinResDto res = FamilyJoinResDto.builder()
                 .familyId(family.getId())
                 .build();
         return responseService.getSingleResult(res);
     }
 
-    @PostMapping("/join/{familyId}")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "가족 그룹 가입")
+    @Operation(summary = "가족 그룹 가입", description = "<strong>가족 그룹<strong>을 가입한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PostMapping(value = "/join/{familyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult joinFamily(
-            @ModelAttribute @Valid FamilyJoinReqDto familyRequest,
+            @ModelAttribute
+            @Valid FamilyJoinReqDto familyRequest,
             @PathVariable long familyId,
-            @RequestPart(value = "image", required = true) MultipartFile image,
+            Authentication authentication,
             HttpServletRequest request) {
-        Long userPk = jwtTokenProvider.getUserPkFromRequest(request);
+        Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
         userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
         Family family = familyService.getFamily(familyId);
-        log.info("1");
-        String[] imageInfo = profileService.enrollImage(image, request).split("#");
-        log.info("2");
+        String[] imageInfo = profileService.enrollImage(familyRequest.getImage(), request).split("#");
         familyService.createProfile(family, user, familyRequest, imageInfo);
-        log.info("3");
         return responseService.getSuccessResult("그룹 가입 완료");
     }
 
-    @GetMapping("/code/check/{code}")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "가족 코드 검사", description = "<strong>가족 코드<strong>를 받아 가족 id를 조회한다.")
-    public SingleResult<FamilyIdResDto> checkFamilyCode(@PathVariable String code, HttpServletRequest request) {
+    @Operation(summary = "가족 코드 검사", description = "<strong>가족 코드<strong>를 받아 가족 id를 조회한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "/code/check/{code}")
+    public SingleResult<FamilyIdResDto> checkFamilyCode(@PathVariable String code) {
         Family family = familyService.checkCode(code);
         FamilyIdResDto res = FamilyIdResDto.builder()
                 .id(family.getId())
@@ -93,38 +99,45 @@ public class FamilyController {
         return responseService.getSingleResult(res);
     }
 
-    @GetMapping("/code")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "가족 코드 조회", description = "<strong>가족 id<strong>를 받아 가족 코드를 조회한다.")
-    public SingleResult<FamilyCodeResDto> getFamilyCode(HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamily(request);
+    @Operation(summary = "가족 코드 조회", description = "<strong>가족 id<strong>를 받아 가족 코드를 조회한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "/code")
+    public SingleResult<FamilyCodeResDto> getFamilyCode(Authentication authentication) {
+        Family family = familyService.fromUserIdToFamily(authentication);
         FamilyCodeResDto res = FamilyCodeResDto.builder()
                 .code(family.getCode())
                 .build();
         return responseService.getSingleResult(res);
     }
 
-    @PutMapping("/picture")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "가족 사진 수정", description = "<strong>가족 사진<stong>을 추가 및 수정한다.")
+    @Operation(summary = "가족 사진 수정", description = "<strong>가족 사진<stong>을 추가 및 수정한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PutMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult updateFamilyPicture(
-            @RequestParam(value = "picture", required = true) MultipartFile picture, HttpServletRequest request) {
+            @RequestParam(value = "picture") MultipartFile picture, Authentication authentication, HttpServletRequest request) {
 
-        Family family = familyService.fromUserIdToFamily(request);
+        Family family = familyService.fromUserIdToFamily(authentication);
         String path = request.getServletContext().getRealPath("");
         familyService.updateFamilyPicture(family, picture, path);
         return responseService.getSuccessResult();
     }
 
-    @GetMapping("/picture")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @Operation(summary = "가족 사진 경로 조회", description = "<strong>가족 사진 경로<stong>를 조회한다.")
-    public SingleResult<FamilyPictureResDto> getFamilyPicture(HttpServletRequest request) {
-        Family family = familyService.fromUserIdToFamily(request);
+    @Operation(summary = "가족 사진 경로 조회", description = "<strong>가족 사진 경로<stong>를 조회한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "/picture")
+    public SingleResult<FamilyPictureResDto> getFamilyPicture(Authentication authentication) {
+        Family family = familyService.fromUserIdToFamily(authentication);
         String picture = family.getPicture();
         FamilyPictureResDto res = FamilyPictureResDto.builder()
                 .picture(picture)
                 .build();
+
         return responseService.getSingleResult(res);
     }
 }

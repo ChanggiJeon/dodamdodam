@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Schema(description = "DTO Model : ProfileReqDto")
 public class ProfileReqDto {
 
 //    @Schema(value = "프로필이미지", required = false, example = "")

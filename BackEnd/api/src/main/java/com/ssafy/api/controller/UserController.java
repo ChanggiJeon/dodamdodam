@@ -1,6 +1,5 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.common.Validate;
 import com.ssafy.api.config.jwt.JwtProvider;
 import com.ssafy.api.dto.req.*;
 import com.ssafy.api.dto.res.ReIssueTokenResDto;
@@ -14,21 +13,24 @@ import com.ssafy.api.service.common.SingleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static com.ssafy.api.exception.CustomErrorCode.*;
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
-@RestController
 @Slf4j
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
+@Tag(name = "UserController", description = "유저 컨트롤러")
 public class UserController {
 
     private final UserService userService;
@@ -39,28 +41,35 @@ public class UserController {
     @GetMapping(value = "{userId}")
     @Operation(summary = "ID 중복체크", description = "<strong>아이디</strong>의 사용여부를 확인한다.")
     public CommonResult idCheck(@PathVariable String userId) {
-        //공백과 특수문자가 안들어 있는상태에서 받았다고 치고 length만 유효성 검사함.
-        idValidate(userId);
 
-        userService.checkId(userId);
+        //공백과 특수문자가 안들어 있는상태에서 받았다고 치고 length만 유효성 검사함.
+        if (userService.idValidate(userId)) {
+            userService.checkId(userId);
+        } else {
+            throw new CustomException(INVALID_REQUEST, "아이디는 4자 이상, 20자 이하여야 합니다.");
+        }
 
         return responseService.getSuccessResult("사용 가능한 아이디입니다.");
     }
 
-    @PostMapping(value = "signup")
+    @PostMapping(value = "signup", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "회원 가입", description = "<strong>아이디, 패스워드, 이름</strong> 정보를 받아 회원가입 한다.")
     public CommonResult userSignUp
-            (@RequestBody @Valid SignUpReqDto singUpRequest) {
+            (@org.springframework.web.bind.annotation.RequestBody
+             @io.swagger.v3.oas.annotations.parameters.RequestBody
+             @Valid SignUpReqDto singUpRequest) {
 
         userService.userSignUp(singUpRequest);
 
         return responseService.getSuccessResult("회원가입 성공");
     }
 
-    @PostMapping(value = "signin")
+    @PostMapping(value = "signin", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "로그인", description = "<strong>아이디, 패스워드</strong> 정보를 받아 로그인 한다.")
     public SingleResult<SignInResDto> userSignIn
-            (@RequestBody @Valid SignInReqDto signInRequest) {
+            (@org.springframework.web.bind.annotation.RequestBody
+             @io.swagger.v3.oas.annotations.parameters.RequestBody
+             @Valid SignInReqDto signInRequest) {
 
         User user = userService.findByUserId(signInRequest.getUserId());
 
@@ -88,7 +97,7 @@ public class UserController {
 
     @PostMapping(value = "refresh")
     @Parameters({
-            @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER),
+            @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER),
             @Parameter(name = "X-AUTH-REFRESH-TOKEN", description = "JWT Refresh Token", required = true, in = HEADER),
     })
     @Operation(summary = "JWT 토큰 재발급", description = "만료된 AccessToken과 Refresh Token으로 AccessToken을 재발급 받는다.")
@@ -117,20 +126,24 @@ public class UserController {
         return responseService.getSingleResult(res);
     }
 
-    @PostMapping(value = "findId")
+    @PostMapping(value = "findId", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "아이디 찾기", description = "<strong>회원 정보<strong>로 아이디를 찾는다.")
     public CommonResult findUserIdWithUserInfo
-            (@RequestBody @Valid FindIdReqDto request) {
+            (@org.springframework.web.bind.annotation.RequestBody
+             @io.swagger.v3.oas.annotations.parameters.RequestBody
+             @Valid FindIdReqDto request) {
 
         String userId = userService.findUserIdWithUserInfo(request);
 
         return responseService.getSuccessResult(userId);
     }
 
-    @PostMapping(value = "newpassword")
+    @PostMapping(value = "newpassword", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "비밀번호 재설정", description = "<strong>비밀번호<strong>를 재설정한다.")
     public CommonResult updatePassword
-            (@RequestBody @Valid UpdatePasswordReqDto request) {
+            (@org.springframework.web.bind.annotation.RequestBody
+             @io.swagger.v3.oas.annotations.parameters.RequestBody
+             @Valid UpdatePasswordReqDto request) {
 
         User user = userService.findByUserId(request.getUserId());
 
@@ -144,31 +157,34 @@ public class UserController {
         return responseService.getSuccessResult();
     }
 
+    @Operation(summary = "생일 정보 업데이트", description = "<strong>생일<strong>정보를 업데이트 한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
     @GetMapping(value = "birthday/{birthday}")
-    @Operation(summary = "생일 정보 업데이트", description = "<strong>생일<strong>정보를 업데이트 한다.")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
     public CommonResult updatePassword
-            (@PathVariable String birthday, HttpServletRequest request) {
+            (@PathVariable String birthday, Authentication authentication) {
 
-        Long userPK = jwtProvider.getUserPkFromRequest(request);
+        Long userPK = Long.parseLong(authentication.getName());
 
         userService.updateBirthdayWithUserPk(userPK, birthday);
 
         return responseService.getSuccessResult();
     }
 
-    private void idValidate(String userId) {
-        if (userId.length() < Validate.USER_ID_MIN.getNumber() ||
-                userId.length() > Validate.USER_ID_MAX.getNumber()) {
-            throw new CustomException(INVALID_REQUEST, "아이디는 4자 이상, 20자 이하여야 합니다.");
-        }
-    }
-    @PostMapping(value = "fcm")
-    @Operation(summary = "fcm 토큰 저장", description = "<strong>fcm토큰<strong> 저장한다.")
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+
+    @Operation(summary = "fcm 토큰 저장", description = "<strong>fcm토큰<strong> 저장한다.",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PostMapping(value = "fcm", consumes = MediaType.APPLICATION_JSON_VALUE)
     public CommonResult updateFcmToken
-            (@RequestBody FcmTokenReqDto fcmReq, HttpServletRequest request) {
-        Long userPk = jwtProvider.getUserPkFromRequest(request);
+            (@org.springframework.web.bind.annotation.RequestBody
+             @io.swagger.v3.oas.annotations.parameters.RequestBody
+                     FcmTokenReqDto fcmReq,
+             Authentication authentication) {
+
+        Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         userService.updateFcmToken(user, fcmReq);
         return responseService.getSuccessResult();

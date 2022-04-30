@@ -22,7 +22,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userPk;
+    private Long userPk;
 
     @Setter
     @Column(nullable = false, unique = true, length = 20)
@@ -51,10 +51,6 @@ public class User extends BaseEntity implements UserDetails {
     @Setter
     @Column(nullable = false, columnDefinition = "varchar(20)")
     private String authority;
-
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "profile_id")
-//    private Profile profile;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

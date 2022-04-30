@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "FindId Request")
+@Schema(description = "DTO Model : FindIdReqDto")
 public class FindIdReqDto {
 
     @NotBlank

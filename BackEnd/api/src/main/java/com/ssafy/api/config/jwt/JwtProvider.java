@@ -26,7 +26,6 @@ public class JwtProvider {
     private final long REFRESH_TOKEN_EXPIRATION_TIME = 15 * 24 * 60 * 60 * 1000;
 
     private final UserDetailsService userDetailsService;
-    private final UserService userService;
 
     // Jwt 토큰 생성
     public String createAccessToken(User user) {
@@ -101,14 +100,6 @@ public class JwtProvider {
 
     public String resolveToken(HttpServletRequest req) {
         return req.getHeader("X-AUTH-TOKEN");
-    }
-
-    public User getUserFromRequest(HttpServletRequest request){
-        return userService.findByUserPk(this.getUserPk(this.resolveToken(request)));
-    }
-
-    public Long getUserPkFromRequest(HttpServletRequest request){
-        return this.getUserPk(this.resolveToken(request));
     }
 
 }

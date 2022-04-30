@@ -11,6 +11,7 @@ import com.ssafy.api.repository.FamilyRepository;
 import com.ssafy.api.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -132,7 +133,7 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = false)
-    public String enrollImage(MultipartFile multipartFile,  HttpServletRequest request){
+    public String enrollImage(MultipartFile multipartFile, HttpServletRequest request){
         try{
             String separ = File.separator;
 //            String today= new SimpleDateFormat("yyMMdd").format(new Date());

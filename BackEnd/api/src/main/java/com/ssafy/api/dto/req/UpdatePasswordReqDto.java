@@ -11,11 +11,11 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "UpdatePassword Request")
+@Schema(description = "DTO Model : UpdatePasswordReqDto")
 public class UpdatePasswordReqDto {
 
     @NotBlank
-    @Size(max = 20, min = 5)
+    @Size(max = 20, min = 4)
     @Schema(description = "아이디", required = true, example = "ssafy")
     private String userId;
 

@@ -13,11 +13,11 @@ import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,25 +27,30 @@ import javax.validation.Valid;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
-@Tag(name = "프로필")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/profile")
+@Tag(name = "ProfileController", description = "프로필 컨트롤러")
 public class ProfileController {
     private final ResponseService responseService;
-    private final JwtProvider jwtProvider;
     private final ProfileService profileService;
     private final UserService userService;
 
 
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "프로필 등록", description = "<strong>프로필 등록</strong>")
-    public CommonResult enrollProfile(@ModelAttribute @Valid ProfileReqDto profileRequest,
-                                      @RequestPart(value = "file", required = false) MultipartFile multipartFile, HttpServletRequest request) {
+    @Operation(summary = "프로필 등록", description = "<strong>프로필 등록</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CommonResult enrollProfile(@org.springframework.web.bind.annotation.RequestBody
+                                      @io.swagger.v3.oas.annotations.parameters.RequestBody
+                                      @Valid ProfileReqDto profileRequest,
+                                      @RequestParam(value = "file", required = false) MultipartFile multipartFile,
+                                      Authentication authentication,
+                                      HttpServletRequest request) {
 
-        User user = jwtProvider.getUserFromRequest(request);
+        User user = userService.findByUserPk(Long.parseLong(authentication.getName()));
 
         userService.updateBirthdayWithUserPk(user.getUserPk(), profileRequest.getBirthday());
 
@@ -64,13 +69,19 @@ public class ProfileController {
         return responseService.getSuccessResult();
     }
 
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @PatchMapping("")
-    @Operation(summary = "프로필 수정", description = "<strong>프로필 수정</strong>")
-    public CommonResult updateProfile(@ModelAttribute @Valid ProfileReqDto profileRequest,
-                                      @RequestPart(value = "file", required = false) MultipartFile multipartFile, HttpServletRequest request) {
 
-        Long userPk = jwtProvider.getUserPkFromRequest(request);
+    @Operation(summary = "프로필 수정", description = "<strong>프로필 수정</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PatchMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public CommonResult updateProfile(@org.springframework.web.bind.annotation.RequestBody
+                                      @io.swagger.v3.oas.annotations.parameters.RequestBody
+                                      @Valid ProfileReqDto profileRequest,
+                                      @RequestPart(value = "file", required = false) MultipartFile multipartFile, Authentication authentication,
+                                      HttpServletRequest request) {
+
+        Long userPk = Long.parseLong(authentication.getName());
 
         Profile updateResult = profileService.updateProfile(userPk, profileRequest, multipartFile, request);
 
@@ -81,10 +92,12 @@ public class ProfileController {
         return responseService.getSuccessResult();
     }
 
-//    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
+//    @Operation(summary = "미션 등록", notes = "<strong>미션 등록</strong>",
+//            parameters = {
+//                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+//            })
 //    @PatchMapping("/mission")
-//    @Operation(summary = "미션 등록", notes = "<strong>미션 등록</strong>")
-//    public CommonResult updateMission(@RequestBody @Valid MissionReqDto missionReqDto, HttpServletRequest request) {
+//    public CommonResult updateMission(@RequestBody @Valid MissionReqDto missionReqDto, Authentication authentication) {
 //        String token = jwtTokenProvider.resolveToken(request);
 //        String userId = jwtTokenProvider.getUserId(token);
 //        Profile mission = profileService.enrollMission(userId, missionReqDto.getMissionContent());
@@ -94,12 +107,16 @@ public class ProfileController {
 //    }
 
 
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @PatchMapping("/status")
-    @Operation(summary = "상태 수정", description = "<strong>상태 수정</strong>")
-    public CommonResult updateStatus(@RequestBody @Valid StatusReqDto statusReqDto, HttpServletRequest request) {
+    @Operation(summary = "상태 수정", description = "<strong>상태 수정</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PatchMapping(value = "/status", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CommonResult updateStatus(@org.springframework.web.bind.annotation.RequestBody
+                                     @io.swagger.v3.oas.annotations.parameters.RequestBody
+                                     @Valid StatusReqDto statusReqDto, Authentication authentication) {
 
-        Long userPk = jwtProvider.getUserPkFromRequest(request);
+        Long userPk = Long.parseLong(authentication.getName());
 
         Profile status = profileService.updateStatus(userPk, statusReqDto);
 
@@ -108,12 +125,14 @@ public class ProfileController {
         return responseService.getSuccessResult();
     }
 
-    @Parameters({@Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)})
-    @GetMapping("/image")
-    @Operation(summary = "프로필이미지 조회", description = "<strong>프로필 이미지 조회</strong>")
-    public SingleResult<String> getProfileImage(HttpServletRequest request) {
+    @Operation(summary = "프로필이미지 조회", description = "<strong>프로필 이미지 조회</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "/image", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public SingleResult<String> getProfileImage(Authentication authentication) {
 
-        Long userPk = jwtProvider.getUserPkFromRequest(request);
+        Long userPk = Long.parseLong(authentication.getName());
 
         return responseService.getSingleResult(profileService.findImage(userPk));
     }

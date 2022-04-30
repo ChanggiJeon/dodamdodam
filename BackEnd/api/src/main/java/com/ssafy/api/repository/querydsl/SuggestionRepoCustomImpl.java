@@ -32,6 +32,8 @@ public class SuggestionRepoCustomImpl implements SuggestionRepoCustom {
                                 .list(Projections.fields(SuggestionResDto.class,
                                         suggestion.id.as("suggestionId"),
                                         suggestion.text,
+                                        suggestion.likeCount,
+                                        suggestion.dislikeCount,
                                         GroupBy.list(
                                                 Projections.fields(
                                                         SuggestionReactionListResDto.class,

@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(name = "FcmToken Request")
+@Schema(description = "DTO Model : FcmTokenReqDto")
 public class FcmTokenReqDto {
     @NotNull
     @Schema(description = "fcm토큰", required = true, example = "c1~~")

@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.common.Validate;
 import com.ssafy.api.dto.req.FcmTokenReqDto;
 import com.ssafy.api.dto.req.FindIdReqDto;
 import com.ssafy.api.dto.req.SignUpReqDto;
@@ -94,4 +95,13 @@ public class UserService {
         user.setFcmToken(fcmReq.getFcmToken());
         userRepository.save(user);
     }
+
+    public boolean idValidate(String userId) {
+        if (userId.length() < Validate.USER_ID_MIN.getNumber() ||
+                userId.length() > Validate.USER_ID_MAX.getNumber()) {
+            return false;
+        }
+        return true;
+    }
+
 }

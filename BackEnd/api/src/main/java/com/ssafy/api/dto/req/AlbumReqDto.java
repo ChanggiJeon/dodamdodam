@@ -1,13 +1,12 @@
 package com.ssafy.api.dto.req;
 
 
-import com.ssafy.api.entity.HashTag;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -15,13 +14,12 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "DTO Model : AlbumReqDto")
 public class AlbumReqDto {
 
-
-    @NotBlank
-    @Schema(description = "해시태그", required = true, example = "아들")
+    @NotNull
+    @ArraySchema(schema = @Schema(description = "해시태그", required = true, example = "광화문"))
     private List<String> hashTags;
 
     @NotBlank
@@ -35,8 +33,8 @@ public class AlbumReqDto {
 //    private List<MultipartFile> multipartFiles;
 
     @NotNull
-    @Schema(name = "메인사진 index", required = true, example = "")
+    @Schema(description = "메인사진 index", required = true, example = "")
     private int mainIndex;
 
-
+    private List<MultipartFile> multipartFiles;
 }
