@@ -9,11 +9,14 @@ import com.ssafy.family.databinding.DetailAlbumEmojiListBinding
 
 class DetailAlbumEmojiAdapter(private val context: Context) :RecyclerView.Adapter<DetailAlbumEmojiAdapter.ViewHolder>() {
 
-    private var datas = mutableListOf<Int>(1,2)
+    var datas = mutableListOf<Int>()
     lateinit var itemClickListener: ItemClickListener
     inner class ViewHolder(val binding: DetailAlbumEmojiListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(){
-            binding.aetailAlbumEmojiImg.setImageResource(R.drawable.aa)
+        fun bind(item:Int){
+            binding.aetailAlbumEmojiImg.setImageResource(item)
+            binding.aetailAlbumEmojiImg.setOnClickListener {
+                itemClickListener.onClick(item)
+            }
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -26,10 +29,10 @@ class DetailAlbumEmojiAdapter(private val context: Context) :RecyclerView.Adapte
     override fun getItemCount(): Int = datas.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind()
+        holder.bind(datas[position])
     }
     interface ItemClickListener {
-        fun onClick()
+        fun onClick(item:Int)
     }
 
 }

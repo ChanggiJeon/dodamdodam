@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.family.config.BaseResponse
-import com.ssafy.family.data.remote.res.Album
 import com.ssafy.family.data.remote.res.AlbumDetailRes
-import com.ssafy.family.data.remote.res.AlbumRes
 import com.ssafy.family.data.remote.res.AllAlbum
 import com.ssafy.family.data.repository.AlbumRepository
 import com.ssafy.family.util.Resource
@@ -24,7 +22,7 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
 
     private val _bottombuttonLeftLivedate = MutableLiveData<String>()
     val bottombuttonLeftLivedate: LiveData<String>
-    get() = _bottombuttonLeftLivedate
+        get() = _bottombuttonLeftLivedate
 
     private val _bottombuttonRightLivedate = MutableLiveData<String>()
     val bottombuttonRightLivedate: LiveData<String>
@@ -42,13 +40,20 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
     val deleteReactionRequestLiveData: LiveData<Resource<BaseResponse>>
         get() = _deleteReactionRequestLiveData
 
-    fun setBottomButton(left:String,right:String) = viewModelScope.launch {
+    private val _addReactionRequestLiveData = MutableLiveData<Resource<BaseResponse>>()
+    val addReactionRequestLiveData: LiveData<Resource<BaseResponse>>
+        get() = _addReactionRequestLiveData
+
+
+    fun setBottomButton(left: String, right: String) = viewModelScope.launch {
         _bottombuttonLeftLivedate.value = left
         _bottombuttonRightLivedate.value = right
     }
-    fun setTitle(title:String)= viewModelScope.launch{
-        _titleLiveData.value=title
+
+    fun setTitle(title: String) = viewModelScope.launch {
+        _titleLiveData.value = title
     }
+
     fun setSaveAlbum(allAlbum: AllAlbum) = viewModelScope.launch {
         _saveAlbumRequestLiveData.value = allAlbum
     }
@@ -63,4 +68,8 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
         _deleteReactionRequestLiveData.postValue(albumRepository.deleteReaction(reactionId))
     }
 
+    fun addReaction(albumId: Int)=viewModelScope.launch {
+        _addReactionRequestLiveData.postValue(Resource.loading(null))
+        _addReactionRequestLiveData.postValue(albumRepository.addReaction(albumId))
+    }
 }

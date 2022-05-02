@@ -6,6 +6,7 @@ import com.ssafy.family.data.remote.res.AlbumRes
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface AlbumAPI {
@@ -16,4 +17,6 @@ interface AlbumAPI {
     suspend fun detailAlbum(@Query("albumId")albumId:Int):Response<AlbumDetailRes>
     @DELETE("/api/album/{reactionId}}")
     suspend fun deleteReaction(@Query("reactionId")reactionId: Int):Response<BaseResponse>
+    @POST("/api/album/{albumId}/reaction")
+    suspend fun addReaction(@Query("albumId")albumId: Int):Response<BaseResponse>
 }

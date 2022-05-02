@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ssafy.family.R
 import com.ssafy.family.data.remote.res.AlbumPicture
 import com.ssafy.family.data.remote.res.AlbumReaction
 import com.ssafy.family.data.remote.res.HashTag
@@ -30,6 +31,13 @@ class DetailAlbumFragment : Fragment() {
     private lateinit var commentAdapter: DetailAlbumCommentAdapter
     private val detailAlbumViewModel by activityViewModels<DetailAlbumViewModel>()
 
+    //이모지 누르는버튼
+    private val emojiItemClickListener = object : DetailAlbumEmojiAdapter.ItemClickListener{
+        override fun onClick(item: Int) {
+            detailAlbumViewModel.addReaction(item)
+        }
+
+    }
     //이모지 삭제버튼
     private val commentItemClickListener = object : DetailAlbumCommentAdapter.ItemClickListener {
         override fun onClick(reactionId: Int) {
@@ -68,6 +76,9 @@ class DetailAlbumFragment : Fragment() {
                     photoAdapter.notifyDataSetChanged()
                     tagAdapter.datas = it.data!!.dataSet!!.hashTags as MutableList<HashTag>
                     tagAdapter.notifyDataSetChanged()
+                    // TODO: 이모티콘 박아야함
+                    emojiAdapter.datas= mutableListOf(R.drawable.amusing,R.drawable.ballon)
+                    emojiAdapter.notifyDataSetChanged()
                     commentAdapter.datas =
                         it.data!!.dataSet!!.albumReactions as MutableList<AlbumReaction>
                     commentAdapter.notifyDataSetChanged()
@@ -102,6 +113,8 @@ class DetailAlbumFragment : Fragment() {
                     taglist.add(HashTag("#해시"))
                     tagAdapter.datas = taglist
                     tagAdapter.notifyDataSetChanged()
+                    emojiAdapter.datas= mutableListOf(R.drawable.amusing,R.drawable.ballon)
+                    emojiAdapter.notifyDataSetChanged()
                     val templist = mutableListOf<AlbumReaction>()
                     templist.add(
                         AlbumReaction(
@@ -157,6 +170,33 @@ class DetailAlbumFragment : Fragment() {
                 }
             }
         }
+        detailAlbumViewModel.addReactionRequestLiveData.observe(requireActivity()){
+            when (it.status) {
+                Status.SUCCESS -> {
+                    detailAlbumViewModel.detailAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
+                }
+                Status.ERROR -> {
+                    //테스트
+                    commentAdapter.datas.add(
+                        AlbumReaction(
+                            1,
+                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+                            "아들",
+                            1
+                        )
+                    )
+                    commentAdapter.notifyDataSetChanged()
+                    //테스트 끝
+                    Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
+                        .show()
+                    dismissLoading()
+                }
+                Status.LOADING -> {
+                    setLoading()
+                }
+            }
+        }
     }
 
     private fun initView() {
@@ -168,7 +208,9 @@ class DetailAlbumFragment : Fragment() {
             adapter = photoAdapter
         }
 
-        emojiAdapter = DetailAlbumEmojiAdapter(requireActivity())
+        emojiAdapter = DetailAlbumEmojiAdapter(requireActivity()).apply {
+            itemClickListener = this@DetailAlbumFragment.emojiItemClickListener
+        }
         binding.detailAlbumEmojiRecycler.apply {
             layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)

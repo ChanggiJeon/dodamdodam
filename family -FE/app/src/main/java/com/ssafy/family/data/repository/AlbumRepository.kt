@@ -10,4 +10,5 @@ interface AlbumRepository {
     suspend fun findAllAlbum(): Resource<AlbumRes>
     suspend fun detailAlbum(albumId:Int):Resource<AlbumDetailRes>
     suspend fun deleteReaction(reactionId: Int):Resource<BaseResponse>
+    suspend fun addReaction(albumId: Int):Resource<BaseResponse>
 }
