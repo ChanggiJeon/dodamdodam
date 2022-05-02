@@ -1,5 +1,6 @@
 package com.ssafy.family.ui.album
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ssafy.family.data.remote.res.AlbumPicture
 import com.ssafy.family.data.remote.res.AlbumReaction
 import com.ssafy.family.data.remote.res.HashTag
 import com.ssafy.family.databinding.FragmentDetailAlbumBinding
@@ -15,6 +17,7 @@ import com.ssafy.family.ui.Adapter.AlbumTagAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumCommentAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumEmojiAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumPhotoAdapter
+import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,12 +29,14 @@ class DetailAlbumFragment : Fragment() {
     private lateinit var tagAdapter: AlbumTagAdapter
     private lateinit var commentAdapter: DetailAlbumCommentAdapter
     private val detailAlbumViewModel by activityViewModels<DetailAlbumViewModel>()
+
     //이모지 삭제버튼
-    private val commentItemClickListener = object : DetailAlbumCommentAdapter.ItemClickListener{
+    private val commentItemClickListener = object : DetailAlbumCommentAdapter.ItemClickListener {
         override fun onClick(reactionId: Int) {
             detailAlbumViewModel.deleteReaction(reactionId)
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -50,29 +55,72 @@ class DetailAlbumFragment : Fragment() {
         initView()
         detailAlbumView()
     }
-    private fun detailAlbumView(){
-        detailAlbumViewModel.detailAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
 
-        detailAlbumViewModel.detailAlbumRequestLiveData.observe(requireActivity()){
-            when(it.status){
-                Status.SUCCESS->{
+    private fun detailAlbumView() {
+        detailAlbumViewModel.setTitle("일정 상세")
+        detailAlbumViewModel.detailAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
+        detailAlbumViewModel.setBottomButton("","")
+        detailAlbumViewModel.detailAlbumRequestLiveData.observe(requireActivity()) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    binding.detailAlbumTitleText.text=it.data!!.dataSet!!.date
+                    photoAdapter.datas = it.data!!.dataSet!!.picture as MutableList<AlbumPicture>
+                    photoAdapter.notifyDataSetChanged()
                     tagAdapter.datas = it.data!!.dataSet!!.hashTags as MutableList<HashTag>
                     tagAdapter.notifyDataSetChanged()
-                    commentAdapter.datas = it.data!!.dataSet!!.albumReactions as MutableList<AlbumReaction>
+                    commentAdapter.datas =
+                        it.data!!.dataSet!!.albumReactions as MutableList<AlbumReaction>
                     commentAdapter.notifyDataSetChanged()
                     dismissLoading()
                 }
-                Status.ERROR->{
+                Status.ERROR -> {
                     //테스트용
+                    val tempphotolist = mutableListOf<AlbumPicture>()
+                    tempphotolist.add(
+                        AlbumPicture(
+                            "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
+                            false
+                        )
+                    )
+                    tempphotolist.add(
+                        AlbumPicture(
+                            "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
+                            false
+                        )
+                    )
+                    tempphotolist.add(
+                        AlbumPicture(
+                            "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
+                            false
+                        )
+                    )
+                    photoAdapter.datas = tempphotolist
+                    photoAdapter.notifyDataSetChanged()
                     val taglist = mutableListOf<HashTag>()
                     taglist.add(HashTag("#해시"))
                     taglist.add(HashTag("#태그"))
                     taglist.add(HashTag("#해시"))
-                    tagAdapter.datas=taglist
+                    tagAdapter.datas = taglist
                     tagAdapter.notifyDataSetChanged()
                     val templist = mutableListOf<AlbumReaction>()
-                    templist.add(AlbumReaction(1,"https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png","https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png","아들",0))
-                    templist.add(AlbumReaction(1,"https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png","https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png","아들",1))
+                    templist.add(
+                        AlbumReaction(
+                            1,
+                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+                            "아들",
+                            0
+                        )
+                    )
+                    templist.add(
+                        AlbumReaction(
+                            1,
+                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+                            "아들",
+                            1
+                        )
+                    )
                     commentAdapter.datas = templist
                     commentAdapter.notifyDataSetChanged()
                     //테스트용 끝
@@ -85,8 +133,34 @@ class DetailAlbumFragment : Fragment() {
                 }
             }
         }
+        detailAlbumViewModel.deleteReactionRequestLiveData.observe(requireActivity()) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        commentAdapter.datas.removeIf { it.profileId == LoginUtil.getUserInfo()!!.profileId.toInt() }
+                    }
+                    commentAdapter.notifyDataSetChanged()
+                }
+                Status.ERROR -> {
+                    //테스트
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        commentAdapter.datas.removeIf { it.profileId == LoginUtil.getUserInfo()!!.profileId.toInt() }
+                    }
+                    commentAdapter.notifyDataSetChanged()
+                    //테스트 끝
+                    Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
+                        .show()
+                    dismissLoading()
+                }
+                Status.LOADING -> {
+                    setLoading()
+                }
+            }
+        }
     }
-    private fun initView(){
+
+    private fun initView() {
+        binding.detailAlbumTitleText.text = ""
         photoAdapter = DetailAlbumPhotoAdapter(requireActivity())
         binding.detailAlbumPhotoRecycler.apply {
             layoutManager =
@@ -116,6 +190,7 @@ class DetailAlbumFragment : Fragment() {
             adapter = commentAdapter
         }
     }
+
     private fun setLoading() {
         binding.progressBarLoginFLoading.visibility = View.VISIBLE
     }

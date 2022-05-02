@@ -18,6 +18,18 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailAlbumViewModel @Inject constructor(private val albumRepository: AlbumRepository) :
     ViewModel() {
+    private val _titleLiveData = MutableLiveData<String>()
+    val titleLiveData: LiveData<String>
+        get() = _titleLiveData
+
+    private val _bottombuttonLeftLivedate = MutableLiveData<String>()
+    val bottombuttonLeftLivedate: LiveData<String>
+    get() = _bottombuttonLeftLivedate
+
+    private val _bottombuttonRightLivedate = MutableLiveData<String>()
+    val bottombuttonRightLivedate: LiveData<String>
+        get() = _bottombuttonRightLivedate
+
     private val _saveAlbumRequestLiveData = MutableLiveData<AllAlbum>()
     val saveAlbumLiveData: LiveData<AllAlbum>
         get() = _saveAlbumRequestLiveData
@@ -30,8 +42,15 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
     val deleteReactionRequestLiveData: LiveData<Resource<BaseResponse>>
         get() = _deleteReactionRequestLiveData
 
-    fun setSaveAlbum(allAlbum: AllAlbum) = viewModelScope.launch{
-        _saveAlbumRequestLiveData.value=allAlbum
+    fun setBottomButton(left:String,right:String) = viewModelScope.launch {
+        _bottombuttonLeftLivedate.value = left
+        _bottombuttonRightLivedate.value = right
+    }
+    fun setTitle(title:String)= viewModelScope.launch{
+        _titleLiveData.value=title
+    }
+    fun setSaveAlbum(allAlbum: AllAlbum) = viewModelScope.launch {
+        _saveAlbumRequestLiveData.value = allAlbum
     }
 
     fun detailAlbum(albumId: Int) = viewModelScope.launch {
@@ -39,7 +58,7 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
         _detailAlbumRequestLiveData.postValue(albumRepository.detailAlbum(albumId))
     }
 
-    fun deleteReaction(reactionId:Int) =viewModelScope.launch {
+    fun deleteReaction(reactionId: Int) = viewModelScope.launch {
         _deleteReactionRequestLiveData.postValue(Resource.loading(null))
         _deleteReactionRequestLiveData.postValue(albumRepository.deleteReaction(reactionId))
     }

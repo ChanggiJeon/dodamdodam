@@ -3,6 +3,7 @@ package com.ssafy.family.ui.album
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
 import com.ssafy.family.R
@@ -28,6 +29,35 @@ class AlbumActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.album_frame, DetailAlbumFragment())
             .commit()
+
+        detailAlbumViewModel.titleLiveData.observe(this){
+            binding.albumTopInclude.scheduleTitle.text = it
+        }
+        binding.albumTopInclude.topLayout.setOnClickListener {
+            finish()
+        }
+        detailAlbumViewModel.bottombuttonLeftLivedate.observe(this){
+            if(it==""){
+                binding.albumButtonInclude.button.visibility = View.GONE
+            }else{
+                binding.albumButtonInclude.button.visibility = View.VISIBLE
+                binding.albumButtonInclude.button.text = it
+            }
+
+        }
+        detailAlbumViewModel.bottombuttonRightLivedate.observe(this){
+            if(it==""){
+                binding.albumButtonInclude.button2.visibility = View.GONE
+            }else{
+                binding.albumButtonInclude.button2.visibility = View.VISIBLE
+                binding.albumButtonInclude.button2.text = it
+            }
+            if(it==""&&detailAlbumViewModel.bottombuttonLeftLivedate.value==""){
+                binding.albumButtonInclude.root.visibility=View.GONE
+            }else{
+                binding.albumButtonInclude.root.visibility=View.VISIBLE
+            }
+        }
 
     }
 }

@@ -4,19 +4,21 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ssafy.family.R
+import com.ssafy.family.data.remote.res.AlbumPicture
 import com.ssafy.family.databinding.AlbumPhotoListBinding
 
 class DetailAlbumPhotoAdapter(private val context: Context) :
     RecyclerView.Adapter<DetailAlbumPhotoAdapter.ViewHolder>() {
 
-    private var datas = mutableListOf<Int>(1, 2)
+    var datas = mutableListOf<AlbumPicture>()
     lateinit var itemClickListener: ItemClickListener
 
     inner class ViewHolder(val binding: AlbumPhotoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind() {
-            binding.albumPhotoListImg.setImageResource(R.drawable.aa)
+        fun bind(item: AlbumPicture) {
+            Glide.with(itemView).load(item.imagePath).into(binding.albumPhotoListImg)
         }
     }
 
@@ -30,7 +32,7 @@ class DetailAlbumPhotoAdapter(private val context: Context) :
     override fun getItemCount(): Int = datas.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind()
+        holder.bind(datas[position])
     }
 
     interface ItemClickListener {
