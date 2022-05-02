@@ -20,7 +20,7 @@ class AlbumActivity : AppCompatActivity() {
         binding = ActivityAlbumBinding.inflate(layoutInflater)
         setContentView(binding.root)
         intent.getParcelableExtra<AllAlbum>(AlbumFragment.FRIEND_INFO)?.let {
-            detailAlbumViewModel.setDetailAlbum(it)
+            detailAlbumViewModel.setSaveAlbum(it)
             Log.d("dddddd", "onCreate: "+it)
         }
 

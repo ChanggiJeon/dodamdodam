@@ -6,6 +6,8 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class AlbumReaction(
+    @SerializedName("reactionId")
+    val reactionId: Int,
     @SerializedName("emoticon")
     val emoticon: String,
     @SerializedName("imagePath")

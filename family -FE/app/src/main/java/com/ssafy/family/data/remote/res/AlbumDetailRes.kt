@@ -5,5 +5,5 @@ import com.ssafy.family.config.BaseResponse
 
 class AlbumDetailRes:BaseResponse() {
     @SerializedName("data")
-    val dataSet: List<AlbumDetail>? = null
+    val dataSet: AlbumDetail? = null
 }
