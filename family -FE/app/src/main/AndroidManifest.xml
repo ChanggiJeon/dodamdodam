@@ -24,6 +24,14 @@
             android:exported="true">
         </activity>
         <activity
+            android:name=".ui.album.AlbumActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".ui.chagephoto.ChangePhotoActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".ui.roulette.RouletteActivity"
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".ScheduleActivity" -->
