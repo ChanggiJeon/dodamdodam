@@ -32,12 +32,13 @@ class DetailAlbumFragment : Fragment() {
     private val detailAlbumViewModel by activityViewModels<DetailAlbumViewModel>()
 
     //이모지 누르는버튼
-    private val emojiItemClickListener = object : DetailAlbumEmojiAdapter.ItemClickListener{
+    private val emojiItemClickListener = object : DetailAlbumEmojiAdapter.ItemClickListener {
         override fun onClick(item: Int) {
             detailAlbumViewModel.addReaction(item)
         }
 
     }
+
     //이모지 삭제버튼
     private val commentItemClickListener = object : DetailAlbumCommentAdapter.ItemClickListener {
         override fun onClick(reactionId: Int) {
@@ -65,19 +66,19 @@ class DetailAlbumFragment : Fragment() {
     }
 
     private fun detailAlbumView() {
-        detailAlbumViewModel.setTitle("일정 상세")
+        detailAlbumViewModel.setTitle("앨범 상세")
         detailAlbumViewModel.detailAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
-        detailAlbumViewModel.setBottomButton("","")
+        detailAlbumViewModel.setBottomButton("", "")
         detailAlbumViewModel.detailAlbumRequestLiveData.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
-                    binding.detailAlbumTitleText.text=it.data!!.dataSet!!.date
+                    binding.detailAlbumTitleText.text = it.data!!.dataSet!!.date
                     photoAdapter.datas = it.data!!.dataSet!!.picture as MutableList<AlbumPicture>
                     photoAdapter.notifyDataSetChanged()
                     tagAdapter.datas = it.data!!.dataSet!!.hashTags as MutableList<HashTag>
                     tagAdapter.notifyDataSetChanged()
-                    // TODO: 이모티콘 박아야함
-                    emojiAdapter.datas= mutableListOf(R.drawable.amusing,R.drawable.ballon)
+                    // TODO: 이모티콘 박아야함 어댑터에 지금 R.drawable.xxx 넣으려고 Int로 해놨는데 나중에 서버에 다 저장해놓고 글라이드로 하기위해서 datas String으로 받게하고 String.xml에 주소 array로 다 박아놔야함
+                    emojiAdapter.datas = mutableListOf(R.drawable.amusing, R.drawable.ballon)
                     emojiAdapter.notifyDataSetChanged()
                     commentAdapter.datas =
                         it.data!!.dataSet!!.albumReactions as MutableList<AlbumReaction>
@@ -86,6 +87,7 @@ class DetailAlbumFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     //테스트용
+                    binding.detailAlbumTitleText.text = "2022년 5월 2일"
                     val tempphotolist = mutableListOf<AlbumPicture>()
                     tempphotolist.add(
                         AlbumPicture(
@@ -113,7 +115,7 @@ class DetailAlbumFragment : Fragment() {
                     taglist.add(HashTag("#해시"))
                     tagAdapter.datas = taglist
                     tagAdapter.notifyDataSetChanged()
-                    emojiAdapter.datas= mutableListOf(R.drawable.amusing,R.drawable.ballon)
+                    emojiAdapter.datas = mutableListOf(R.drawable.amusing, R.drawable.ballon)
                     emojiAdapter.notifyDataSetChanged()
                     val templist = mutableListOf<AlbumReaction>()
                     templist.add(
@@ -170,7 +172,7 @@ class DetailAlbumFragment : Fragment() {
                 }
             }
         }
-        detailAlbumViewModel.addReactionRequestLiveData.observe(requireActivity()){
+        detailAlbumViewModel.addReactionRequestLiveData.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
                     detailAlbumViewModel.detailAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)

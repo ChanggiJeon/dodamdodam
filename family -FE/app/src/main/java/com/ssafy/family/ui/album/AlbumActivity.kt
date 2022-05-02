@@ -1,15 +1,16 @@
 package com.ssafy.family.ui.album
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.ssafy.family.R
 import com.ssafy.family.data.remote.res.AllAlbum
 import com.ssafy.family.databinding.ActivityAlbumBinding
 import com.ssafy.family.ui.main.bottomFragment.AlbumFragment
+import com.ssafy.family.util.LoginUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,11 +19,12 @@ class AlbumActivity : AppCompatActivity() {
     private val detailAlbumViewModel by viewModels<DetailAlbumViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("dddddd", "onCreate: " + LoginUtil.getUserInfo())
         binding = ActivityAlbumBinding.inflate(layoutInflater)
         setContentView(binding.root)
         intent.getParcelableExtra<AllAlbum>(AlbumFragment.FRIEND_INFO)?.let {
             detailAlbumViewModel.setSaveAlbum(it)
-            Log.d("dddddd", "onCreate: "+detailAlbumViewModel.saveAlbumLiveData.value)
+            Log.d("dddddd", "onCreate: " + detailAlbumViewModel.saveAlbumLiveData.value)
         }
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -30,32 +32,32 @@ class AlbumActivity : AppCompatActivity() {
             .replace(R.id.album_frame, DetailAlbumFragment())
             .commit()
 
-        detailAlbumViewModel.titleLiveData.observe(this){
+        detailAlbumViewModel.titleLiveData.observe(this) {
             binding.albumTopInclude.scheduleTitle.text = it
         }
         binding.albumTopInclude.topLayout.setOnClickListener {
             finish()
         }
-        detailAlbumViewModel.bottombuttonLeftLivedate.observe(this){
-            if(it==""){
+        detailAlbumViewModel.bottombuttonLeftLivedate.observe(this) {
+            if (it == "") {
                 binding.albumButtonInclude.button.visibility = View.GONE
-            }else{
+            } else {
                 binding.albumButtonInclude.button.visibility = View.VISIBLE
                 binding.albumButtonInclude.button.text = it
             }
 
         }
-        detailAlbumViewModel.bottombuttonRightLivedate.observe(this){
-            if(it==""){
+        detailAlbumViewModel.bottombuttonRightLivedate.observe(this) {
+            if (it == "") {
                 binding.albumButtonInclude.button2.visibility = View.GONE
-            }else{
+            } else {
                 binding.albumButtonInclude.button2.visibility = View.VISIBLE
                 binding.albumButtonInclude.button2.text = it
             }
-            if(it==""&&detailAlbumViewModel.bottombuttonLeftLivedate.value==""){
-                binding.albumButtonInclude.root.visibility=View.GONE
-            }else{
-                binding.albumButtonInclude.root.visibility=View.VISIBLE
+            if (it == "" && detailAlbumViewModel.bottombuttonLeftLivedate.value == "") {
+                binding.albumButtonInclude.root.visibility = View.GONE
+            } else {
+                binding.albumButtonInclude.root.visibility = View.VISIBLE
             }
         }
 
