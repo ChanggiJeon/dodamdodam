@@ -11,7 +11,9 @@ import com.ssafy.family.ui.Adapter.DetailAlbumCommentAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumEmojiAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumPhotoAdapter
 import com.ssafy.family.databinding.FragmentDetailAlbumBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailAlbumFragment : Fragment() {
     private lateinit var binding: FragmentDetailAlbumBinding
     private lateinit var photoAdapter:DetailAlbumPhotoAdapter
