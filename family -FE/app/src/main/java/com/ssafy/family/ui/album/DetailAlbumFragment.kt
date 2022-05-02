@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.family.data.remote.res.AlbumReaction
+import com.ssafy.family.data.remote.res.HashTag
 import com.ssafy.family.databinding.FragmentDetailAlbumBinding
 import com.ssafy.family.ui.Adapter.AlbumTagAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumCommentAdapter
@@ -55,11 +56,26 @@ class DetailAlbumFragment : Fragment() {
         detailAlbumViewModel.detailAlbumRequestLiveData.observe(requireActivity()){
             when(it.status){
                 Status.SUCCESS->{
+                    tagAdapter.datas = it.data!!.dataSet!!.hashTags as MutableList<HashTag>
+                    tagAdapter.notifyDataSetChanged()
                     commentAdapter.datas = it.data!!.dataSet!!.albumReactions as MutableList<AlbumReaction>
                     commentAdapter.notifyDataSetChanged()
                     dismissLoading()
                 }
                 Status.ERROR->{
+                    //테스트용
+                    val taglist = mutableListOf<HashTag>()
+                    taglist.add(HashTag("#해시"))
+                    taglist.add(HashTag("#태그"))
+                    taglist.add(HashTag("#해시"))
+                    tagAdapter.datas=taglist
+                    tagAdapter.notifyDataSetChanged()
+                    val templist = mutableListOf<AlbumReaction>()
+                    templist.add(AlbumReaction(1,"https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png","https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png","아들",0))
+                    templist.add(AlbumReaction(1,"https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png","https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png","아들",1))
+                    commentAdapter.datas = templist
+                    commentAdapter.notifyDataSetChanged()
+                    //테스트용 끝
                     Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
                         .show()
                     dismissLoading()

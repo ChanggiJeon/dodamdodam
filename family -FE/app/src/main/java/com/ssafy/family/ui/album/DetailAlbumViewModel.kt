@@ -30,8 +30,8 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
     val deleteReactionRequestLiveData: LiveData<Resource<BaseResponse>>
         get() = _deleteReactionRequestLiveData
 
-    fun setSaveAlbum(allAlbum: AllAlbum) {
-        _saveAlbumRequestLiveData.postValue(allAlbum)
+    fun setSaveAlbum(allAlbum: AllAlbum) = viewModelScope.launch{
+        _saveAlbumRequestLiveData.value=allAlbum
     }
 
     fun detailAlbum(albumId: Int) = viewModelScope.launch {

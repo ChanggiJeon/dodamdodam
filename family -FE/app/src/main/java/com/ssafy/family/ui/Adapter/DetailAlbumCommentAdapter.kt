@@ -1,13 +1,16 @@
 package com.ssafy.family.ui.Adapter
 
 import android.content.Context
+import android.opengl.Visibility
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ssafy.family.R
 import com.ssafy.family.data.remote.res.AlbumReaction
 import com.ssafy.family.databinding.DetailAlbumCommentListBinding
+import com.ssafy.family.util.LoginUtil
 
 class DetailAlbumCommentAdapter(private val context: Context) :
     RecyclerView.Adapter<DetailAlbumCommentAdapter.ViewHolder>() {
@@ -20,6 +23,9 @@ class DetailAlbumCommentAdapter(private val context: Context) :
         fun bind(item : AlbumReaction) {
             Glide.with(itemView).load(item.imagePath).into(binding.commentFamilyImg)
             Glide.with(itemView).load(item.emoticon).into(binding.commentFamilyEmoji)
+            if(item.profileId!=LoginUtil.getUserInfo()!!.profileId.toInt()){
+                binding.commentFamilyDelete.visibility= View.GONE
+            }
             binding.commentFamilyDelete.setOnClickListener { itemClickListener.onClick(item.reactionId) }
         }
     }

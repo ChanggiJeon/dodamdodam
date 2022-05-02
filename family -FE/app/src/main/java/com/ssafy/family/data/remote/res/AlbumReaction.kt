@@ -13,7 +13,9 @@ data class AlbumReaction(
     @SerializedName("imagePath")
     val imagePath: String,
     @SerializedName("role")
-    val role: String
+    val role: String,
+    @SerializedName("profileId")
+    val profileId: Int
 
 
 ) : Parcelable

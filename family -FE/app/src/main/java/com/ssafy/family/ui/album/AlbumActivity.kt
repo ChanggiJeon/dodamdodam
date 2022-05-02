@@ -21,7 +21,7 @@ class AlbumActivity : AppCompatActivity() {
         setContentView(binding.root)
         intent.getParcelableExtra<AllAlbum>(AlbumFragment.FRIEND_INFO)?.let {
             detailAlbumViewModel.setSaveAlbum(it)
-            Log.d("dddddd", "onCreate: "+it)
+            Log.d("dddddd", "onCreate: "+detailAlbumViewModel.saveAlbumLiveData.value)
         }
 
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
