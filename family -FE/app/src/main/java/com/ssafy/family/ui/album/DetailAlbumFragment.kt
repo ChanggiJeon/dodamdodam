@@ -1,61 +1,110 @@
 package com.ssafy.family.ui.album
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ssafy.family.data.remote.res.AlbumReaction
+import com.ssafy.family.databinding.FragmentDetailAlbumBinding
 import com.ssafy.family.ui.Adapter.AlbumTagAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumCommentAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumEmojiAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumPhotoAdapter
-import com.ssafy.family.databinding.FragmentDetailAlbumBinding
+import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DetailAlbumFragment : Fragment() {
     private lateinit var binding: FragmentDetailAlbumBinding
-    private lateinit var photoAdapter:DetailAlbumPhotoAdapter
+    private lateinit var photoAdapter: DetailAlbumPhotoAdapter
     private lateinit var emojiAdapter: DetailAlbumEmojiAdapter
     private lateinit var tagAdapter: AlbumTagAdapter
     private lateinit var commentAdapter: DetailAlbumCommentAdapter
+    private val detailAlbumViewModel by activityViewModels<DetailAlbumViewModel>()
+    //이모지 삭제버튼
+    private val commentItemClickListener = object : DetailAlbumCommentAdapter.ItemClickListener{
+        override fun onClick(reactionId: Int) {
+            detailAlbumViewModel.deleteReaction(reactionId)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
+    //detail 어댑터 3개있는거 싹다 새로
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentDetailAlbumBinding.inflate(inflater,container,false)
+        binding = FragmentDetailAlbumBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+        detailAlbumView()
+    }
+    private fun detailAlbumView(){
+        detailAlbumViewModel.detailAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
+
+        detailAlbumViewModel.detailAlbumRequestLiveData.observe(requireActivity()){
+            when(it.status){
+                Status.SUCCESS->{
+                    commentAdapter.datas = it.data!!.dataSet!!.albumReactions as MutableList<AlbumReaction>
+                    commentAdapter.notifyDataSetChanged()
+                    dismissLoading()
+                }
+                Status.ERROR->{
+                    Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
+                        .show()
+                    dismissLoading()
+                }
+                Status.LOADING -> {
+                    setLoading()
+                }
+            }
+        }
+    }
+    private fun initView(){
         photoAdapter = DetailAlbumPhotoAdapter(requireActivity())
         binding.detailAlbumPhotoRecycler.apply {
-            layoutManager = LinearLayoutManager(requireActivity(),LinearLayoutManager.HORIZONTAL,false)
-            adapter =  photoAdapter
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = photoAdapter
         }
 
         emojiAdapter = DetailAlbumEmojiAdapter(requireActivity())
         binding.detailAlbumEmojiRecycler.apply {
-            layoutManager = LinearLayoutManager(requireActivity(),LinearLayoutManager.HORIZONTAL,false)
-            adapter =  emojiAdapter
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = emojiAdapter
         }
 
         tagAdapter = AlbumTagAdapter(requireActivity())
         binding.detailAlbumTagRecycler.apply {
-            layoutManager = LinearLayoutManager(requireActivity(),LinearLayoutManager.HORIZONTAL,false)
-            adapter =  tagAdapter
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = tagAdapter
         }
 
-        commentAdapter = DetailAlbumCommentAdapter(requireActivity())
+        commentAdapter = DetailAlbumCommentAdapter(requireActivity()).apply {
+            itemClickListener = this@DetailAlbumFragment.commentItemClickListener
+        }
         binding.detailAlbumCommentRecycler.apply {
             layoutManager = LinearLayoutManager(requireActivity())
-            adapter =  commentAdapter
+            adapter = commentAdapter
         }
+    }
+    private fun setLoading() {
+        binding.progressBarLoginFLoading.visibility = View.VISIBLE
+    }
+
+    private fun dismissLoading() {
+        binding.progressBarLoginFLoading.visibility = View.GONE
     }
 }

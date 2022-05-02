@@ -4,21 +4,27 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ssafy.family.R
+import com.ssafy.family.data.remote.res.AlbumReaction
 import com.ssafy.family.databinding.DetailAlbumCommentListBinding
 
-class DetailAlbumCommentAdapter(private val context: Context) : RecyclerView.Adapter<DetailAlbumCommentAdapter.ViewHolder>()  {
+class DetailAlbumCommentAdapter(private val context: Context) :
+    RecyclerView.Adapter<DetailAlbumCommentAdapter.ViewHolder>() {
 
-    private var datas = mutableListOf<Int>(1,2,3)
+    var datas = mutableListOf<AlbumReaction>()
     lateinit var itemClickListener: ItemClickListener
-    inner class ViewHolder(val binding: DetailAlbumCommentListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(){
-            binding.commentFamilyImg.setImageResource(R.drawable.amusing)
-            binding.commentFamilyEmoji.setImageResource(R.drawable.laughing)
+
+    inner class ViewHolder(val binding: DetailAlbumCommentListBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item : AlbumReaction) {
+            Glide.with(itemView).load(item.imagePath).into(binding.commentFamilyImg)
+            Glide.with(itemView).load(item.emoticon).into(binding.commentFamilyEmoji)
+            binding.commentFamilyDelete.setOnClickListener { itemClickListener.onClick(item.reactionId) }
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //val view = LayoutInflater.from(context).inflate(R.layout.item_family_status,parent,false)
         val inflater = LayoutInflater.from(parent.context)
         val binding = DetailAlbumCommentListBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
@@ -27,9 +33,10 @@ class DetailAlbumCommentAdapter(private val context: Context) : RecyclerView.Ada
     override fun getItemCount(): Int = datas.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind()
+        holder.bind(datas[position])
     }
+
     interface ItemClickListener {
-        fun onClick()
+        fun onClick(reactionId:Int)
     }
 }
