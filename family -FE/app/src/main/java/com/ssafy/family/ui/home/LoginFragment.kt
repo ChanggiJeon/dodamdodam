@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.family.R
 import com.ssafy.family.data.remote.req.AddFcmReq
@@ -21,6 +20,10 @@ import com.ssafy.family.util.InputValidUtil
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -78,7 +81,10 @@ class LoginFragment : Fragment() {
                     LoginUtil.setAutoLogin(loginViewModel.isAutoLogin)
                     LoginUtil.saveUserInfo(it.data!!.dataSet!!)
                     Log.d("dddd", "initView: " + LoginUtil.getUserInfo())
-                    val token = FirebaseMessaging.getInstance().token.result ?: ""
+                    var token = ""
+                    CoroutineScope(Dispatchers.IO).launch {
+                        token = FirebaseMessaging.getInstance().token.result ?: ""
+                    }
                     // TODO: 에러나는지 확인 attach 
                     val context = requireActivity()
                     addFCM(AddFcmReq(token))
@@ -87,7 +93,8 @@ class LoginFragment : Fragment() {
                     dismissLoading()
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireActivity(), it.message?:"서버 에러", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
+                        .show()
                     dismissLoading()
                 }
                 Status.LOADING -> {
