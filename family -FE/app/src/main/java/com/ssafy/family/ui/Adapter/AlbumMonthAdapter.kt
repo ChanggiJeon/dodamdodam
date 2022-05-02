@@ -9,7 +9,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ssafy.family.R
-import com.ssafy.family.data.remote.res.AlbumRes
 import com.ssafy.family.data.remote.res.AllAlbum
 import com.ssafy.family.databinding.ItemMonthAlbumBinding
 
@@ -18,6 +17,7 @@ class AlbumMonthAdapter(private val context: Context) :
     RecyclerView.Adapter<AlbumMonthAdapter.ViewHolder>() {
 
     var datas = mutableListOf<AllAlbum>()
+    lateinit var itemClickListener: ItemClickListener
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemMonthAlbumBinding.inflate(inflater, parent, false)
@@ -37,16 +37,21 @@ class AlbumMonthAdapter(private val context: Context) :
 
         private val albumtag: TextView = itemView.findViewById(R.id.album_main_hashtag)
         private val albumimg: ImageView = itemView.findViewById(R.id.album_main_img)
-        private val albumdate:TextView= itemView.findViewById(R.id.album_main_date)
+        private val albumdate: TextView = itemView.findViewById(R.id.album_main_date)
         fun bind(item: AllAlbum) {
-            albumdate.text=item.mainPicture.album[0].date
+            albumdate.text = item.mainPicture.album[0].date
             Glide.with(itemView).load(item.mainPicture.path_name).into(albumimg)
             var alltag = ""
-            item.hashTags.forEach { alltag+=it.text }
-            albumtag.text=alltag
-
+            item.hashTags.forEach { alltag += it.text }
+            albumtag.text = alltag
+            itemView.setOnClickListener {
+                itemClickListener.onClick(item)
+            }
         }
     }
 
+    interface ItemClickListener {
+        fun onClick(allAlbum: AllAlbum)
+    }
 
 }
