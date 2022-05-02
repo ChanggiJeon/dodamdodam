@@ -39,8 +39,8 @@ class AlbumMonthAdapter(private val context: Context) :
         private val albumimg: ImageView = itemView.findViewById(R.id.album_main_img)
         private val albumdate: TextView = itemView.findViewById(R.id.album_main_date)
         fun bind(item: AllAlbum) {
-            albumdate.text = item.mainPicture.album[0].date
-            Glide.with(itemView).load(item.mainPicture.path_name).into(albumimg)
+            albumdate.text = item.mainPicture.date
+            Glide.with(itemView).load(item.mainPicture.imagePath).into(albumimg)
             var alltag = ""
             item.hashTags.forEach { alltag += it.text }
             albumtag.text = alltag

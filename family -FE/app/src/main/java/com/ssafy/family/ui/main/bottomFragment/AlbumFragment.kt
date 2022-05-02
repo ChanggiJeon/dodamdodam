@@ -72,14 +72,10 @@ class AlbumFragment : Fragment() {
                     val taglist = mutableListOf<HashTag>()
                     taglist.add(HashTag("#해시"))
                     taglist.add(HashTag("#해시"))
-                    val albumlist = mutableListOf<Album>()
-                    albumlist.add(Album(0, mutableListOf(), "2022년 5월 2일"))
                     val temppicture = Picture(
                         1,
-                        albumlist,
-                        "d",
-                        "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
-                        true
+                        "2022년 5월 2일",
+                        "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png"
                     )
                     val allalbumlist = mutableListOf<AllAlbum>()
                     allalbumlist.add(AllAlbum(taglist, temppicture))
