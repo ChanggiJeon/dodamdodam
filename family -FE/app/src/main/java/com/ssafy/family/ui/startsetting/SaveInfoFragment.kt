@@ -1,60 +1,49 @@
 package com.ssafy.family.ui.startsetting
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import com.ssafy.family.R
+import com.ssafy.family.databinding.FragmentAskFamilyCodeBinding
+import com.ssafy.family.databinding.FragmentSaveInfoBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SaveInfoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SaveInfoFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    val TAG: String = "로그"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var binding: FragmentSaveInfoBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_save_info, container, false)
+        binding = FragmentSaveInfoBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SaveInfoFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SaveInfoFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // 상단 텍스트 수정
+        (activity as StartSettingActivity).changeTopMessage("'나'를 저장하세요!")
+        // 스피너 설정
+        val roleData = resources.getStringArray(R.array.family_role)
+        val adpater = ArrayAdapter<String>(requireContext(), R.layout.spinner_item, roleData)
+        binding.saveInfoSpinner.adapter = adpater
+        binding.saveInfoSpinner.setSelection(0)
+        binding.saveInfoSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                Log.d(TAG, "선택한 아이템" + binding.saveInfoSpinner.selectedItem)
             }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+
+        }
+
     }
+
 }
