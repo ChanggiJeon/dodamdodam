@@ -27,10 +27,10 @@ interface AccountAPI {
     suspend fun newPassword(@Body newIdPwReq:LoginReq):Response<BaseResponse>
 
     @GET("/api/user/{userId}")
-    suspend fun idCheck(@Query("userId") userId:String):Response<BaseResponse>
+    suspend fun idCheck(@Path("userId") userId:String):Response<BaseResponse>
 
     @GET("api/user/birthday/{birthday}")
-    suspend fun updateBirthDay(@Query("birthday")birthday:String):Response<BaseResponse>
+    suspend fun updateBirthDay(@Path("birthday")birthday:String):Response<BaseResponse>
 
     @POST("/api/user/refresh")
     suspend fun makeRefreshToken(@Header("X-AUTH-REFRESH-TOKEN") refreshToken:String):Response<RefreshTokenRes>
