@@ -1,6 +1,7 @@
 package com.ssafy.api.service;
 
 
+
 import com.ssafy.core.dto.req.ProfileReqDto;
 import com.ssafy.core.dto.req.StatusReqDto;
 import com.ssafy.core.dto.res.MainProfileResDto;
@@ -31,14 +32,15 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final UserService userService;
     private final FamilyRepository familyRepository;
+    private final FileService fileService;
     private final Random random = new Random();
 
     @Transactional(readOnly = false)
-    public void enrollProfile(Profile profile) {
+    public void enrollProfile(Profile profile){
         profileRepository.save(profile);
     }
 
-    //    @Transactional(readOnly = false)
+//    @Transactional(readOnly = false)
 //    public void enrollProfile(String userId){
 //        User user = userService.findByUserId(userId);
 //
@@ -57,12 +59,13 @@ public class ProfileService {
 //
 //    }
     @Transactional(readOnly = false)
-    public Profile updateProfile(Long userPK, ProfileReqDto profileDto, MultipartFile multipartFile, HttpServletRequest request) {
+    public Profile updateProfile(Long userPK, ProfileReqDto profileDto, MultipartFile multipartFile, HttpServletRequest request){
         Profile profile = profileRepository.findProfileByUserPk(userPK);
-        //이미지 originalName, path 수정
-//        profile.updateImageName(profileDto.getProfileImage().getOriginalFilename());
-//        profile.updateImagePath(profileDto.getProfileImage().get);
-        updateImage(multipartFile, profile, request);
+        String originFileName = multipartFile.getOriginalFilename();
+        String filePath = fileService.uploadFileV1("profile",multipartFile);
+        profile.updateImageName(originFileName);
+        profile.updateImagePath(filePath);
+//        updateImage(multipartFile, profile, request);
         profile.updateRole(profileDto.getRole());
         profile.updateNickname(profileDto.getNickname());
 
@@ -99,6 +102,7 @@ public class ProfileService {
     }
 
 
+
     @Transactional(readOnly = false)
     public void updateStatus(Profile profile, StatusReqDto statusDto) {
         profile.updateEmotion(statusDto.getEmotion());
@@ -106,80 +110,65 @@ public class ProfileService {
 
         profileRepository.save(profile);
     }
-
-    @Transactional(readOnly = false)
-    public void updateImage(MultipartFile multipartFile, Profile profile, HttpServletRequest request) {
-        try {
-            String separ = File.separator;
-            String today = new SimpleDateFormat("yyMMdd").format(new Date());
-
-            File file = new File("");
-//            String rootPath = file.getAbsolutePath().split("src")[0];
-
-//            String savePath = "../"+"profileImg"+separ+today;
-            String savePath = request.getServletContext().getRealPath("/resources/profileImage");
-            log.info(savePath);
-            if (!new File(savePath).exists()) {
-                try {
-                    new File(savePath).mkdirs();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            String originFileName = multipartFile.getOriginalFilename();
-            String saveFileName = UUID.randomUUID().toString() + originFileName.substring(originFileName.lastIndexOf("."));
-
-            String filePath = savePath + separ + saveFileName;
-            multipartFile.transferTo(new File(filePath));
-            profile.updateImagePath("/resources/profileImage/" + saveFileName);
-            profile.updateImageName(originFileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Transactional(readOnly = false)
-    public String enrollImage(MultipartFile multipartFile, HttpServletRequest request) {
-        try {
-            String separ = File.separator;
+//
+//    @Transactional(readOnly = false)
+//    public void updateImage(MultipartFile multipartFile, Profile profile, HttpServletRequest request){
+//        try{
+//            String separ = File.separator;
 //            String today= new SimpleDateFormat("yyMMdd").format(new Date());
+//
+//            File file = new File("");
+////            String rootPath = file.getAbsolutePath().split("src")[0];
+//
+////            String savePath = "../"+"profileImg"+separ+today;
+//            String savePath = request.getServletContext().getRealPath("/resources/profileImage");
+//            log.info(savePath);
+//            if(!new File(savePath).exists()){
+//                try{
+//                    new File(savePath).mkdirs();
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
+//            String originFileName = multipartFile.getOriginalFilename();
+//            String saveFileName = UUID.randomUUID().toString() + originFileName.substring(originFileName.lastIndexOf("."));
+//
+//            String filePath = savePath+separ+saveFileName;
+//            multipartFile.transferTo(new File(filePath));
+//            profile.updateImagePath("/resources/profileImage/"+saveFileName);
+//            profile.updateImageName(originFileName);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 
-            File file = new File("");
-//            String rootPath = file.getAbsolutePath().split("src")[0];
+    @Transactional(readOnly = false)
+    public String enrollImage(MultipartFile multipartFile, HttpServletRequest request){
 
-//            String savePath = "../"+"profileImg"+separ+today;
-            String savePath = request.getServletContext().getRealPath("/resources/profileImage");
-            if (!new File(savePath).exists()) {
-                try {
-                    new File(savePath).mkdirs();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        try{
+
             String originFileName = multipartFile.getOriginalFilename();
-            String saveFileName = UUID.randomUUID().toString() + originFileName.substring(originFileName.lastIndexOf("."));
-
-            String filePath = savePath + separ + saveFileName;
-            multipartFile.transferTo(new File(filePath));
-            String realPath = "/resources/profileImage/" + saveFileName;
-            return realPath + "#" + originFileName;
-        } catch (Exception e) {
+            String filePath = fileService.uploadFileV1("profile",multipartFile);
+            return filePath+"#"+originFileName;
+        }catch (Exception e){
             e.printStackTrace();
         }
         return "";
     }
 
     @Transactional
-    public String findImage(Long userPk) {
+    public String findImage(Long userPk){
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         return profile.getImagePath();
     }
 
     @Transactional
-    public Profile findProfileByUserPk(Long userPk) {
+    public Profile findProfileByUserPk(Long userPk){
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         return profile;
     }
+
+
 
 
 }

@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "DTO Model : FamilyJoinReqDto")
-public class FamilyJoinReqDto {
+public class FamilyCreateReqDto {
 
     @NotBlank
     @Size(max = 10, min = 1)
@@ -32,7 +32,4 @@ public class FamilyJoinReqDto {
 
     @Schema(description = "이미지", required = true, example = "1994-10-25")
     private MultipartFile image;
-
-    @Schema(description = "id", required = true, example = "1")
-    private long familyId;
 }

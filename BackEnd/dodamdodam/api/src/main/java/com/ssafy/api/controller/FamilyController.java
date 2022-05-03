@@ -1,9 +1,9 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.core.dto.req.FamilyCreateReqDto;
 import com.ssafy.core.dto.req.FamilyJoinReqDto;
 import com.ssafy.core.dto.res.FamilyCodeResDto;
 import com.ssafy.core.dto.res.FamilyIdResDto;
-import com.ssafy.core.dto.res.FamilyJoinResDto;
 import com.ssafy.core.dto.res.FamilyPictureResDto;
 import com.ssafy.core.entity.Family;
 import com.ssafy.core.entity.User;
@@ -46,19 +46,19 @@ public class FamilyController {
                     @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public SingleResult<FamilyJoinResDto> createFamily(
-            @ModelAttribute @Valid FamilyJoinReqDto familyJoinReqDto,
+    public SingleResult<FamilyIdResDto> createFamily(
+            @ModelAttribute @Valid FamilyCreateReqDto familyReq,
             Authentication authentication,
             HttpServletRequest request) {
 
         Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
-        userService.updateBirthdayWithUserPk(userPk, familyJoinReqDto.getBirthday());
+        userService.updateBirthdayWithUserPk(userPk, familyReq.getBirthday());
         Family family = familyService.createFamily();
-        String[] imageInfo = profileService.enrollImage(familyJoinReqDto.getImage(), request).split("#");
-        familyService.createProfile(family, user, familyJoinReqDto, imageInfo);
-        FamilyJoinResDto res = FamilyJoinResDto.builder()
+        String[] imageInfo = profileService.enrollImage(familyReq.getImage(), request).split("#");
+        familyService.createProfileForFirst(family, user, familyReq, imageInfo);
+        FamilyIdResDto res = FamilyIdResDto.builder()
                 .familyId(family.getId())
                 .build();
         return responseService.getSingleResult(res);
@@ -68,20 +68,19 @@ public class FamilyController {
             parameters = {
                     @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
-    @PostMapping(value = "/join/{familyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/join", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult joinFamily(
             @ModelAttribute
             @Valid FamilyJoinReqDto familyRequest,
-            @PathVariable long familyId,
             Authentication authentication,
             HttpServletRequest request) {
         Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
         userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
-        Family family = familyService.getFamily(familyId);
+        Family family = familyService.getFamily(familyRequest.getFamilyId());
         String[] imageInfo = profileService.enrollImage(familyRequest.getImage(), request).split("#");
-        familyService.createProfile(family, user, familyRequest, imageInfo);
+        familyService.createProfileForJoin(family, user, familyRequest, imageInfo);
         return responseService.getSuccessResult("그룹 가입 완료");
     }
 
@@ -93,7 +92,7 @@ public class FamilyController {
     public SingleResult<FamilyIdResDto> checkFamilyCode(@PathVariable String code) {
         Family family = familyService.checkCode(code);
         FamilyIdResDto res = FamilyIdResDto.builder()
-                .id(family.getId())
+                .familyId(family.getId())
                 .build();
         return responseService.getSingleResult(res);
     }

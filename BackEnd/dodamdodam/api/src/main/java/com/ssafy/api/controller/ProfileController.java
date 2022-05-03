@@ -36,36 +36,36 @@ public class ProfileController {
     private final UserService userService;
 
 
-    @Operation(summary = "프로필 등록", description = "<strong>프로필 등록</strong>",
-            parameters = {
-                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
-            })
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public CommonResult enrollProfile(@RequestBody
-                                      @io.swagger.v3.oas.annotations.parameters.RequestBody
-                                      @Valid ProfileReqDto profileRequest,
-                                      @RequestParam(value = "file", required = false) MultipartFile multipartFile,
-                                      Authentication authentication,
-                                      HttpServletRequest request) {
-
-        User user = userService.findByUserPk(Long.parseLong(authentication.getName()));
-
-        userService.updateBirthdayWithUserPk(user.getUserPk(), profileRequest.getBirthday());
-
-        String[] imageInfo = profileService.enrollImage(multipartFile, request).split("#");
-        //family코드로 넣을 부분 필요
-        Profile profile = Profile.builder()
-                .role(profileRequest.getRole())
-                .nickname(profileRequest.getNickname())
-                .user(user)
-                .imagePath(imageInfo[0])
-                .imageName(imageInfo[1])
-//                .family()
-                .build();
-
-        profileService.enrollProfile(profile);
-        return responseService.getSuccessResult();
-    }
+//    @Operation(summary = "프로필 등록", description = "<strong>프로필 등록</strong>",
+//            parameters = {
+//                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+//            })
+//    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public CommonResult enrollProfile(@RequestBody
+//                                      @io.swagger.v3.oas.annotations.parameters.RequestBody
+//                                      @Valid ProfileReqDto profileRequest,
+//                                      @RequestParam(value = "file", required = false) MultipartFile multipartFile,
+//                                      Authentication authentication,
+//                                      HttpServletRequest request) {
+//
+//        User user = userService.findByUserPk(Long.parseLong(authentication.getName()));
+//
+//        userService.updateBirthdayWithUserPk(user.getUserPk(), profileRequest.getBirthday());
+//
+//        String[] imageInfo = profileService.enrollImage(multipartFile, request).split("#");
+//        //family코드로 넣을 부분 필요
+//        Profile profile = Profile.builder()
+//                .role(profileRequest.getRole())
+//                .nickname(profileRequest.getNickname())
+//                .user(user)
+//                .imagePath(imageInfo[0])
+//                .imageName(imageInfo[1])
+////                .family()
+//                .build();
+//
+//        profileService.enrollProfile(profile);
+//        return responseService.getSuccessResult();
+//    }
 
 
     @Operation(summary = "프로필 수정", description = "<strong>프로필 수정</strong>",
@@ -73,15 +73,14 @@ public class ProfileController {
                     @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PatchMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public CommonResult updateProfile(@RequestBody
-                                      @io.swagger.v3.oas.annotations.parameters.RequestBody
+    public CommonResult updateProfile(@ModelAttribute
                                       @Valid ProfileReqDto profileRequest,
-                                      @RequestPart(value = "file", required = false) MultipartFile multipartFile, Authentication authentication,
+                                      Authentication authentication,
                                       HttpServletRequest request) {
 
         Long userPk = Long.parseLong(authentication.getName());
 
-        Profile updateResult = profileService.updateProfile(userPk, profileRequest, multipartFile, request);
+        Profile updateResult = profileService.updateProfile(userPk, profileRequest, profileRequest.getMultipartFile(), request);
 
         userService.updateBirthdayWithUserPk(userPk, profileRequest.getBirthday());
 
@@ -92,7 +91,7 @@ public class ProfileController {
 
 //    @Operation(summary = "미션 등록", notes = "<strong>미션 등록</strong>",
 //            parameters = {
-//                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
+//                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
 //            })
 //    @PatchMapping("/mission")
 //    public CommonResult updateMission(@RequestBody @Valid MissionReqDto missionReqDto, Authentication authentication) {
@@ -127,12 +126,12 @@ public class ProfileController {
             parameters = {
                     @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "/image", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/image")
     public SingleResult<String> getProfileImage(Authentication authentication) {
 
         Long userPk = Long.parseLong(authentication.getName());
-
-        return responseService.getSingleResult(profileService.findImage(userPk));
+        String imagePath = profileService.findImage(userPk);
+        return responseService.getSingleResult(imagePath);
     }
 
 }

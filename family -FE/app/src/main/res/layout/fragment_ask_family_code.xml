@@ -7,24 +7,11 @@
     tools:context=".ui.startsetting.AskFamilyCodeFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:gravity="center"
-        android:fontFamily="@font/spoqahansans"
-        android:text="@string/ask_family_code"
-        android:textColor="@color/pink01"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/ask_family_code_answer_yes_btn"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="60dp"
         android:background="@drawable/box_white_button"
         android:gravity="center"
         android:text="네, 가족 코드를 입력할게요!"
@@ -32,7 +19,6 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="420dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/box_white_button"
         android:gravity="center"
         android:text="아니요, 새로 만들게요!"
@@ -49,9 +35,8 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/ask_family_code_answer_yes_btn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
