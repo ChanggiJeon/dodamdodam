@@ -21,7 +21,7 @@ class PhotoPickAdapter(): RecyclerView.Adapter<PhotoPickAdapter.ViewHolder>()  {
         }
         fun bind(item: Uri) {
             val imageView = itemView.findViewById<ImageView>(R.id.imageView_albumF)
-            Glide.with(imageView).load(item).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).centerCrop().into(imageView)
+           imageView.setImageURI(item)
         }
     }
 
