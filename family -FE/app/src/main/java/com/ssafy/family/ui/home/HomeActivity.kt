@@ -1,5 +1,7 @@
 package com.ssafy.family.ui.home
 
+import android.Manifest
+import android.app.Dialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -20,6 +22,7 @@ import com.ssafy.family.databinding.ActivityHomeBinding
 import com.ssafy.family.ui.main.MainActivity
 import com.ssafy.family.ui.schedule.AddScheduleFragment
 import com.ssafy.family.util.LoginUtil
+import com.ssafy.family.util.PermissionUtil
 import com.ssafy.family.util.SharedPreferencesUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,10 +31,20 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private val loginViewModel by viewModels<LoginViewModel>()
+    lateinit var dialog: Dialog
+    lateinit var permissionUtil: PermissionUtil
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        permissionUtil = PermissionUtil(this)
+        permissionUtil.permissionListener = object : PermissionUtil.PermissionListener {
+            override fun run() {
+                init()
+            }
+        }
+    }
+    fun init(){
         if (ApplicationClass.sSharedPreferences.getString(ApplicationClass.JWT) != null) {
             // TODO: 첫 접속일시 분기 만들어야함
             // TODO: 토큰 만료됐을시 분기 만들어야함
@@ -58,11 +71,23 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
-        //Log.d("ddddddd", "onCreate: "+FirebaseMessaging.getInstance().token.result)
-
-
     }
-
+    override fun onStart() {
+        super.onStart()
+        checkPermissions()
+    }
+    private fun checkPermissions() {
+        if(!permissionUtil.checkPermissions(listOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION))) {
+            permissionUtil.requestPermissions()
+        } else {
+            init()
+        }
+    }
     private fun addFCM(fcmToken: AddFcmReq) {
         loginViewModel.addFCM(fcmToken)
     }
