@@ -35,9 +35,16 @@ class SelectPhotoFragment : Fragment() {
     private lateinit var pickAdapter: PhotoPickAdapter
     private val itemClickListener = object: PhotoRecyclerViewAdapter.ItemClickListener {
         override fun onClick(uri: Uri, view: View, position: Int) {
-            Log.d("ddddd", "onClick: "+uri)
-            pickAdapter.uris.add(uri)
-            pickAdapter.notifyDataSetChanged()
+            if(view.tag==true){
+                detailAlbumViewModel.deleteImgUri(uri)
+                pickAdapter.uris = detailAlbumViewModel.selectedImgUriList
+                pickAdapter.notifyDataSetChanged()
+            }else{
+                Log.d("ddddd", "onClick: "+uri)
+                detailAlbumViewModel.setSelectedImgUri(uri)
+                pickAdapter.uris = detailAlbumViewModel.selectedImgUriList
+                pickAdapter.notifyDataSetChanged()
+            }
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +67,7 @@ class SelectPhotoFragment : Fragment() {
     }
     private fun initView(){
         detailAlbumViewModel.setTitle("사진 선택")
-        detailAlbumViewModel.setBottomButton("취소","확인")
+        detailAlbumViewModel.setBottomButton("취소","완료")
         photoRecyclerViewAdapter = PhotoRecyclerViewAdapter().apply { itemClickListener = this@SelectPhotoFragment.itemClickListener }
         binding.recyclerViewAlbumF.apply {
             adapter = photoRecyclerViewAdapter

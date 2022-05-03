@@ -55,8 +55,14 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
     val addAlbumRequestLiveData: LiveData<Resource<BaseResponse>>
         get() = _addAlbumRequestLiveData
 
-    var selectedImgUri: Uri? = null
+    var selectedImgUriList =  arrayListOf<Uri>()
 
+    fun setSelectedImgUri(uri: Uri){
+        selectedImgUriList.add(uri)
+    }
+    fun deleteImgUri(uri: Uri){
+        selectedImgUriList.remove(uri)
+    }
     fun setBottomButton(left: String, right: String) = viewModelScope.launch {
         _bottombuttonLeftLivedate.value = left
         _bottombuttonRightLivedate.value = right

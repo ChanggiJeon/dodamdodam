@@ -3,6 +3,7 @@ package com.ssafy.family.ui.Adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.ssafy.family.R
@@ -19,6 +20,18 @@ class DetailAlbumPhotoAdapter(private val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: AlbumPicture) {
             Glide.with(itemView).load(item.imagePath).into(binding.albumPhotoListImg)
+            binding.albumPhotoListImg.setOnClickListener {
+                itemClickListener.onClick(item)
+            }
+            if (item.main) {
+                itemView.background = ResourcesCompat.getDrawable(
+                    itemView.resources,
+                    R.drawable.list_box_select,
+                    null
+                )
+            } else {
+                itemView.background = null
+            }
         }
     }
 
@@ -36,7 +49,7 @@ class DetailAlbumPhotoAdapter(private val context: Context) :
     }
 
     interface ItemClickListener {
-        fun onClick()
+        fun onClick(item: AlbumPicture)
     }
 
 
