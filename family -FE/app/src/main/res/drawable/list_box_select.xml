@@ -6,8 +6,8 @@
             <solid android:color="@color/white" />
 
             <stroke
-                android:width="2dp"
-                android:color="@color/pink01" />
+                android:width="4dp"
+                android:color="@color/red" />
         </shape>
     </item>
 
