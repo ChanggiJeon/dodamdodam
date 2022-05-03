@@ -26,6 +26,7 @@ public class FamilyService {
     private final FamilyRepository familyRepository;
     private final ProfileRepository profileRepository;
     private final JwtProvider jwtTokenProvider;
+    private final FileService fileService;
 
     // 가족 생성 및 프로필 생성
     public Family createFamily() {
@@ -99,25 +100,27 @@ public class FamilyService {
 
     public void updateFamilyPicture(Family family, MultipartFile picture, String path) {
         String originFileName = picture.getOriginalFilename();
-        UUID uuid = UUID.randomUUID();
-        String saveFileName = "/resources/familyPicture/" + uuid.toString() + "_" + originFileName;
-        File dir = new File(path + "/resources/familyPicture");
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        try {
-            log.info(family.getPicture());
-            if (family.getPicture() != null) {
-                File file = new File(path + family.getPicture());
-                log.info(file.toString());
-                file.delete();
-            }
-            File file = new File(path + saveFileName);
-            picture.transferTo(file);
-        } catch (Exception e) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "파일이 없습니다.");
-        }
-        family.setPicture(saveFileName);
+        String filePath = fileService.uploadFileV1("family",picture);
+//        String originFileName = picture.getOriginalFilename();
+//        UUID uuid = UUID.randomUUID();
+//        String saveFileName = "/resources/familyPicture/" + uuid.toString() + "_" + originFileName;
+//        File dir = new File(path + "/resources/familyPicture");
+//        if (!dir.exists()) {
+//            dir.mkdirs();
+//        }
+//        try {
+//            log.info(family.getPicture());
+//            if (family.getPicture() != null) {
+//                File file = new File(path + family.getPicture());
+//                log.info(file.toString());
+//                file.delete();
+//            }
+//            File file = new File(path + saveFileName);
+//            picture.transferTo(file);
+//        } catch (Exception e) {
+//            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "파일이 없습니다.");
+//        }
+        family.setPicture(filePath);
         familyRepository.save(family);
     }
 

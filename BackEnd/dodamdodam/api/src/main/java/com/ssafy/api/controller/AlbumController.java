@@ -186,6 +186,8 @@ public class AlbumController {
                     .build();
             albumList.add(albumResDto);
         }
+
+
         return responseService.getListResult(albumList);
     }
 

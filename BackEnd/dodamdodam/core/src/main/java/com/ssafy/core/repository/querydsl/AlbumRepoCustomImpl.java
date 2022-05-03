@@ -43,7 +43,7 @@ public class AlbumRepoCustomImpl implements AlbumRepoCustom{
     }
     @Override
     public List<Album> findAlbumByHashTag(String keyword, long familyId) {
-        return jpaQueryFactory.select(album)
+        return jpaQueryFactory.select(album).distinct()
                 .from(album)
                 .join(family)
                 .on(album.family.id.eq(family.id))
