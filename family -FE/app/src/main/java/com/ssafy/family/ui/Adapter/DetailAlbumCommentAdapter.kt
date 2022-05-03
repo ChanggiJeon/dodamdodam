@@ -2,6 +2,7 @@ package com.ssafy.family.ui.Adapter
 
 import android.content.Context
 import android.opengl.Visibility
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ class DetailAlbumCommentAdapter(private val context: Context) :
         fun bind(item : AlbumReaction) {
             Glide.with(itemView).load(item.imagePath).into(binding.commentFamilyImg)
             Glide.with(itemView).load(item.emoticon).into(binding.commentFamilyEmoji)
+            Log.d("dddd", ".: "+item.profileId)
             if(item.profileId!=LoginUtil.getUserInfo()!!.profileId.toInt()){
                 binding.commentFamilyDelete.visibility= View.GONE
             }

@@ -21,14 +21,14 @@ class PhotoRecyclerViewAdapter(): RecyclerView.Adapter<PhotoRecyclerViewAdapter.
         }
         fun bind(item: Uri) {
             val imageView = itemView.findViewById<ImageView>(R.id.imageView_photoItem_clothes)
-            Glide.with(imageView).load(item).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).centerCrop().into(imageView)
+            Glide.with(imageView).load(item).centerCrop().into(imageView)
             itemView.setOnClickListener{
                 itemClickListener.onClick(item, itemView, adapterPosition)
                 itemView.tag = itemView.tag == false
                 if(itemView.tag == true) {
                     itemView.background = ResourcesCompat.getDrawable(itemView.resources, R.drawable.list_box_select, null)
                 } else {
-                    itemView.background = ResourcesCompat.getDrawable(itemView.resources, R.drawable.list_box, null)
+                    itemView.background = null
                 }
             }
         }

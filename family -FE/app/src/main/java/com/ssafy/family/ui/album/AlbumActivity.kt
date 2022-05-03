@@ -64,10 +64,12 @@ class AlbumActivity : AppCompatActivity() {
             } else {
                 binding.albumButtonInclude.root.visibility = View.VISIBLE
             }
-            if(it=="저장"){
+            if(it=="완료"){
                 binding.albumButtonInclude.button2.setOnClickListener {
-                    val photoF = supportFragmentManager.findFragmentById(R.id.album_frame) as SelectPhotoFragment
-                    Log.d("ddd", "onCreate: "+detailAlbumViewModel.selectedImgUri)
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.album_frame, AddAlbumFragment())
+                        .commit()
+
                 }
             }
         }

@@ -39,6 +39,7 @@ class DetailAlbumFragment : Fragment() {
     //이모지 누르는버튼
     private val emojiItemClickListener = object : DetailAlbumEmojiAdapter.ItemClickListener {
         override fun onClick(item: String) {
+            Log.d("dddd", "onClick: "+LoginUtil.getUserInfo()!!.profileId)
             detailAlbumViewModel.addReaction(AlbumReactionReq(item,detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture!!.albumId))
         }
 
