@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ssafy.family.R
+import com.ssafy.family.data.remote.req.AlbumReactionReq
 import com.ssafy.family.data.remote.res.AlbumPicture
 import com.ssafy.family.data.remote.res.AlbumReaction
 import com.ssafy.family.data.remote.res.HashTag
@@ -21,6 +22,7 @@ import com.ssafy.family.ui.Adapter.DetailAlbumPhotoAdapter
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class DetailAlbumFragment : Fragment() {
@@ -29,12 +31,13 @@ class DetailAlbumFragment : Fragment() {
     private lateinit var emojiAdapter: DetailAlbumEmojiAdapter
     private lateinit var tagAdapter: AlbumTagAdapter
     private lateinit var commentAdapter: DetailAlbumCommentAdapter
+    private var DetailAlbumId by Delegates.notNull<Int>()
     private val detailAlbumViewModel by activityViewModels<DetailAlbumViewModel>()
 
     //이모지 누르는버튼
     private val emojiItemClickListener = object : DetailAlbumEmojiAdapter.ItemClickListener {
-        override fun onClick(item: Int) {
-            detailAlbumViewModel.addReaction(item)
+        override fun onClick(item: String) {
+            detailAlbumViewModel.addReaction(AlbumReactionReq("",detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture!!.albumId))
         }
 
     }
@@ -73,12 +76,12 @@ class DetailAlbumFragment : Fragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     binding.detailAlbumTitleText.text = it.data!!.dataSet!!.date
-                    photoAdapter.datas = it.data!!.dataSet!!.picture as MutableList<AlbumPicture>
+                    photoAdapter.datas = it.data!!.dataSet!!.pictures as MutableList<AlbumPicture>
                     photoAdapter.notifyDataSetChanged()
                     tagAdapter.datas = it.data!!.dataSet!!.hashTags as MutableList<HashTag>
                     tagAdapter.notifyDataSetChanged()
                     // TODO: 이모티콘 박아야함 어댑터에 지금 R.drawable.xxx 넣으려고 Int로 해놨는데 나중에 서버에 다 저장해놓고 글라이드로 하기위해서 datas String으로 받게하고 String.xml에 주소 array로 다 박아놔야함
-                    emojiAdapter.datas = mutableListOf(R.drawable.amusing, R.drawable.ballon)
+                    emojiAdapter.datas = mutableListOf("https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg","https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg")
                     emojiAdapter.notifyDataSetChanged()
                     commentAdapter.datas =
                         it.data!!.dataSet!!.albumReactions as MutableList<AlbumReaction>
@@ -115,7 +118,7 @@ class DetailAlbumFragment : Fragment() {
                     taglist.add(HashTag("#해시"))
                     tagAdapter.datas = taglist
                     tagAdapter.notifyDataSetChanged()
-                    emojiAdapter.datas = mutableListOf(R.drawable.amusing, R.drawable.ballon)
+                    emojiAdapter.datas = mutableListOf("https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg","https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg")
                     emojiAdapter.notifyDataSetChanged()
                     val templist = mutableListOf<AlbumReaction>()
                     templist.add(

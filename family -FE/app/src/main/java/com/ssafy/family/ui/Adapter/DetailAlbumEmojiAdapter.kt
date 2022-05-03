@@ -4,16 +4,19 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.ssafy.family.R
+import com.ssafy.family.data.remote.req.AlbumReactionReq
+import com.ssafy.family.data.remote.res.Album
 import com.ssafy.family.databinding.DetailAlbumEmojiListBinding
 
 class DetailAlbumEmojiAdapter(private val context: Context) :RecyclerView.Adapter<DetailAlbumEmojiAdapter.ViewHolder>() {
 
-    var datas = mutableListOf<Int>()
+    var datas = mutableListOf<String>()
     lateinit var itemClickListener: ItemClickListener
     inner class ViewHolder(val binding: DetailAlbumEmojiListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item:Int){
-            binding.aetailAlbumEmojiImg.setImageResource(item)
+        fun bind(item:String){
+            Glide.with(itemView).load(item).into(binding.aetailAlbumEmojiImg)
             binding.aetailAlbumEmojiImg.setOnClickListener {
                 itemClickListener.onClick(item)
             }
@@ -32,7 +35,7 @@ class DetailAlbumEmojiAdapter(private val context: Context) :RecyclerView.Adapte
         holder.bind(datas[position])
     }
     interface ItemClickListener {
-        fun onClick(item:Int)
+        fun onClick(item:String)
     }
 
 }

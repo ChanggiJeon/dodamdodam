@@ -3,6 +3,7 @@ package com.ssafy.family.data.repository
 
 import com.ssafy.family.config.BaseResponse
 import com.ssafy.family.data.remote.api.AlbumAPI
+import com.ssafy.family.data.remote.req.AlbumReactionReq
 import com.ssafy.family.data.remote.res.AlbumDetailRes
 import com.ssafy.family.data.remote.res.AlbumRes
 import com.ssafy.family.util.Resource
@@ -71,9 +72,9 @@ class AlbumRepositoryImpl(
         }
     }
 
-    override suspend fun addReaction(albumId: Int): Resource<BaseResponse> = withContext(ioDispatcher) {
+    override suspend fun addReaction(albumReactionReq: AlbumReactionReq): Resource<BaseResponse> = withContext(ioDispatcher) {
         try {
-            val response = api.addReaction(albumId)
+            val response = api.addReaction(albumReactionReq)
             when {
                 response.isSuccessful -> {
                     Resource.success(response.body()!!)

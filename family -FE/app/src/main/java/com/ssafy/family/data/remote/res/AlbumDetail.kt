@@ -9,7 +9,7 @@ data class AlbumDetail(
     @SerializedName("date")
     val date: String,
     @SerializedName("pictures")
-    val picture: List<AlbumPicture>,
+    val pictures: List<AlbumPicture>,
     @SerializedName("hashtags")
     val hashTags: List<HashTag>,
     @SerializedName("albumReactions")

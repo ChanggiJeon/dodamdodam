@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.family.config.BaseResponse
+import com.ssafy.family.data.remote.req.AlbumReactionReq
 import com.ssafy.family.data.remote.res.AlbumDetailRes
 import com.ssafy.family.data.remote.res.AllAlbum
 import com.ssafy.family.data.repository.AlbumRepository
@@ -68,8 +69,8 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
         _deleteReactionRequestLiveData.postValue(albumRepository.deleteReaction(reactionId))
     }
 
-    fun addReaction(albumId: Int)=viewModelScope.launch {
+    fun addReaction(albumReactionReq: AlbumReactionReq)=viewModelScope.launch {
         _addReactionRequestLiveData.postValue(Resource.loading(null))
-        _addReactionRequestLiveData.postValue(albumRepository.addReaction(albumId))
+        _addReactionRequestLiveData.postValue(albumRepository.addReaction(albumReactionReq))
     }
 }
