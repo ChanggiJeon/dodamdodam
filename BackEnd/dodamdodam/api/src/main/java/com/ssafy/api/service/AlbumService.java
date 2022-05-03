@@ -306,6 +306,8 @@ public class AlbumService {
                     .emoticon(albumReactions.get(i).getEmoticon())
                     .imagePath(profile.getImagePath())
                     .role(profile.getRole())
+                    .profileId(profile.getId())
+                    .reactionId(albumReactions.get(i).getId())
                     .build();
             result.add(albumReactionListResDto);
         }
