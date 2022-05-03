@@ -2,10 +2,8 @@ package com.ssafy.family.di
 
 import com.google.firebase.database.FirebaseDatabase
 import com.ssafy.family.data.remote.api.AccountAPI
-import com.ssafy.family.data.repository.AccountRepository
-import com.ssafy.family.data.repository.AccountRepositoryImpl
-import com.ssafy.family.data.repository.ChatRepository
-import com.ssafy.family.data.repository.ChatRepositoryImpl
+import com.ssafy.family.data.remote.api.CalendarAPI
+import com.ssafy.family.data.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +31,15 @@ object RepositoryModule {
         @DispatcherModule.MainDispatcher mainDispatcher: CoroutineDispatcher
     ): ChatRepository
             = ChatRepositoryImpl(ioDispatcher,mainDispatcher)
+
+    @Singleton
+    @Provides
+    fun provideCalendarRepository(
+        apiAPI: CalendarAPI,
+        @DispatcherModule.IoDispatcher ioDispatcher: CoroutineDispatcher,
+        @DispatcherModule.MainDispatcher mainDispatcher: CoroutineDispatcher
+    ): CalendarRepository
+            = CalendarRepositoryImpl(apiAPI,ioDispatcher,mainDispatcher)
 
 //    @Singleton
 //    @Provides

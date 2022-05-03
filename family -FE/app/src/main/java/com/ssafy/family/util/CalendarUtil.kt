@@ -7,9 +7,12 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.LocalTime
 import java.time.temporal.WeekFields
 import java.util.*
 
@@ -49,4 +52,15 @@ object CalendarUtil {
     fun Context.getColorCompat(@ColorRes color: Int) = ContextCompat.getColor(this, color)
     fun TextView.setTextColorRes(@ColorRes color: Int) = setTextColor(context.getColorCompat(color))
 
+    internal fun Context.getDrawableCompat(@DrawableRes drawable: Int) = ContextCompat.getDrawable(this, drawable)
+
+//    fun stringToLocalDate(string: String): LocalDate {
+//        val data = string.split("-")
+//        return LocalDate.of(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2]))
+//    }
+//
+//    fun stringToLocalDate(string: String): LocalDate {
+//        val data = string.split("-")
+//        return LocalDate.of(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2]))
+//    }
 }

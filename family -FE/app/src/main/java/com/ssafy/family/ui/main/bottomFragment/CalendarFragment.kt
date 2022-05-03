@@ -1,8 +1,10 @@
 package com.ssafy.family.ui.main.bottomFragment
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +30,7 @@ import com.ssafy.family.databinding.CalendarDayBinding
 import com.ssafy.family.databinding.CalendarHeaderBinding
 import com.ssafy.family.databinding.FragmentCalendarBinding
 import com.ssafy.family.ui.Adapter.ScheduleAdapter
+import com.ssafy.family.ui.schedule.ScheduleActivity
 import com.ssafy.family.util.CalendarUtil
 import com.ssafy.family.util.CalendarUtil.daysOfWeekFromLocale
 import com.ssafy.family.util.CalendarUtil.inputMethodManager
@@ -103,6 +106,7 @@ class CalendarFragment : Fragment() {
             }
         }
 
+        //일자 컨테이너 클릭리스너를 일자마다 달아줌
         class DayViewContainer(view: View) : ViewContainer(view) {
             lateinit var day: CalendarDay // Will be set when this container is bound.
             val binding = CalendarDayBinding.bind(view)
@@ -169,27 +173,19 @@ class CalendarFragment : Fragment() {
 
         //일정 추가 버튼
         binding.addButton.setOnClickListener {
-            inputDialog.show()
+//            inputDialog.show()
+            val intent = Intent(requireContext(),ScheduleActivity::class.java)
+            startActivity(intent)
         }
 
         //요일 헤더 선언
         class MonthViewContainer(view: View) : ViewContainer(view) {
             val legendLayout = CalendarHeaderBinding.bind(view).legendLayout
         }
-
         binding.calendar.monthHeaderBinder = object :
             MonthHeaderFooterBinder<MonthViewContainer> {
             override fun create(view: View) = MonthViewContainer(view)
-            override fun bind(container: MonthViewContainer, month: CalendarMonth) {
-                // Setup each header day text if we have not done that already.
-//                if (container.legendLayout.tag == null) {
-//                    container.legendLayout.tag = month.yearMonth
-//                    container.legendLayout.children.map { it as TextView }.forEachIndexed { index, tv ->
-//                        tv.text = daysOfWeek[index].name.first().toString()
-//                        tv.setTextColorRes(R.color.black)
-//                    }
-//                }
-            }
+            override fun bind(container: MonthViewContainer, month: CalendarMonth) {}
         }
     }
 
@@ -201,6 +197,7 @@ class CalendarFragment : Fragment() {
             binding.calendar.notifyDateChanged(date)
             updateAdapterForDate(date)
             binding.selectedMonthText.setText("${date.year}년 ${date.monthValue}월 ")
+            Log.d("xxxxx", "selectDate: $date")
         }
     }
 
@@ -264,4 +261,6 @@ class CalendarFragment : Fragment() {
                 }
             }
     }
+
+
 }

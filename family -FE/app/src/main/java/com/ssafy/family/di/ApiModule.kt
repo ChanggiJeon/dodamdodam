@@ -7,6 +7,7 @@ import com.ssafy.family.config.AddCookiesInterceptor
 import com.ssafy.family.config.ReceivedCookiesInterceptor
 import com.ssafy.family.config.XAccessTokenInterceptor
 import com.ssafy.family.data.remote.api.AccountAPI
+import com.ssafy.family.data.remote.api.CalendarAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -73,6 +74,12 @@ object ApiModule {
     @Provides
     fun provideAccountApiService(retrofit: Retrofit): AccountAPI {
         return retrofit.create(AccountAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCalendarApiService(retrofit: Retrofit): CalendarAPI {
+        return retrofit.create(CalendarAPI::class.java)
     }
 
 //    fun initRetrofit() {
