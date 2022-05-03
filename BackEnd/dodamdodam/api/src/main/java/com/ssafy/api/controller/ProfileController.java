@@ -126,12 +126,12 @@ public class ProfileController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @GetMapping(value = "/image", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/image")
     public SingleResult<String> getProfileImage(Authentication authentication) {
 
         Long userPk = Long.parseLong(authentication.getName());
-
-        return responseService.getSingleResult(profileService.findImage(userPk));
+        String imagePath = profileService.findImage(userPk);
+        return responseService.getSingleResult(imagePath);
     }
 
 }
