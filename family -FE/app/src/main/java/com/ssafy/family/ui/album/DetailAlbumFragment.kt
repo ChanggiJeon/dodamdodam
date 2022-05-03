@@ -2,6 +2,7 @@ package com.ssafy.family.ui.album
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,10 +77,11 @@ class DetailAlbumFragment : Fragment() {
         detailAlbumViewModel.detailAlbumRequestLiveData.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
+                    Log.d("dddddddddd", "detailAlbumView: "+it.data!!.dataSet)
                     binding.detailAlbumTitleText.text = it.data!!.dataSet!!.date
                     photoAdapter.datas = it.data!!.dataSet!!.pictures as MutableList<AlbumPicture>
                     photoAdapter.notifyDataSetChanged()
-                    tagAdapter.datas = it.data!!.dataSet!!.hashTags as MutableList<HashTag>
+                    tagAdapter.datas = detailAlbumViewModel.saveAlbumLiveData.value!!.hashTags.toMutableList()
                     tagAdapter.notifyDataSetChanged()
                     // TODO: 이모티콘 박아야함 어댑터에 지금 R.drawable.xxx 넣으려고 Int로 해놨는데 나중에 서버에 다 저장해놓고 글라이드로 하기위해서 datas String으로 받게하고 String.xml에 주소 array로 다 박아놔야함
                     emojiAdapter.datas = mutableListOf("https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg","https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg")
