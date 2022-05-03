@@ -43,7 +43,7 @@ public class AlbumController {
     //앨범수정, 앨범 검색
     @Operation(summary = "앨범 전체 조회", description = "<strong>앨범 전체 조회</strong>",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ListResult<AlbumResDto> getAlbums(Authentication authentication) {
@@ -67,7 +67,7 @@ public class AlbumController {
 
     @Operation(summary = "앨범 상세 조회", description = "<strong>앨범 상세 조회</strong>",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "{albumId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public SingleResult<AlbumDetailResDto> getAlbum(@PathVariable long albumId, Authentication authentication) {
@@ -92,7 +92,7 @@ public class AlbumController {
 
 
     @Operation(summary = "앨범 등록", description = "<strong>앨범 등록</strong>", parameters = {
-            @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
     })
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult createAlbum(@ModelAttribute
@@ -117,7 +117,7 @@ public class AlbumController {
 
     @Operation(summary = "앨범 리액션 등록 및 수정", description = "<strong>앨범 리액션 등록 및 수정</strong>",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PostMapping(value = "/{albumId}/reaction", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResult createReaction(@PathVariable long albumId,
@@ -135,7 +135,7 @@ public class AlbumController {
 
     @Operation(summary = "앨범 리액션 삭제", description = "<strong>앨범 리액션 삭제</strong>",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @DeleteMapping(value = "/{albumId}/reaction", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResult deleteReaction(@PathVariable long albumId, Authentication authentication) {
@@ -148,7 +148,7 @@ public class AlbumController {
 
     @Operation(summary = "앨범 수정", description = "<strong>앨범 수정</strong>",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PatchMapping(value = "/{albumId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult updateAlbum(@PathVariable long albumId,
@@ -165,7 +165,7 @@ public class AlbumController {
         return responseService.getSuccessResult();
     }
 
-//    @ApiImplicitParams({@ApiImplicitParam(name = "X-Auth-Token", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
+//    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "JWT Token", required = true, dataType = "string", paramType = "header")})
 //    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
 //    @ApiOperation(value = "앨범 검색", notes = "<strong>앨범 검색 </strong>")
 //    public ListResult<AlbumResDto> searchAlbum(Authentication authentication){

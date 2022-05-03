@@ -43,7 +43,7 @@ public class FamilyController {
 
     @Operation(summary = "가족 그룹 생성", description = "<strong>가족 그룹</strong>을 생성한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SingleResult<FamilyJoinResDto> createFamily(
@@ -66,7 +66,7 @@ public class FamilyController {
 
     @Operation(summary = "가족 그룹 가입", description = "<strong>가족 그룹<strong>을 가입한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PostMapping(value = "/join/{familyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult joinFamily(
@@ -87,7 +87,7 @@ public class FamilyController {
 
     @Operation(summary = "가족 코드 검사", description = "<strong>가족 코드<strong>를 받아 가족 id를 조회한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/code/check/{code}")
     public SingleResult<FamilyIdResDto> checkFamilyCode(@PathVariable String code) {
@@ -100,7 +100,7 @@ public class FamilyController {
 
     @Operation(summary = "가족 코드 조회", description = "<strong>가족 id<strong>를 받아 가족 코드를 조회한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/code")
     public SingleResult<FamilyCodeResDto> getFamilyCode(Authentication authentication) {
@@ -113,7 +113,7 @@ public class FamilyController {
 
     @Operation(summary = "가족 사진 수정", description = "<strong>가족 사진<stong>을 추가 및 수정한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PutMapping(value = "/picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult updateFamilyPicture(
@@ -127,7 +127,7 @@ public class FamilyController {
 
     @Operation(summary = "가족 사진 경로 조회", description = "<strong>가족 사진 경로<stong>를 조회한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/picture")
     public SingleResult<FamilyPictureResDto> getFamilyPicture(Authentication authentication) {

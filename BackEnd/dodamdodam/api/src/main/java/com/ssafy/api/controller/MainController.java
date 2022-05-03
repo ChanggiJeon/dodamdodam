@@ -39,7 +39,7 @@ public class MainController {
 
     @Operation(summary = "가족 Profile 정보", description = "본인을 제외한 가족의 <strong>profile<strong> 정보를 받는다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "profileList")
     public ListResult<MainProfileResDto> getProfileList(Authentication authentication) {
@@ -53,7 +53,7 @@ public class MainController {
     //  의견 관련 API
     @Operation(summary = "의견 제시 생성", description = "<strong>의견 제시<strong>를 작성한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PostMapping(value = "suggestion")
     public CommonResult createSuggestion(@RequestParam String text, Authentication authentication) {
@@ -68,7 +68,7 @@ public class MainController {
 
     @Operation(summary = "의견 제시 삭제", description = "<strong>의견 제시<strong>를 삭제한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @DeleteMapping(value = "{suggestionId}")
     public CommonResult deleteSuggestion(@PathVariable Long suggestionId, Authentication authentication) {
@@ -83,7 +83,7 @@ public class MainController {
 
     @Operation(summary = "의견 리스트 목록", description = "<strong>의견 제시 리스트<strong>를 조회한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "suggestionList")
     public ListResult<SuggestionResDto> getSuggestionList(Authentication authentication) {
@@ -94,7 +94,7 @@ public class MainController {
 
     @Operation(summary = "의견 리액션", description = "<strong>의견 제시 리액션<strong>을 등록 혹은 수정한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PostMapping(value = "suggestion/reaction", consumes = MediaType.APPLICATION_JSON_VALUE)
     public SingleResult<SuggestionReactionResDto> manageSuggestionReaction(
@@ -109,7 +109,7 @@ public class MainController {
 
     @Operation(summary = "오늘 일정 리스트 목록", description = "<strong>오늘 일정 리스트<strong>를 조회한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "schedule/today")
     public ListResult<ScheduleDetailResDto> getTodayScheduleList(Authentication authentication) {
@@ -123,7 +123,7 @@ public class MainController {
 
 //    @Operation(summary = "미션 리스트 목록", description = "<strong>미션 리스트<strong>를 조회한다.",
 //            parameters = {
-//                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+//                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
 //            })
 //    @GetMapping(value = "alarm")
 //    public ListResult<PushAlarmReqDto> getAlarmList() {
@@ -138,7 +138,7 @@ public class MainController {
 //
 //    @Operation(summary = "미션 리스트 목록", description = "<strong>미션 리스트<strong>를 조회한다.",
 //            parameters = {
-//                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+//                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
 //            })
 //    @PostMapping(value = "alarm")
 //    public CommonResult pushAlarm(@org.springframework.web.bind.annotation.RequestBody
