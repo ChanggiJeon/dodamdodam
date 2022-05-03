@@ -92,11 +92,7 @@ public class ScheduleService {
         } catch (NumberFormatException | DateTimeException e) {
             throw new CustomException(INVALID_REQUEST);
         }
-        List<ScheduleDetailResDto> scheduleRes = scheduleRepository.findScheduleByDay(result, family);
-        if (scheduleRes.isEmpty()) {
-            throw new CustomException(INVALID_REQUEST, "해당하는 스케줄이 없습니다.");
-        }
-        return scheduleRes;
+        return scheduleRepository.findScheduleByDay(result, family);
     }
 
     public List<ScheduleDetailResDto> getScheduleListByMonth (Family family, String month) {
@@ -109,11 +105,7 @@ public class ScheduleService {
             throw new CustomException(INVALID_REQUEST);
         }
         Integer result = Integer.parseInt(dayList[1]);
-        List<ScheduleDetailResDto> scheduleRes = scheduleRepository.findScheduleByMonth(result, family);
-        if (scheduleRes.isEmpty()) {
-            throw new CustomException(INVALID_REQUEST, "해당하는 스케줄이 없습니다.");
-        }
-        return scheduleRes;
+        return scheduleRepository.findScheduleByMonth(result, family);
     }
 
     public void updateSchedule(Schedule schedule, NewScheduleReqDto scheduleReq) {
