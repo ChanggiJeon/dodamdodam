@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.core.dto.req.FamilyCreateReqDto;
 import com.ssafy.core.dto.req.FamilyJoinReqDto;
 import com.ssafy.api.config.jwt.JwtProvider;
 import com.ssafy.core.entity.Family;
@@ -51,7 +52,18 @@ public class FamilyService {
     }
 
     // profile 생성
-    public void createProfile(Family family, User user, FamilyJoinReqDto familyRequest, String[] imageInfo) {
+    public void createProfileForFirst(Family family, User user, FamilyCreateReqDto familyRequest, String[] imageInfo) {
+        Profile profile = Profile.builder()
+                .role(familyRequest.getRole())
+                .nickname(familyRequest.getNickname())
+                .imagePath(imageInfo[0])
+                .imageName(imageInfo[1])
+                .user(user)
+                .family(family)
+                .build();
+        profileRepository.save(profile);
+    }
+    public void createProfileForJoin(Family family, User user, FamilyJoinReqDto familyRequest, String[] imageInfo) {
         Profile profile = Profile.builder()
                 .role(familyRequest.getRole())
                 .nickname(familyRequest.getNickname())
