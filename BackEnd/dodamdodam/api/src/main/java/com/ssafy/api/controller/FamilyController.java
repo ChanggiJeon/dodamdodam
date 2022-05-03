@@ -67,7 +67,7 @@ public class FamilyController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @PostMapping(value = "/join}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/join", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult joinFamily(
             @ModelAttribute
             @Valid FamilyJoinReqDto familyRequest,
