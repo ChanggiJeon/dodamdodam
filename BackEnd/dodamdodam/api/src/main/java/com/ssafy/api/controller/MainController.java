@@ -2,10 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.service.ScheduleService;
 import com.ssafy.core.dto.req.SuggestionReactionReqDto;
-import com.ssafy.core.dto.res.MainProfileResDto;
-import com.ssafy.core.dto.res.ScheduleDetailResDto;
-import com.ssafy.core.dto.res.SuggestionReactionResDto;
-import com.ssafy.core.dto.res.SuggestionResDto;
+import com.ssafy.core.dto.res.*;
 import com.ssafy.api.service.MainService;
 import com.ssafy.api.service.common.CommonResult;
 import com.ssafy.api.service.common.ListResult;
@@ -121,21 +118,17 @@ public class MainController {
     }
 
 
-//    @Operation(summary = "미션 리스트 목록", description = "<strong>미션 리스트<strong>를 조회한다.",
-//            parameters = {
-//                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
-//            })
-//    @GetMapping(value = "alarm")
-//    public ListResult<PushAlarmReqDto> getAlarmList() {
-//        Class alarmListClass = AlarmList.class;
-//
-//        List<PushAlarmReqDto> alarmList = new ArrayList<>();
-//        alarmList.add(alarmListClass.getName(), alarmListClass.get
-//                alarmList.add(alarmListClass.getEnumConstants());
-//
-//        return responseService.getListResult(alarmList);
-//    }
-//
+    @Operation(summary = "오늘의 미션 조회", description = "<strong>미션 대상<strong>과 미션 내용을 조회한다.",
+            parameters = {
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "mission")
+    public SingleResult<MissionResDto> getTodayMission(Authentication authentication) {
+
+        return responseService.getSingleResult(
+                mainService.getTodayMission(Long.parseLong(authentication.getName())));
+    }
+
 //    @Operation(summary = "미션 리스트 목록", description = "<strong>미션 리스트<strong>를 조회한다.",
 //            parameters = {
 //                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
