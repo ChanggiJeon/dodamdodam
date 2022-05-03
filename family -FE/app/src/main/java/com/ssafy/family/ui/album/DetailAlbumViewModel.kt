@@ -1,10 +1,12 @@
 package com.ssafy.family.ui.album
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.family.config.BaseResponse
+import com.ssafy.family.data.remote.req.AddAlbumReq
 import com.ssafy.family.data.remote.req.AlbumReactionReq
 import com.ssafy.family.data.remote.res.AlbumDetailRes
 import com.ssafy.family.data.remote.res.AllAlbum
@@ -12,6 +14,10 @@ import com.ssafy.family.data.repository.AlbumRepository
 import com.ssafy.family.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -45,6 +51,11 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
     val addReactionRequestLiveData: LiveData<Resource<BaseResponse>>
         get() = _addReactionRequestLiveData
 
+    private val _addAlbumRequestLiveData = MutableLiveData<Resource<BaseResponse>>()
+    val addAlbumRequestLiveData: LiveData<Resource<BaseResponse>>
+        get() = _addAlbumRequestLiveData
+
+    var selectedImgUri: Uri? = null
 
     fun setBottomButton(left: String, right: String) = viewModelScope.launch {
         _bottombuttonLeftLivedate.value = left
@@ -72,5 +83,14 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
     fun addReaction(albumReactionReq: AlbumReactionReq)=viewModelScope.launch {
         _addReactionRequestLiveData.postValue(Resource.loading(null))
         _addReactionRequestLiveData.postValue(albumRepository.addReaction(albumReactionReq))
+    }
+
+    fun addAlbum(addAlbum: AddAlbumReq, imagefiles: ArrayList<File>)=viewModelScope.launch {
+        _addAlbumRequestLiveData.postValue(Resource.loading(null))
+        _addAlbumRequestLiveData.postValue(albumRepository.addAlbum(addAlbum,imagefiles))
+    }
+    private fun makeMultiPart(path: String): MultipartBody.Part {
+        val imgFile = File(path)
+        return MultipartBody.Part.createFormData("photo", imgFile.name, imgFile.asRequestBody("image/*".toMediaType()))
     }
 }

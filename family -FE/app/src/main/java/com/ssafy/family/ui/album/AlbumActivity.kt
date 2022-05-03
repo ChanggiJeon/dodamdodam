@@ -22,16 +22,21 @@ class AlbumActivity : AppCompatActivity() {
         Log.d("dddddd", "onCreate: " + LoginUtil.getUserInfo())
         binding = ActivityAlbumBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        intent.getParcelableExtra<AllAlbum>(AlbumFragment.FRIEND_INFO)?.let {
-            detailAlbumViewModel.setSaveAlbum(it)
-            Log.d("dddddd", "onCreate: " + detailAlbumViewModel.saveAlbumLiveData.value)
-        }
-
+        val data = intent.getParcelableExtra<AllAlbum>(AlbumFragment.FRIEND_INFO)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.album_frame, DetailAlbumFragment())
-            .commit()
-
+        if(data!=null){
+            intent.getParcelableExtra<AllAlbum>(AlbumFragment.FRIEND_INFO)?.let {
+                detailAlbumViewModel.setSaveAlbum(it)
+                Log.d("dddddd", "onCreate: " + detailAlbumViewModel.saveAlbumLiveData.value)
+            }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.album_frame, DetailAlbumFragment())
+                .commit()
+        }else{
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.album_frame, SelectPhotoFragment())
+                .commit()
+        }
         detailAlbumViewModel.titleLiveData.observe(this) {
             binding.albumTopInclude.scheduleTitle.text = it
         }
@@ -58,6 +63,12 @@ class AlbumActivity : AppCompatActivity() {
                 binding.albumButtonInclude.root.visibility = View.GONE
             } else {
                 binding.albumButtonInclude.root.visibility = View.VISIBLE
+            }
+            if(it=="저장"){
+                binding.albumButtonInclude.button2.setOnClickListener {
+                    val photoF = supportFragmentManager.findFragmentById(R.id.album_frame) as SelectPhotoFragment
+                    Log.d("ddd", "onCreate: "+detailAlbumViewModel.selectedImgUri)
+                }
             }
         }
 
