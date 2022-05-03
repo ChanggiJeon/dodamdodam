@@ -6,11 +6,9 @@ import com.ssafy.family.data.remote.req.LoginReq
 import com.ssafy.family.data.remote.req.SignUpReq
 import com.ssafy.family.data.remote.req.findIdReq
 import com.ssafy.family.data.remote.res.LoginRes
+import com.ssafy.family.data.remote.res.RefreshTokenRes
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface AccountAPI {
     @POST("/api/user/signin")
@@ -33,4 +31,7 @@ interface AccountAPI {
 
     @GET("api/user/birthday/{birthday}")
     suspend fun updateBirthDay(@Query("birthday")birthday:String):Response<BaseResponse>
+
+    @POST("/api/user/refresh")
+    suspend fun makeRefreshToken(@Header("X-AUTH-REFRESH-TOKEN") refreshToken:String):Response<RefreshTokenRes>
 }

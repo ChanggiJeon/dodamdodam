@@ -15,6 +15,8 @@ import com.ssafy.family.data.remote.res.Picture
 import com.ssafy.family.databinding.FragmentAlbumBinding
 import com.ssafy.family.ui.Adapter.AlbumMonthAdapter
 import com.ssafy.family.ui.album.AlbumActivity
+import com.ssafy.family.ui.home.LoginViewModel
+import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,6 +30,7 @@ class AlbumFragment : Fragment() {
     private lateinit var binding: FragmentAlbumBinding
     private lateinit var albumMonthAdapter: AlbumMonthAdapter
     private val albumViewModel by activityViewModels<AlbumViewModel>()
+    private val loginViewModel by activityViewModels<LoginViewModel>()
     private val itemClickListener = object : AlbumMonthAdapter.ItemClickListener {
         override fun onClick(allAlbum: AllAlbum) {
             val intent = Intent(requireActivity(), AlbumActivity::class.java)
@@ -90,6 +93,11 @@ class AlbumFragment : Fragment() {
                 }
                 Status.LOADING -> {
                     setLoading()
+                }
+                Status.EXPIRED ->{
+                    loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
+                    findAllAlbum()
+                    dismissLoading()
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.ssafy.family.util
 
 import com.ssafy.family.config.ApplicationClass
 import com.ssafy.family.config.ApplicationClass.Companion.JWT
+import com.ssafy.family.data.remote.res.RefreshJWT
 import com.ssafy.family.data.remote.res.UserInfo
 
 object LoginUtil {
@@ -29,6 +30,10 @@ object LoginUtil {
         return !preferences.getString(ApplicationClass.JWT).isNullOrBlank()
     }
 
+    fun changeUserToken(refreshJWT: RefreshJWT){
+        preferences.setString(JWT, refreshJWT.jwtToken)
+        preferences.setString(REFRESH_TOKEN, refreshJWT.refreshToken)
+    }
     fun saveUserInfo(userInfo: UserInfo) {
 
         preferences.setString(JWT, userInfo.jwtToken)

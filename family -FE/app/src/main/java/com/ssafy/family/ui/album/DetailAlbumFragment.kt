@@ -19,6 +19,7 @@ import com.ssafy.family.ui.Adapter.AlbumTagAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumCommentAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumEmojiAdapter
 import com.ssafy.family.ui.Adapter.DetailAlbumPhotoAdapter
+import com.ssafy.family.ui.home.LoginViewModel
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,11 +34,11 @@ class DetailAlbumFragment : Fragment() {
     private lateinit var commentAdapter: DetailAlbumCommentAdapter
     private var DetailAlbumId by Delegates.notNull<Int>()
     private val detailAlbumViewModel by activityViewModels<DetailAlbumViewModel>()
-
+    private val loginViewModel by activityViewModels<LoginViewModel>()
     //이모지 누르는버튼
     private val emojiItemClickListener = object : DetailAlbumEmojiAdapter.ItemClickListener {
         override fun onClick(item: String) {
-            detailAlbumViewModel.addReaction(AlbumReactionReq("",detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture!!.albumId))
+            detailAlbumViewModel.addReaction(AlbumReactionReq(item,detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture!!.albumId))
         }
 
     }
@@ -149,6 +150,11 @@ class DetailAlbumFragment : Fragment() {
                 Status.LOADING -> {
                     setLoading()
                 }
+                Status.EXPIRED ->{
+                    loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
+                    detailAlbumViewModel.detailAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
+                    dismissLoading()
+                }
             }
         }
         detailAlbumViewModel.deleteReactionRequestLiveData.observe(requireActivity()) {
@@ -172,6 +178,12 @@ class DetailAlbumFragment : Fragment() {
                 }
                 Status.LOADING -> {
                     setLoading()
+                }
+                Status.EXPIRED ->{
+                    loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
+                    Toast.makeText(requireActivity(), "다시 시도해주세요", Toast.LENGTH_SHORT)
+                        .show()
+                    dismissLoading()
                 }
             }
         }
@@ -199,6 +211,12 @@ class DetailAlbumFragment : Fragment() {
                 }
                 Status.LOADING -> {
                     setLoading()
+                }
+                Status.EXPIRED ->{
+                    loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
+                    Toast.makeText(requireActivity(), "다시 시도해주세요", Toast.LENGTH_SHORT)
+                        .show()
+                    dismissLoading()
                 }
             }
         }
