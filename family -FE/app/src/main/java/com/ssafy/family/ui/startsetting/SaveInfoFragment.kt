@@ -41,7 +41,6 @@ class SaveInfoFragment : Fragment() {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
-
         }
 
     }

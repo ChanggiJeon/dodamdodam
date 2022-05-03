@@ -20,8 +20,9 @@ class StartSettingActivity : AppCompatActivity() {
             .replace(R.id.fragment_in_start_setting, AskFamilyCodeFragment())
             .commit()
     }
-
+    // 상단 메시지 변경하는 함수
     fun changeTopMessage(text: String) {
         binding.startSettingTopMsg.text = text
     }
+
 }

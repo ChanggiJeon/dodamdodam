@@ -31,16 +31,16 @@ class AskFamilyCodeFragment : Fragment() {
         (activity as StartSettingActivity).changeTopMessage("가족 코드를 갖고 계신가요?")
         // 버튼별 클릭 이벤트 리스너 등록
         binding.askFamilyCodeAnswerYesBtn.setOnClickListener {
-            Log.d(TAG, "AskFamilyCodeFragment - onViewCreated() called")
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_in_start_setting, WriteFamilyCodeFragment())
+                .addToBackStack(null)
                 .commit()
         }
         binding.askFamilyCodeAnswerNoBtn.setOnClickListener {
-            Log.d(TAG, "AskFamilyCodeFragment - onViewCreated() called")
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_in_start_setting, SaveInfoFragment())
+                .addToBackStack(null)
                 .commit()
         }
-    }
+    } //onViewCreated
 }
