@@ -8,13 +8,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.ssafy.family.R
 import com.ssafy.family.data.remote.res.Album
 import com.ssafy.family.data.remote.res.AllAlbum
 import com.ssafy.family.data.remote.res.HashTag
 import com.ssafy.family.data.remote.res.Picture
 import com.ssafy.family.databinding.FragmentAlbumBinding
 import com.ssafy.family.ui.Adapter.AlbumMonthAdapter
+import com.ssafy.family.ui.album.AddAlbumFragment
 import com.ssafy.family.ui.album.AlbumActivity
+import com.ssafy.family.ui.album.DetailAlbumFragment
+import com.ssafy.family.ui.home.LoginFragment
 import com.ssafy.family.ui.home.LoginViewModel
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
@@ -59,6 +63,10 @@ class AlbumFragment : Fragment() {
 
     private fun initView() {
         findAllAlbum()
+        binding.addAlbumButton.setOnClickListener {
+            val intent = Intent(requireActivity(), AlbumActivity::class.java)
+            startActivity(intent)
+        }
         albumMonthAdapter = AlbumMonthAdapter(requireActivity()).apply {
             itemClickListener = this@AlbumFragment.itemClickListener
         }
@@ -100,6 +108,50 @@ class AlbumFragment : Fragment() {
                     dismissLoading()
                 }
             }
+        }
+        binding.searchButton.setOnClickListener {
+            val keyword = binding.searchEditText.text.toString()
+            albumViewModel.searchAlbum(keyword)
+        }
+        albumViewModel.searchAlbumRequestLiveData.observe(requireActivity()){
+            when(it.status){
+                Status.SUCCESS->{
+                    albumMonthAdapter.datas = (it.data!!.dataSet as MutableList<AllAlbum>?)!!
+                    albumMonthAdapter.notifyDataSetChanged()
+                    dismissLoading()
+                }
+                Status.ERROR -> {
+                    //테스트용
+                    val taglist = mutableListOf<HashTag>()
+                    taglist.add(HashTag("#해시"))
+                    taglist.add(HashTag("#해시"))
+                    val temppicture = Picture(
+                        1,
+                        "2022년 5월 2일",
+                        "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png"
+                    )
+                    val allalbumlist = mutableListOf<AllAlbum>()
+                    allalbumlist.add(AllAlbum(taglist, temppicture))
+                    allalbumlist.add(AllAlbum(taglist, temppicture))
+                    allalbumlist.add(AllAlbum(taglist, temppicture))
+                    albumMonthAdapter.datas = (allalbumlist)
+                    albumMonthAdapter.notifyDataSetChanged()
+                    //테스트용 끝
+                    Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
+                        .show()
+                    dismissLoading()
+                }
+                Status.LOADING -> {
+                    setLoading()
+                }
+                Status.EXPIRED ->{
+                    loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
+                    val keyword = binding.searchEditText.text.toString()
+                    albumViewModel.searchAlbum(keyword)
+                    dismissLoading()
+                }
+            }
+
         }
     }
 
