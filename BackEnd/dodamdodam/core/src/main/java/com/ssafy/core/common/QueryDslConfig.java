@@ -1,4 +1,4 @@
-package com.ssafy.api.config;
+package com.ssafy.core.common;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;

@@ -21,6 +21,7 @@ public class ScheduleRepoCustomImpl implements ScheduleRepoCustom{
     public List<ScheduleDetailResDto> findScheduleByMonth(Integer month, Family family) {
         return queryFactory
                 .select(Projections.fields(ScheduleDetailResDto.class,
+                        schedule.id.as("scheduleId"),
                         schedule.title,
                         schedule.content,
                         schedule.startDate,

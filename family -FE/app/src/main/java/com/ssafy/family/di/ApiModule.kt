@@ -8,6 +8,7 @@ import com.ssafy.family.config.ReceivedCookiesInterceptor
 import com.ssafy.family.config.XAccessTokenInterceptor
 import com.ssafy.family.data.remote.api.AccountAPI
 import com.ssafy.family.data.remote.api.FamilyAPI
+import com.ssafy.family.data.remote.api.AlbumAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -82,6 +83,11 @@ object ApiModule {
         return retrofit.create(FamilyAPI::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideAlbumApiService(retrofit: Retrofit): AlbumAPI {
+        return retrofit.create(AlbumAPI::class.java)
+    }
 //    fun initRetrofit() {
 //        val client: OkHttpClient = OkHttpClient.Builder()
 //            .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)

@@ -3,6 +3,8 @@ package com.ssafy.api.service;
 
 import com.ssafy.core.dto.req.AlbumReactionReqDto;
 import com.ssafy.core.dto.req.AlbumReqDto;
+import com.ssafy.core.dto.req.AlbumUpdateReqDto;
+import com.ssafy.core.dto.res.AlbumMainResDto;
 import com.ssafy.core.dto.res.AlbumReactionListResDto;
 import com.ssafy.core.entity.*;
 import com.ssafy.core.exception.CustomErrorCode;
@@ -33,6 +35,8 @@ public class AlbumService {
     private final PictureRepository pictureRepository;
     private final AlbumReactionRepository albumReactionRepository;
     private final ProfileRepository profileRepository;
+
+    private final FileService fileService;
 
 
     @Transactional(readOnly = false)
@@ -82,7 +86,7 @@ public class AlbumService {
 
 
     @Transactional(readOnly = false)
-    public Picture findMainPictureByAlbumId(long albumId){
+    public AlbumMainResDto findMainPictureByAlbumId(long albumId){
         return pictureRepository.findMainPictureByAlbumId(albumId);
     }
 
@@ -90,45 +94,38 @@ public class AlbumService {
     @Transactional(readOnly = false)
     public void createAlbum(AlbumReqDto albumReqDto, Family family, Album album, List<MultipartFile> multipartFiles, HttpServletRequest request) {
 
-//        List<MultipartFile> multipartFiles = multipartFiles.getMultipartFiles();
+
         String familyCode = family.getCode();
-//        String[] result =  new String[multipartFiles.size()];
+
         List<String> hashTags = albumReqDto.getHashTags();
         try{
-            String separ = File.separator;
-//            String today= new SimpleDateFormat("yyMMdd").format(new Date());
-
-            File file = new File("");
-//            String rootPath = file.getAbsolutePath().split("src")[0];
-
-//            String savePath = "../"+"profileImg"+separ+today;
-            String savePath = request.getServletContext().getRealPath("/resources/Album/"+familyCode);
-            if(!new File(savePath).exists()){
-                try{
-                    new File(savePath).mkdirs();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
+//            String separ = File.separator;
+//            File file = new File("");
+//            String savePath = request.getServletContext().getRealPath("/resources/Album/"+familyCode);
+//            if(!new File(savePath).exists()){
+//                try{
+//                    new File(savePath).mkdirs();
+//                }catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//            }
             String[] originFileNames  = new String[multipartFiles.size()];
-            String[] realPaths =  new String[multipartFiles.size()];
 
             String saveFileName = "";
             String filePath = "";
             boolean isMain = false;
             for(int i = 0 ; i<multipartFiles.size() ; i++){
                 originFileNames[i] = multipartFiles.get(i).getOriginalFilename();
-                saveFileName = UUID.randomUUID().toString() + originFileNames[i].substring(originFileNames[i].lastIndexOf("."));
-                filePath = savePath+separ+saveFileName;
-                multipartFiles.get(i).transferTo(new File(filePath));
-//                realPaths[i] = savePath+saveFileName;
-//                result[i] = realPaths[i]+"#"+originFileNames[i];
+//                saveFileName = UUID.randomUUID().toString() + originFileNames[i].substring(originFileNames[i].lastIndexOf("."));
+//                filePath = savePath+separ+saveFileName;
+//                multipartFiles.get(i).transferTo(new File(filePath));
                 if(albumReqDto.getMainIndex()==i) isMain=true;
                 else isMain=false;
+                filePath = fileService.uploadFileV1("album",multipartFiles.get(i));
                 Picture picture = Picture.builder()
                         .album(album)
                         .origin_name(multipartFiles.get(i).getOriginalFilename())
-                        .path_name(savePath+separ+saveFileName)
+                        .path_name(filePath)
                         .is_main(isMain)
                         .build();
                 pictureRepository.save(picture);
@@ -158,12 +155,12 @@ public class AlbumService {
     }
 
     @Transactional(readOnly = false)
-    public void updateAlbum(long userPk, Album album, AlbumReqDto albumReqDto,
+    public void updateAlbum(long userPk, Album album, AlbumUpdateReqDto albumUpdateReqDto,
                             List<MultipartFile> multipartFiles, Authentication authentication, HttpServletRequest request){
         Family family = findFamilyByUserPK(userPk);
-        album.updateLocalDate(createDate(albumReqDto.getDate()));
+        album.updateLocalDate(createDate(albumUpdateReqDto.getDate()));
         albumRepository.save(album);
-        List<String> updateHashTags =albumReqDto.getHashTags();
+        List<String> updateHashTags =albumUpdateReqDto.getHashTags();
         List<HashTag> hashTags = hashTagRepository.findHashTagsByAlbumId(album.getId());
         List<Picture> pictures = pictureRepository.findPicturesByAlbumId(album.getId());
 
@@ -195,20 +192,20 @@ public class AlbumService {
                 }
             }
         }
-        int mainIndex = albumReqDto.getMainIndex();
+        int mainIndex = albumUpdateReqDto.getMainIndex();
         boolean isMain = false;
-        String savePath = request.getServletContext().getRealPath("/resources/Album/"+family.getCode());
-        File dir= new File(request.getServletContext().getRealPath("/resources/Album/"+family.getCode()));
-        if(!dir.exists()){
-            dir.mkdirs();
-        }
+//        String savePath = request.getServletContext().getRealPath("/resources/Album/"+family.getCode());
+//        File dir= new File(request.getServletContext().getRealPath("/resources/Album/"+family.getCode()));
+//        if(!dir.exists()){
+//            dir.mkdirs();
+//        }
         //사진 수가 기존보다 많은 경우
         if(multipartFiles.size()>=pictures.size()){
             for(int i = 0 ; i< multipartFiles.size();i++){
                 UUID uuid = UUID.randomUUID();
                 String originFileName = multipartFiles.get(i).getOriginalFilename();
-                String saveFileName = UUID.randomUUID().toString() + originFileName.substring(originFileName.lastIndexOf("."));
-                String filePath = savePath+saveFileName;
+//                String saveFileName = UUID.randomUUID().toString() + originFileName.substring(originFileName.lastIndexOf("."));
+                String filePath = fileService.uploadFileV1("album",multipartFiles.get(i));
                 if(mainIndex==i){
                     isMain = true;
                 }
@@ -232,22 +229,18 @@ public class AlbumService {
                             .build();
                     pictureRepository.save(picture);
                 }
-                File file = new File(savePath+"/"+saveFileName);
-                try {
-                    multipartFiles.get(i).transferTo(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                File file = new File(savePath+"/"+saveFileName);
+//                try {
+//                    multipartFiles.get(i).transferTo(file);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
             }
         }
         //사진 수가 기존보다 적은 경우
         else{
             for(int i = 0; i<pictures.size();i++){
-                UUID uuid = UUID.randomUUID();
-                String originFileName = multipartFiles.get(i).getOriginalFilename();
-                String saveFileName = UUID.randomUUID().toString() + originFileName.substring(originFileName.lastIndexOf("."));
-                String filePath = savePath+saveFileName;
                 if(mainIndex==i){
                     isMain = true;
                 }
@@ -255,6 +248,8 @@ public class AlbumService {
                     isMain = false;
                 }
                 if(i<multipartFiles.size()){
+                    String originFileName = multipartFiles.get(i).getOriginalFilename();
+                    String filePath =fileService.uploadFileV1("album",multipartFiles.get(i));
                     pictures.get(i).updateOriginName(originFileName);
                     pictures.get(i).updatePathName(filePath);
                     pictures.get(i).updateIsMain(isMain);
@@ -263,12 +258,7 @@ public class AlbumService {
                 else{
                     pictureRepository.delete(pictures.get(i));
                 }
-                File file = new File(savePath+"/"+saveFileName);
-                try {
-                    multipartFiles.get(i).transferTo(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
             }
         }
 
@@ -299,11 +289,11 @@ public class AlbumService {
         }
     }
     @Transactional(readOnly = false)
-    public void deleteAlbumReaction(long userPk, Album album){
+    public void deleteAlbumReaction(long userPk, long reactionId){
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         AlbumReaction albumReaction =
-                albumReactionRepository.findReactionByAlbumId(
-                        album.getId(), profile.getId());
+                albumReactionRepository.findReactionByReactionId(
+                        reactionId, profile.getId());
         albumReactionRepository.delete(albumReaction);
     }
 
@@ -316,11 +306,20 @@ public class AlbumService {
                     .emoticon(albumReactions.get(i).getEmoticon())
                     .imagePath(profile.getImagePath())
                     .role(profile.getRole())
+                    .profileId(profile.getId())
+                    .reactionId(albumReactions.get(i).getId())
                     .build();
             result.add(albumReactionListResDto);
         }
         return result;
     }
+
+    @Transactional(readOnly = false)
+    public List<Album> findAlbumsByHashTag(String keyword, long albumId){
+
+        return albumRepository.findAlbumByHashTag(keyword,albumId);
+    }
+
 
 
 

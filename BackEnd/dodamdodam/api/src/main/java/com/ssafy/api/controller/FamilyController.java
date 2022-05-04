@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.core.dto.req.FamilyCreateReqDto;
 import com.ssafy.core.dto.req.FamilyJoinReqDto;
 import com.ssafy.core.dto.res.FamilyCodeResDto;
 import com.ssafy.core.dto.res.FamilyIdResDto;
@@ -46,17 +47,17 @@ public class FamilyController {
             })
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SingleResult<FamilyIdResDto> createFamily(
-            @ModelAttribute @Valid FamilyJoinReqDto familyJoinReqDto,
+            @ModelAttribute @Valid FamilyCreateReqDto familyReq,
             Authentication authentication,
             HttpServletRequest request) {
 
         Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
-        userService.updateBirthdayWithUserPk(userPk, familyJoinReqDto.getBirthday());
+        userService.updateBirthdayWithUserPk(userPk, familyReq.getBirthday());
         Family family = familyService.createFamily();
-        String[] imageInfo = profileService.enrollImage(familyJoinReqDto.getImage(), request).split("#");
-        familyService.createProfile(family, user, familyJoinReqDto, imageInfo);
+        String[] imageInfo = profileService.enrollImage(familyReq.getImage(), request).split("#");
+        familyService.createProfileForFirst(family, user, familyReq, imageInfo);
         FamilyIdResDto res = FamilyIdResDto.builder()
                 .familyId(family.getId())
                 .build();
@@ -67,20 +68,19 @@ public class FamilyController {
             parameters = {
                     @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
             })
-    @PostMapping(value = "/join/{familyId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/join", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult joinFamily(
             @ModelAttribute
             @Valid FamilyJoinReqDto familyRequest,
-            @PathVariable long familyId,
             Authentication authentication,
             HttpServletRequest request) {
         Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
         userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
-        Family family = familyService.getFamily(familyId);
+        Family family = familyService.getFamily(familyRequest.getFamilyId());
         String[] imageInfo = profileService.enrollImage(familyRequest.getImage(), request).split("#");
-        familyService.createProfile(family, user, familyRequest, imageInfo);
+        familyService.createProfileForJoin(family, user, familyRequest, imageInfo);
         return responseService.getSuccessResult("그룹 가입 완료");
     }
 

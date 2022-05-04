@@ -32,4 +32,7 @@ public class FamilyJoinReqDto {
 
     @Schema(description = "이미지", required = true, example = "1994-10-25")
     private MultipartFile image;
+
+    @Schema(description = "id", required = true, example = "1")
+    private long familyId;
 }

@@ -3,9 +3,11 @@ package com.ssafy.core.dto.req;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Builder
 @Getter
@@ -32,4 +34,7 @@ public class ProfileReqDto {
     @Size(max = 10, min = 1)
     @Schema(description = "생년월일", required = true, example = "1995-08-20")
     private String birthday;
+
+    @Schema(description = "프로필사진", required = true, example = "")
+    private MultipartFile multipartFile;
 }
