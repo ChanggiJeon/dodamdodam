@@ -1,26 +1,36 @@
 package com.ssafy.family.ui.home
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.ssafy.family.R
 import com.ssafy.family.data.remote.req.AddFcmReq
 import com.ssafy.family.data.remote.req.LoginReq
 import com.ssafy.family.databinding.FragmentLoginBinding
 import com.ssafy.family.ui.main.MainActivity
+import com.ssafy.family.ui.main.MainActivity.Companion.channel_id
 import com.ssafy.family.util.InputValidUtil
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
@@ -78,16 +88,21 @@ class LoginFragment : Fragment() {
                     LoginUtil.setAutoLogin(loginViewModel.isAutoLogin)
                     LoginUtil.saveUserInfo(it.data!!.dataSet!!)
                     Log.d("dddd", "initView: " + LoginUtil.getUserInfo())
-                    val token = FirebaseMessaging.getInstance().token.result ?: ""
                     // TODO: 에러나는지 확인 attach 
                     val context = requireActivity()
-                    addFCM(AddFcmReq(token))
+                    getFCM()
                     startActivity(Intent(context, MainActivity::class.java))
                     requireActivity().finish()
                     dismissLoading()
                 }
+                Status.EXPIRED->{
+                    loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
+                    login()
+                    dismissLoading()
+                }
                 Status.ERROR -> {
-                    Toast.makeText(requireActivity(), it.message!!, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
+                        .show()
                     dismissLoading()
                 }
                 Status.LOADING -> {
@@ -153,4 +168,27 @@ class LoginFragment : Fragment() {
         binding.textInputLayoutLoginFPW.error =
             resources.getString(R.string.passwordErrorMessage)
     }
+    fun getFCM() {
+        // FCM 토큰 수신
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+            addFCM(AddFcmReq(task.result!!))
+        })
+        createNotificationChannel(channel_id, "ssafy")
+    }
+
+    // NotificationChannel 설정
+    private fun createNotificationChannel(id: String, name: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(id, name, importance)
+
+            val notificationManager = context?.getSystemService(
+                Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+    // NotificationChannel 설정
 }
