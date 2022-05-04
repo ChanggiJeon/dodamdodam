@@ -8,5 +8,5 @@ public interface FamilyRepoCustom {
 
     Long findFamilyIdByUserPk(Long userPk);
 
-
+    Long findFamilyIdByUserPK(Long userPk);
 }

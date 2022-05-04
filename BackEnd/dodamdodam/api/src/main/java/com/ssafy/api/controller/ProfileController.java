@@ -3,7 +3,6 @@ package com.ssafy.api.controller;
 import com.ssafy.core.dto.req.ProfileReqDto;
 import com.ssafy.core.dto.req.StatusReqDto;
 import com.ssafy.core.entity.Profile;
-import com.ssafy.core.entity.User;
 import com.ssafy.api.service.ProfileService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.common.CommonResult;
@@ -17,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -79,6 +77,11 @@ public class ProfileController {
                                       HttpServletRequest request) {
 
         Long userPk = Long.parseLong(authentication.getName());
+
+        Long familyId = userService.getFamilyIdByUserPk(userPk);
+
+        profileService.checkNicknameByFamilyIdExceptMe(familyId, profileRequest.getNickname(), userPk);
+        profileService.checkRoleByFamilyIdExceptMe(familyId, profileRequest.getRole(), userPk);
 
         Profile updateResult = profileService.updateProfile(userPk, profileRequest, profileRequest.getMultipartFile(), request);
 
