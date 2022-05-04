@@ -43,6 +43,7 @@ public class ScheduleRepoCustomImpl implements ScheduleRepoCustom{
         System.out.println(schedule.endDate.getClass().getName());
         return queryFactory
                 .select(Projections.fields(ScheduleDetailResDto.class,
+                        schedule.id.as("scheduleId"),
                         schedule.title,
                         schedule.content,
                         schedule.startDate,
