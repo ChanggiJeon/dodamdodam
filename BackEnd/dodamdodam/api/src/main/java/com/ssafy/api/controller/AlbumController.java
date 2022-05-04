@@ -121,10 +121,10 @@ public class AlbumController {
             })
     @PostMapping(value = "/reaction", produces = MediaType.APPLICATION_JSON_VALUE)
     public CommonResult createReaction(
-                                       @RequestBody
-                                       @io.swagger.v3.oas.annotations.parameters.RequestBody
-                                               AlbumReactionReqDto albumReactionReqDto,
-                                       Authentication authentication) {
+            @RequestBody
+            @io.swagger.v3.oas.annotations.parameters.RequestBody
+                    AlbumReactionReqDto albumReactionReqDto,
+            Authentication authentication) {
 
         Long userPK = Long.parseLong(authentication.getName());
         Album album = albumService.findByAlbum(albumReactionReqDto.getAlbumId());
@@ -166,7 +166,7 @@ public class AlbumController {
     @GetMapping(value = "/search/{keyword}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "앨범 검색", description = "<strong>앨범 검색</strong>",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             }
     )
     public ListResult<AlbumResDto> searchAlbum(@PathVariable String keyword,Authentication authentication){
@@ -190,6 +190,5 @@ public class AlbumController {
 
         return responseService.getListResult(albumList);
     }
-
 
 }

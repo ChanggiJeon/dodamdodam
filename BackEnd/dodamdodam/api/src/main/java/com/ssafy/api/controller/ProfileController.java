@@ -38,7 +38,7 @@ public class ProfileController {
 
 //    @Operation(summary = "프로필 등록", description = "<strong>프로필 등록</strong>",
 //            parameters = {
-//                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+//                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
 //            })
 //    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    public CommonResult enrollProfile(@RequestBody
@@ -91,7 +91,7 @@ public class ProfileController {
 
 //    @Operation(summary = "미션 등록", notes = "<strong>미션 등록</strong>",
 //            parameters = {
-//                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+//                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
 //            })
 //    @PatchMapping("/mission")
 //    public CommonResult updateMission(@RequestBody @Valid MissionReqDto missionReqDto, Authentication authentication) {
