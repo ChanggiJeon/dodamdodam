@@ -34,7 +34,7 @@ public class MainService {
     public List<MainProfileResDto> getProfileList(Long userPk) {
         long familyId = familyRepository.findFamilyIdByUserPk(userPk);
 
-        return profileRepository.getProfileListByFamilyId(familyId).stream()
+        return profileRepository.findProfileListByFamilyId(familyId).stream()
                 .filter(profile -> !profile.getUserPk().equals(userPk))
                 .collect(Collectors.toList());
     }

@@ -18,8 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
