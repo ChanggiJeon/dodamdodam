@@ -111,6 +111,7 @@ class AlbumActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
     private fun setLoading() {
         binding.progressBarLoginFLoading.visibility = View.VISIBLE

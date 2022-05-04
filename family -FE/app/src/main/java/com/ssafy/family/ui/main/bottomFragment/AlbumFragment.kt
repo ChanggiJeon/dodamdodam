@@ -190,6 +190,31 @@ class AlbumFragment : Fragment() {
             }
 
         }
+        albumViewModel.searchDateAlbumRequestLiveData.observe(requireActivity()){
+            when(it.status){
+                Status.SUCCESS->{
+                    albumMonthAdapter.datas = (it.data!!.dataSet as MutableList<AllAlbum>?)!!
+                    albumMonthAdapter.notifyDataSetChanged()
+                    dismissLoading()
+                }
+                Status.LOADING->{
+                    setLoading()
+
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
+                        .show()
+                    dismissLoading()
+                }
+                Status.EXPIRED -> {
+                    loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
+                    val year = binding.viewpager[1].findViewById<EditText>(R.id.search_edit_year).text.toString()
+                    val month = binding.viewpager[1].findViewById<EditText>(R.id.search_edit_month).text.toString()
+                    albumViewModel.searchDateAlbum(year+month)
+                    dismissLoading()
+                }
+            }
+        }
     }
 
     private fun findAllAlbum() {
