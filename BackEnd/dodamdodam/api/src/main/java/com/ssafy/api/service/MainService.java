@@ -151,10 +151,7 @@ public class MainService {
     }
 
 
-    public MissionResDto getTodayMission(long userPk) {
-        Profile profile = profileRepository.findProfileByUserPk(userPk);
-        return MissionResDto.builder()
-                .missionContent(profile.getMission_content())
-                .build();
+    public MissionResDto findTodayMission(long userPk) {
+        return profileRepository.findTodayMissionByUserPk(userPk);
     }
 }
