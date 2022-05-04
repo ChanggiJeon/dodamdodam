@@ -306,6 +306,8 @@ public class AlbumService {
                     .emoticon(albumReactions.get(i).getEmoticon())
                     .imagePath(profile.getImagePath())
                     .role(profile.getRole())
+                    .profileId(profile.getId())
+                    .reactionId(albumReactions.get(i).getId())
                     .build();
             result.add(albumReactionListResDto);
         }
@@ -318,6 +320,11 @@ public class AlbumService {
         return albumRepository.findAlbumByHashTag(keyword,albumId);
     }
 
+    @Transactional(readOnly = false)
+    public List<Album> findAlbumsByDate(String date, long albumId){
+
+        return albumRepository.findAlbumByDate(date,albumId);
+    }
 
 
 

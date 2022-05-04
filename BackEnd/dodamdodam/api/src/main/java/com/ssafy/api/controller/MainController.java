@@ -1,6 +1,8 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.service.FcmService;
 import com.ssafy.api.service.ScheduleService;
+import com.ssafy.core.dto.req.AlarmReqDto;
 import com.ssafy.core.dto.req.SuggestionReactionReqDto;
 import com.ssafy.core.dto.res.*;
 import com.ssafy.api.service.MainService;
@@ -17,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
@@ -31,6 +34,7 @@ public class MainController {
     private final MainService mainService;
     private final ResponseService responseService;
     private final ScheduleService scheduleService;
+    private final FcmService fcmService;
 
     @Operation(summary = "가족 Profile 정보", description = "본인을 제외한 가족의 <strong>profile<strong> 정보를 받는다.",
             parameters = {
@@ -140,4 +144,18 @@ public class MainController {
 //
 //        return responseService.getSuccessResult("알림이 정상적으로 발송되었습니다.");
 //    }
+
+    @Operation(summary = "푸쉬 알림", description = "<strong>푸쉬 알림<strong>전송 및 데이터 저장.",
+            parameters = {
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
+            })
+    @PostMapping(value = "alarm")
+    public CommonResult sendAlarm(@RequestBody AlarmReqDto alarmReq,
+                                  Authentication authentication) throws IOException {
+        Long userPk = Long.parseLong(authentication.getName());
+        String profileNickname = mainService.getOneProfileNickname(userPk);
+        String fcmToken = mainService.getTargetFcmToken(alarmReq.getTargetId());
+        fcmService.sendMessageTo(fcmToken, profileNickname, alarmReq.getContent());
+        return responseService.getSuccessResult();
+    }
 }

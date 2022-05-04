@@ -6,4 +6,5 @@ public interface UserRepoCustom {
 
     String findUserIdByUserInfo(FindIdReqDto request);
 
+    String findUserFcmTokenByProfileId(Long targetId);
 }

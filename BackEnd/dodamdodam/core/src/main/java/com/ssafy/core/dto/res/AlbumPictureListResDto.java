@@ -26,7 +26,12 @@ public class AlbumPictureListResDto {
                     .isMain(pictures.get(i).is_main())
                     .imagePath(pictures.get(i).getPath_name())
                     .build();
-            result.add(albumDetailResDto);
+            if(pictures.get(i).is_main()){
+                result.add(0,albumDetailResDto);
+            }else{
+                result.add(albumDetailResDto);
+            }
+
         }
         return result;
     }

@@ -2,7 +2,6 @@ package com.ssafy.core.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.req.FindIdReqDto;
-import com.ssafy.core.entity.QFamily;
 import com.ssafy.core.entity.QProfile;
 import com.ssafy.core.entity.QUser;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +29,15 @@ public class UserRepoCustomImpl implements UserRepoCustom {
                 .fetchFirst();
     }
 
+    @Override
+    public String findUserFcmTokenByProfileId(Long targetId) {
+        return jpaQueryFactory.select(user.fcmToken)
+                .from(user)
+                .join(profile)
+                .on(user.userPk.eq(profile.user.userPk))
+                .where(profile.id.eq(targetId))
+                .fetchFirst();
+    }
 
     /**
      * QueryDsl 정리
