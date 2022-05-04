@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.core.dto.req.AlarmReqDto;
 import com.ssafy.core.dto.req.SuggestionReactionReqDto;
 import com.ssafy.core.dto.res.MainProfileResDto;
 import com.ssafy.core.dto.res.SuggestionReactionResDto;
@@ -9,10 +10,7 @@ import com.ssafy.core.entity.Profile;
 import com.ssafy.core.entity.Suggestion;
 import com.ssafy.core.exception.CustomErrorCode;
 import com.ssafy.core.exception.CustomException;
-import com.ssafy.core.repository.FamilyRepository;
-import com.ssafy.core.repository.ProfileRepository;
-import com.ssafy.core.repository.SuggestionReactionRepository;
-import com.ssafy.core.repository.SuggestionRepository;
+import com.ssafy.core.repository.*;
 import com.ssafy.core.entity.SuggestionReaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +25,7 @@ public class MainService {
 
     private final ProfileRepository profileRepository;
     private final FamilyRepository familyRepository;
+    private final UserRepository userRepository;
     private final SuggestionRepository suggestionRepository;
     private final SuggestionReactionRepository suggestionReactionRepository;
 
@@ -147,5 +146,13 @@ public class MainService {
                 .like(suggestion.getLikeCount())
                 .dislike(suggestion.getDislikeCount())
                 .build();
+    }
+
+    public String getTargetFcmToken(Long targetId) {
+        return userRepository.findUserFcmTokenByProfileId(targetId);
+
+    }
+    public String getOneProfileNickname(Long userPk) {
+        return profileRepository.findProfileByUserPk(userPk).getNickname();
     }
 }
