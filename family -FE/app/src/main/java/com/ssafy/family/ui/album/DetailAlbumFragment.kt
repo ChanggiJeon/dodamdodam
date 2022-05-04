@@ -1,17 +1,23 @@
 package com.ssafy.family.ui.album
 
+import android.app.ActionBar
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.Toast
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ssafy.family.R
 import com.ssafy.family.data.remote.req.AlbumReactionReq
 import com.ssafy.family.data.remote.res.AlbumPicture
@@ -38,19 +44,30 @@ class DetailAlbumFragment : Fragment() {
     private var DetailAlbumId by Delegates.notNull<Int>()
     private val detailAlbumViewModel by activityViewModels<DetailAlbumViewModel>()
     private val loginViewModel by activityViewModels<LoginViewModel>()
+
     //이모지 누르는버튼
-    private val emojiItemClickListener = object : DetailAlbumEmojiAdapter.ItemClickListener {
-        override fun onClick(item: String) {
-            Log.d("dddd", "onClick: "+LoginUtil.getUserInfo()!!.profileId)
-            detailAlbumViewModel.addReaction(AlbumReactionReq(item,detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture!!.albumId))
+    private val photoClickListener = object : DetailAlbumPhotoAdapter.ItemClickListener {
+        override fun onClick(item: AlbumPicture) {
+            showStyleDialog(item.imagePath)
         }
 
+    }
+    private val emojiItemClickListener = object : DetailAlbumEmojiAdapter.ItemClickListener {
+        override fun onClick(item: String) {
+            Log.d("dddd", "onClick: " + LoginUtil.getUserInfo()!!.profileId)
+            detailAlbumViewModel.addReaction(
+                AlbumReactionReq(
+                    item,
+                    detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture!!.albumId
+                )
+            )
+        }
     }
 
     //이모지 삭제버튼
     private val commentItemClickListener = object : DetailAlbumCommentAdapter.ItemClickListener {
         override fun onClick(reactionId: Int) {
-            Log.d("dddddd", "onClick: "+reactionId)
+            Log.d("dddddd", "onClick: " + reactionId)
             detailAlbumViewModel.deleteReaction(reactionId)
         }
     }
@@ -81,14 +98,18 @@ class DetailAlbumFragment : Fragment() {
         detailAlbumViewModel.detailAlbumRequestLiveData.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
-                    Log.d("dddddddddd", "detailAlbumView: "+it.data!!.dataSet)
+                    Log.d("dddddddddd", "detailAlbumView: " + it.data!!.dataSet)
                     binding.detailAlbumTitleText.text = it.data!!.dataSet!!.date
                     photoAdapter.datas = it.data!!.dataSet!!.pictures as MutableList<AlbumPicture>
                     photoAdapter.notifyDataSetChanged()
-                    tagAdapter.datas = detailAlbumViewModel.saveAlbumLiveData.value!!.hashTags.toMutableList()
+                    tagAdapter.datas =
+                        detailAlbumViewModel.saveAlbumLiveData.value!!.hashTags.toMutableList()
                     tagAdapter.notifyDataSetChanged()
                     // TODO: 이모티콘 박아야함 어댑터에 지금 R.drawable.xxx 넣으려고 Int로 해놨는데 나중에 서버에 다 저장해놓고 글라이드로 하기위해서 datas String으로 받게하고 String.xml에 주소 array로 다 박아놔야함
-                    emojiAdapter.datas = mutableListOf("https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg","https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg")
+                    emojiAdapter.datas = mutableListOf(
+                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
+                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg"
+                    )
                     emojiAdapter.notifyDataSetChanged()
                     commentAdapter.datas =
                         it.data!!.dataSet!!.albumReactions as MutableList<AlbumReaction>
@@ -125,7 +146,10 @@ class DetailAlbumFragment : Fragment() {
                     taglist.add(HashTag("#해시"))
                     tagAdapter.datas = taglist
                     tagAdapter.notifyDataSetChanged()
-                    emojiAdapter.datas = mutableListOf("https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg","https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg")
+                    emojiAdapter.datas = mutableListOf(
+                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
+                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg"
+                    )
                     emojiAdapter.notifyDataSetChanged()
                     val templist = mutableListOf<AlbumReaction>()
                     templist.add(
@@ -156,7 +180,7 @@ class DetailAlbumFragment : Fragment() {
                 Status.LOADING -> {
                     setLoading()
                 }
-                Status.EXPIRED ->{
+                Status.EXPIRED -> {
                     loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
                     detailAlbumViewModel.detailAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
                     dismissLoading()
@@ -186,7 +210,7 @@ class DetailAlbumFragment : Fragment() {
                 Status.LOADING -> {
                     setLoading()
                 }
-                Status.EXPIRED ->{
+                Status.EXPIRED -> {
                     loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
                     Toast.makeText(requireActivity(), "다시 시도해주세요", Toast.LENGTH_SHORT)
                         .show()
@@ -219,7 +243,7 @@ class DetailAlbumFragment : Fragment() {
                 Status.LOADING -> {
                     setLoading()
                 }
-                Status.EXPIRED ->{
+                Status.EXPIRED -> {
                     loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
                     Toast.makeText(requireActivity(), "다시 시도해주세요", Toast.LENGTH_SHORT)
                         .show()
@@ -231,7 +255,9 @@ class DetailAlbumFragment : Fragment() {
 
     private fun initView() {
         binding.detailAlbumTitleText.text = ""
-        photoAdapter = DetailAlbumPhotoAdapter(requireActivity(),true)
+        photoAdapter = DetailAlbumPhotoAdapter(requireActivity(), true).apply {
+            itemClickListener=this@DetailAlbumFragment.photoClickListener
+        }
         binding.detailAlbumPhotoRecycler.apply {
             layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
@@ -269,5 +295,28 @@ class DetailAlbumFragment : Fragment() {
 
     private fun dismissLoading() {
         binding.progressBarLoginFLoading.visibility = View.GONE
+    }
+
+    fun showStyleDialog(url: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_style, null)
+
+        val dialogphoto = dialogView.findViewById<ImageView>(R.id.dialog_image)
+        Glide.with(dialogphoto).load(Uri.parse(url))
+            .diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true)
+            .centerInside()
+            .into(dialogphoto)
+
+        val adb = android.app.AlertDialog.Builder(requireContext(), R.style.MyDialogTheme)
+            .setView(dialogView)
+        val dialog = adb.create()
+        val params:WindowManager.LayoutParams = dialog.window!!.attributes;
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        dialog.window!!.attributes =  params
+        
+        //나오는부분말고는 투명하게 해주는것
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
+        dialog.show()
+
     }
 }
