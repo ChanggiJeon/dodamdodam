@@ -16,7 +16,7 @@ interface AlbumAPI {
     @GET("/api/album/{albumId}")
     suspend fun detailAlbum(@Path("albumId") albumId: Int): Response<AlbumDetailRes>
 
-    @DELETE("/api/album/{reactionId}}")
+    @DELETE("/api/album/{reactionId}")
     suspend fun deleteReaction(@Path("reactionId") reactionId: Int): Response<BaseResponse>
 
     @POST("/api/album/reaction")
