@@ -6,6 +6,7 @@ import java.util.*
 private const val TAG = "InputValidUtil_strait"
 object InputValidUtil {
     val nameRegex = "^[가-힣a-zA-Z]{2,20}$".toRegex()
+    val nickNameRegex = "^[가-힣a-zA-Z]{2,10}$".toRegex()
     val idRegex = "^[0-9a-z]{4,20}".toRegex()
     //영문, 숫자
     val passRegex1 = "^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$".toRegex()
@@ -25,6 +26,11 @@ object InputValidUtil {
 
     fun isValidName(name: String): Boolean {
         val result = name.matches(nameRegex)
+        return result
+    }
+
+    fun isValidNickName(name: String): Boolean {
+        val result = name.matches(nickNameRegex)
         return result
     }
 

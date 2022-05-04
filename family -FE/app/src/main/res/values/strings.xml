@@ -55,6 +55,7 @@
 
     <string name="idErrorMessage">올바르지 않은 아이디입니다.</string>
     <string name="nameErrorMessage">올바르지 않은 이름입니다.</string>
+    <string name="nickNameErrorMessage">올바르지 않은 별명입니다.</string>
     <string name="passwordErrorMessage">올바르지 않은 비밀번호입니다.</string>
     <string name="passwordCheckErrorMessage">입력한 비밀번호와 다릅니다.</string>
     <string name="phoneNumberErrorMessage">올바르지 않은 휴대전화번호입니다.</string>
