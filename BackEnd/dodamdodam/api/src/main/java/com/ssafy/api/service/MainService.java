@@ -1,17 +1,15 @@
 package com.ssafy.api.service;
 
+import com.ssafy.core.dto.req.AlarmReqDto;
 import com.ssafy.core.dto.req.SuggestionReactionReqDto;
 import com.ssafy.core.dto.res.MainProfileResDto;
 import com.ssafy.core.dto.res.MissionResDto;
 import com.ssafy.core.dto.res.SuggestionReactionResDto;
 import com.ssafy.core.dto.res.SuggestionResDto;
-import com.ssafy.core.entity.Family;
-import com.ssafy.core.entity.Profile;
-import com.ssafy.core.entity.Suggestion;
+import com.ssafy.core.entity.*;
 import com.ssafy.core.exception.CustomErrorCode;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.*;
-import com.ssafy.core.entity.SuggestionReaction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +26,7 @@ public class MainService {
     private final UserRepository userRepository;
     private final SuggestionRepository suggestionRepository;
     private final SuggestionReactionRepository suggestionReactionRepository;
+    private final AlarmRepository alarmRepository;
 
     public List<MainProfileResDto> getProfileList(Long userPk) {
         long familyId = familyRepository.findFamilyIdByUserPk(userPk);
@@ -154,10 +153,35 @@ public class MainService {
     }
 
     public String getTargetFcmToken(Long targetId) {
-        return userRepository.findUserFcmTokenByProfileId(targetId);
+        String fcmToken = userRepository.findUserFcmTokenByProfileId(targetId);
+        if (fcmToken == null) {
+            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "잘못된 대상입니다.");
+        }
+        return fcmToken;
 
     }
-    public String getOneProfileNickname(Long userPk) {
-        return profileRepository.findProfileByUserPk(userPk).getNickname();
+    public Profile getOneProfileNickname(Long userPk) {
+        Profile profile = profileRepository.findProfileByUserPk(userPk);
+        if (profile == null) {
+            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "소속된 그룹이 없습니다.");
+        }
+        return profile;
+    }
+
+    public void recordAlarmCount(Profile me, AlarmReqDto alarmReq) {
+        Profile target = profileRepository.findProfileById(alarmReq.getTargetId());
+        Alarm alarm = alarmRepository.findAlarmByProfileAndTarget(me, target);
+        if (alarm == null) {
+            alarmRepository.save(Alarm.builder()
+                    .content(alarmReq.getContent())
+                    .me(me)
+                    .target(target)
+                    .count(1)
+                    .build()
+            );
+        } else {
+            alarm.setCount(alarm.getCount()+1);
+            alarmRepository.save(alarm);
+        }
     }
 }

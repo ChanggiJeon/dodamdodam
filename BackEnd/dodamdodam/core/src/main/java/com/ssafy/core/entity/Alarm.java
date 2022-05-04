@@ -1,10 +1,7 @@
 package com.ssafy.core.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -19,6 +16,7 @@ public class Alarm {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     @Column
     private long count;
 
@@ -27,7 +25,7 @@ public class Alarm {
 
     @ManyToOne
     @JoinColumn(name = "profile_id")
-    private Profile profile;
+    private Profile me;
 
     @ManyToOne
     @JoinColumn(name = "target_id")
