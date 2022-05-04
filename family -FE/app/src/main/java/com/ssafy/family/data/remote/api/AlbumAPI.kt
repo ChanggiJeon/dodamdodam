@@ -5,6 +5,7 @@ import com.ssafy.family.data.remote.req.AlbumReactionReq
 import com.ssafy.family.data.remote.res.AlbumDetailRes
 import com.ssafy.family.data.remote.res.AlbumRes
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -28,9 +29,7 @@ interface AlbumAPI {
     @Multipart
     @POST("api/album/create")
     suspend fun addAlbum(
-        @Part("hashTags") hashTags: ArrayList<MultipartBody.Part>,
-        @Part("date") date:MultipartBody.Part,
-        @Part("mainIndex") mainIndex:MultipartBody.Part,
-        @Part("multipartFiles") multipartFiles: ArrayList<MultipartBody.Part>
+        @PartMap data : HashMap<String, RequestBody>,
+        @Part multipartFiles: ArrayList<MultipartBody.Part>
     ): Response<BaseResponse>
 }

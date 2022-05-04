@@ -7,10 +7,12 @@ import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.ssafy.family.R
+import com.ssafy.family.data.remote.req.AddAlbumReq
 import com.ssafy.family.data.remote.res.AllAlbum
 import com.ssafy.family.databinding.ActivityAlbumBinding
 import com.ssafy.family.ui.main.bottomFragment.AlbumFragment
 import com.ssafy.family.util.LoginUtil
+import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +26,7 @@ class AlbumActivity : AppCompatActivity() {
         setContentView(binding.root)
         val data = intent.getParcelableExtra<AllAlbum>(AlbumFragment.FRIEND_INFO)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        if(data!=null){
+        if (data != null) {
             intent.getParcelableExtra<AllAlbum>(AlbumFragment.FRIEND_INFO)?.let {
                 detailAlbumViewModel.setSaveAlbum(it)
                 Log.d("dddddd", "onCreate: " + detailAlbumViewModel.saveAlbumLiveData.value)
@@ -32,7 +34,7 @@ class AlbumActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.album_frame, DetailAlbumFragment())
                 .commit()
-        }else{
+        } else {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.album_frame, SelectPhotoFragment())
                 .commit()
@@ -64,7 +66,7 @@ class AlbumActivity : AppCompatActivity() {
             } else {
                 binding.albumButtonInclude.root.visibility = View.VISIBLE
             }
-            if(it=="완료"){
+            if (it == "완료") {
                 binding.albumButtonInclude.button2.setOnClickListener {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.album_frame, AddAlbumFragment())
@@ -72,7 +74,49 @@ class AlbumActivity : AppCompatActivity() {
 
                 }
             }
+            if (it == "등록") {
+                Log.d("ddddd", "등록: ")
+                val hashTag =  detailAlbumViewModel.hashTag
+                val date = detailAlbumViewModel.date
+                val mainIndex = detailAlbumViewModel.mainIndex
+                Log.d("ddddd", "onCreate: "+hashTag)
+                Log.d("ddddd", "onCreate: "+date)
+                Log.d("ddddd", "onCreate: "+mainIndex)
+                if(!hashTag.isNullOrEmpty()&&!date.isNullOrEmpty()&&mainIndex!=null){
+                    Log.d("ddddd", "in: ")
+                    detailAlbumViewModel.addAlbum(
+                        AddAlbumReq(
+                            hashTag,
+                            date,
+                            mainIndex
+                        )
+                    )
+                    finish()
+                }
+            }
         }
+        detailAlbumViewModel.addAlbumRequestLiveData.observe(this){
+            when(it.status){
+                Status.SUCCESS->{
+                    Log.d("ddddd", "SUCCESS: ")
+                    dismissLoading()
+                }
+                Status.ERROR->{
+                    Log.d("ddddd", "ERROR: ")
+                    dismissLoading()
+                }
+                Status.LOADING->{
+                    Log.d("ddddd", "LOADING: ")
+                    setLoading()
+                }
+            }
+        }
+    }
+    private fun setLoading() {
+        binding.progressBarLoginFLoading.visibility = View.VISIBLE
+    }
 
+    private fun dismissLoading() {
+        binding.progressBarLoginFLoading.visibility = View.GONE
     }
 }

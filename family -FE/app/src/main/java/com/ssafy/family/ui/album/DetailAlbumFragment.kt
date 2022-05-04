@@ -52,6 +52,12 @@ class DetailAlbumFragment : Fragment() {
         }
 
     }
+    private val tagItemClickListener = object :AlbumTagAdapter.ItemClickListener{
+        override fun onClick(item: HashTag) {
+            TODO("Not yet implemented")
+        }
+
+    }
     private val emojiItemClickListener = object : DetailAlbumEmojiAdapter.ItemClickListener {
         override fun onClick(item: String) {
             Log.d("dddd", "onClick: " + LoginUtil.getUserInfo()!!.profileId)
@@ -273,7 +279,9 @@ class DetailAlbumFragment : Fragment() {
             adapter = emojiAdapter
         }
 
-        tagAdapter = AlbumTagAdapter(requireActivity())
+        tagAdapter = AlbumTagAdapter(requireActivity()).apply {
+            itemClickListener = this@DetailAlbumFragment.tagItemClickListener
+        }
         binding.detailAlbumTagRecycler.apply {
             layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
@@ -313,7 +321,7 @@ class DetailAlbumFragment : Fragment() {
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
         dialog.window!!.attributes =  params
-        
+
         //나오는부분말고는 투명하게 해주는것
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
         dialog.show()

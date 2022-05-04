@@ -20,5 +20,5 @@ interface AlbumRepository {
     suspend fun deleteReaction(reactionId: Int):Resource<BaseResponse>
     suspend fun addReaction(albumReactionReq: AlbumReactionReq):Resource<BaseResponse>
     suspend fun searchAlbum(keyword:String): Resource<AlbumRes>
-    suspend fun addAlbum(addAlbum:AddAlbumReq, imagefiles: ArrayList<File>):Resource<BaseResponse>
+    suspend fun addAlbum(addAlbum:AddAlbumReq, imagefiles: ArrayList<MultipartBody.Part>):Resource<BaseResponse>
 }

@@ -1,6 +1,7 @@
 package com.ssafy.family.data.repository
 
 
+import android.util.Log
 import com.ssafy.family.config.BaseResponse
 import com.ssafy.family.data.remote.api.AlbumAPI
 import com.ssafy.family.data.remote.req.AddAlbumReq
@@ -10,9 +11,13 @@ import com.ssafy.family.data.remote.res.AlbumRes
 import com.ssafy.family.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 class AlbumRepositoryImpl(
@@ -121,16 +126,24 @@ class AlbumRepositoryImpl(
 
     override suspend fun addAlbum(
         addAlbum: AddAlbumReq,
-        imagefiles: ArrayList<File>
+        imagefiles: ArrayList<MultipartBody.Part>
     ): Resource<BaseResponse> =
         withContext(ioDispatcher) {
-            try {
-                val hashTags = getArrayBody("hashTags", addAlbum.hashTags)
-                val date = getBody("date", addAlbum.date)
-                val mainIndex = getBody("mainIndex", addAlbum.mainIndex)
-                val multipartFiles = getImageBody("multipartFiles",imagefiles)
+//            try {
+                val map = HashMap<String,RequestBody>()
+                var data = ""
+                for(i in addAlbum.hashTags.indices){
+                    if(i!=0){
+                        data+=","
+                    }
+                    data+=addAlbum.hashTags[i].text
+                }
+                map.put("hashTags",getBody(data))
+                map.put("date",getBody(addAlbum.date))
+                map.put("mainIndex",getBody(addAlbum.mainIndex))
+                Log.d("ddddd", "addAlbum: "+map)
                 val response =
-                    api.addAlbum(hashTags = hashTags, date = date, mainIndex, multipartFiles)
+                    api.addAlbum(data = map, imagefiles)
                 when {
                     response.isSuccessful -> {
                         Resource.success(response.body()!!)
@@ -139,21 +152,23 @@ class AlbumRepositoryImpl(
                         Resource.expired(response.body()!!)
                     }
                     else -> {
+                        Log.d("ddddd", "addAlbum: err")
                         Resource.error(null, response.message())
                     }
                 }
-            } catch (e: Exception) {
-                Resource.error(null, "서버와 연결오류")
-            }
+//            } catch (e: Exception) {
+//                Log.d("ddddd", "addAlbum: exception")
+//                Resource.error(null, "서버와 연결오류")
+//            }
         }
 
-    private fun getBody(name: String, value: Any): MultipartBody.Part {
-        return MultipartBody.Part.createFormData(name, value.toString())
+    private fun getBody(value: Any): RequestBody{
+        return value.toString().toRequestBody("text/plain".toMediaTypeOrNull());
     }
 
-    private fun getArrayBody(name: String, value: List<Any>): ArrayList<MultipartBody.Part> {
-        val list = arrayListOf<MultipartBody.Part>()
-        value.forEach { list.add(MultipartBody.Part.createFormData(name, it.toString())) }
+    private fun getArrayBody(value: List<Any>): ArrayList<RequestBody> {
+        val list = arrayListOf<RequestBody>()
+        value.forEach { list.add(value.toString().toRequestBody("text/plain".toMediaTypeOrNull())) }
         return list
     }
 
