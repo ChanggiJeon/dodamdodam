@@ -10,6 +10,9 @@ import androidx.fragment.app.activityViewModels
 import com.ssafy.family.databinding.FragmentSearchDateBinding
 import com.ssafy.family.ui.home.LoginViewModel
 import com.ssafy.family.ui.main.bottomFragment.AlbumViewModel
+import java.text.SimpleDateFormat
+import java.time.YearMonth
+import java.util.*
 
 class SearchDateFragment : Fragment() {
 
@@ -31,12 +34,15 @@ class SearchDateFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val year = binding.searchAlbumDatePicker.year
-        val month = binding.searchAlbumDatePicker.month + 1
-        val day = binding.searchAlbumDatePicker.dayOfMonth
-        Log.d("ddddd", "onViewCreated: " + year)
-        Log.d("ddddd", "onViewCreated: " + month)
-        Log.d("ddddd", "onViewCreated: " + day)
+        init()
+    }
+    private fun init(){
+        val now = System.currentTimeMillis()
+        val date = Date(now)
+        val yearformat = SimpleDateFormat("yyyy")
+        val monthformat = SimpleDateFormat("MM")
+        binding.searchEditYear.hint = yearformat.format(date)
+        binding.searchEditMonth.hint = monthformat.format(date)
     }
 
 }

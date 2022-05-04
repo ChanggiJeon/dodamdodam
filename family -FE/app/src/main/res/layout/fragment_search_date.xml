@@ -8,7 +8,7 @@
     <View
         android:id="@+id/free_icon_g"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="70dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
@@ -17,17 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
-    <DatePicker
-        android:id="@+id/search_album_datePicker"
-        android:layout_width="0dp"
-        android:layout_height="90dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="100dp"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/free_icon_g"
-        app:layout_constraintTop_toTopOf="@+id/free_icon_g" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/search_button"
@@ -37,8 +26,61 @@
         android:background="@drawable/album_search_button"
         android:fontFamily="@font/spoqahansans"
         android:text="@string/album_search"
-        app:layout_constraintBottom_toBottomOf="@+id/search_album_datePicker"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/free_icon_g"
-        app:layout_constraintStart_toEndOf="@+id/search_album_datePicker"
-        app:layout_constraintTop_toTopOf="@+id/search_album_datePicker" />
+        app:layout_constraintTop_toTopOf="@+id/free_icon_g" />
+
+    <EditText
+        android:id="@+id/search_edit_year"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:hint="2022"
+        android:inputType="numberDecimal"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/free_icon_g"
+        app:layout_constraintTop_toTopOf="@+id/free_icon_g" />
+
+    <EditText
+        android:id="@+id/search_edit_month"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:textAlignment="center"
+        android:hint="5"
+        app:layout_constraintBottom_toBottomOf="@+id/free_icon_g"
+        app:layout_constraintEnd_toStartOf="@+id/search_button"
+        app:layout_constraintStart_toEndOf="@+id/search_edit_year"
+        app:layout_constraintTop_toTopOf="@+id/free_icon_g" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/spoqahansans"
+        android:text="년"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/search_edit_year"
+        app:layout_constraintTop_toTopOf="@+id/free_icon_g"
+        tools:text="년" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/spoqahansans"
+        android:text="월"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/search_edit_month"
+        app:layout_constraintTop_toTopOf="@+id/free_icon_g"
+        tools:text="월" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
