@@ -26,7 +26,7 @@ public class AlbumReaction extends BaseEntity{
     private Profile profile;
 
     @Nullable
-    @Column( length = 10)
+    @Column(length = 255)
     private String emoticon;
 
     public void updateEmoticon(String emoticon){
