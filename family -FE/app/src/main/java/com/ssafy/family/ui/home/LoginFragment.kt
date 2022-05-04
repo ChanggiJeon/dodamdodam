@@ -78,10 +78,10 @@ class LoginFragment : Fragment() {
                     LoginUtil.setAutoLogin(loginViewModel.isAutoLogin)
                     LoginUtil.saveUserInfo(it.data!!.dataSet!!)
                     Log.d("dddd", "initView: " + LoginUtil.getUserInfo())
-                    val token = FirebaseMessaging.getInstance().token.result ?: ""
+                    //val token = FirebaseMessaging.getInstance().token.result ?: ""
                     // TODO: 에러나는지 확인 attach 
                     val context = requireActivity()
-                    addFCM(AddFcmReq(token))
+                    //addFCM(AddFcmReq(token))
                     startActivity(Intent(context, MainActivity::class.java))
                     requireActivity().finish()
                     dismissLoading()

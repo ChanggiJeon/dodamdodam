@@ -1,16 +1,15 @@
 package com.ssafy.family.ui.Adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.ssafy.family.data.Event
+import com.ssafy.family.data.ScheduleInfo
 import com.ssafy.family.databinding.ItemScheduleBinding
 
-class ScheduleAdapter(val context: Context, val onClick: (Event) -> Unit) :
+class ScheduleAdapter(val onClick: (ScheduleInfo) -> Unit) :
     RecyclerView.Adapter<ScheduleAdapter.ScheduleViewHolder>() {
 
-    val events = mutableListOf<Event>()
+    var scheduleList = mutableListOf<ScheduleInfo>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -20,22 +19,23 @@ class ScheduleAdapter(val context: Context, val onClick: (Event) -> Unit) :
     }
 
     override fun onBindViewHolder(viewHolder: ScheduleViewHolder, position: Int) {
-        viewHolder.bind(events[position])
+        viewHolder.bind(scheduleList[position])
     }
 
-    override fun getItemCount(): Int = events.size
+    override fun getItemCount(): Int = scheduleList.size
 
     inner class ScheduleViewHolder(private val binding: ItemScheduleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener {
-                onClick(events[bindingAdapterPosition])
+                onClick(scheduleList[bindingAdapterPosition])
             }
         }
 
-        fun bind(event: Event) {
-            binding.itemEventText.text = event.text
+        fun bind(scheduleInfo: ScheduleInfo) {
+            binding.itemScheduleTitle.text = scheduleInfo.title
+            binding.itemScheduleRole.text = scheduleInfo.role
         }
     }
 }

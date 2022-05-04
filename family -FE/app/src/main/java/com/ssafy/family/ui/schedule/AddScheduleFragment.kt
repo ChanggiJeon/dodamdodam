@@ -1,11 +1,9 @@
 package com.ssafy.family.ui.schedule
 
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,33 +11,30 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.google.firebase.messaging.FirebaseMessaging
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
-import com.kizitonwose.calendarview.utils.yearMonth
 import com.ssafy.family.R
-import com.ssafy.family.data.remote.req.AddFcmReq
 import com.ssafy.family.data.remote.req.ScheduleReq
 import com.ssafy.family.databinding.CalendarHeaderBinding
 import com.ssafy.family.databinding.CalendarSelectingDayBinding
 import com.ssafy.family.databinding.FragmentAddScheduleBinding
-import com.ssafy.family.ui.main.MainActivity
 import com.ssafy.family.util.CalendarUtil
 import com.ssafy.family.util.CalendarUtil.getDrawableCompat
+import com.ssafy.family.util.CalendarUtil.dayLocalDateToString
+import com.ssafy.family.util.CalendarUtil.isInDateBetween
+import com.ssafy.family.util.CalendarUtil.isOutDateBetween
 import com.ssafy.family.util.CalendarUtil.makeInVisible
 import com.ssafy.family.util.CalendarUtil.makeVisible
 import com.ssafy.family.util.CalendarUtil.setTextColorRes
-import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-
 
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
@@ -57,7 +52,6 @@ class AddScheduleFragment : Fragment() {
     private val startBackground: GradientDrawable by lazy {
         requireContext().getDrawableCompat(R.drawable.box_calendar_start) as GradientDrawable
     }
-
     private val endBackground: GradientDrawable by lazy {
         requireContext().getDrawableCompat(R.drawable.box_calendar_end) as GradientDrawable
     }
@@ -77,70 +71,67 @@ class AddScheduleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as ScheduleActivity).changeHeader("일정 추가","취소", "저장")
-
-        (activity as ScheduleActivity).binding.scheduleButtonInclude.button.setOnClickListener {
-            requireActivity().finish()
+        //헤더 및 parent 텍스트 초기화
+        (activity as ScheduleActivity).apply {
+            changeHeader("일정 추가","취소", "저장")
+            binding.scheduleButtonInclude.button.setOnClickListener {
+                requireActivity().finish()
+            }
+            binding.scheduleTopInclude.backbtn.setOnClickListener {
+                requireActivity().finish()
+            }
         }
 
+        //일정 추가 버튼
         (activity as ScheduleActivity).binding.scheduleButtonInclude.button2.setOnClickListener {
-            if(binding.scheduleTitle.text.isNotEmpty() && binding.scheduleContent.text!!.isNotEmpty()
-                && startDate != null && endDate != null){
+            if(binding.scheduleTitle.text.isEmpty()){
+                Toast.makeText(requireContext(), "일정 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
+            } else if(binding.scheduleContent.text!!.isEmpty()){
+                Toast.makeText(requireContext(), "일정 내용을 입력해주세요", Toast.LENGTH_SHORT).show()
+            }else if(startDate == null && endDate == null){
+                Toast.makeText(requireContext(), "일정 날짜를 선택해주세요", Toast.LENGTH_SHORT).show()
+            }else{
                 addScheduleViewModel.addSchedule(
                     ScheduleReq(
                         binding.scheduleTitle.text.toString(),
                         binding.scheduleContent.text.toString(),
-                        startDate!!,
-                        endDate!!
+                        dayLocalDateToString(startDate!!),
+                        dayLocalDateToString(endDate!!)
                     )
                 )
-            }else{
-                Toast.makeText(requireContext(), "일정 정보를 입력해주세요", Toast.LENGTH_SHORT).show()
             }
         }
 
-        (activity as ScheduleActivity).binding.scheduleTopInclude.backbtn.setOnClickListener {
-            requireActivity().finish()
+        //일정 추가 요청 결과 옵저버
+        addScheduleViewModel.addRequestLiveData.observe(requireActivity()) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    Toast.makeText(requireContext(), "일정 등록이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                    dismissLoading()
+                    requireActivity().finish()
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireActivity(), it.message!!, Toast.LENGTH_SHORT).show()
+                    dismissLoading()
+                }
+                Status.LOADING -> {
+                    setLoading()
+                }
+            }
         }
 
+        //달력 초기화
+        initCalendar()
+    }
+
+    private fun initCalendar() {
+
+        //달력 기본 설정
         val daysOfWeek = CalendarUtil.daysOfWeekFromLocale()
         var currentMonth = YearMonth.now()
         binding.calendar.apply {
-            setup(currentMonth.minusMonths(10), currentMonth.plusMonths(10), daysOfWeek.first())
+            setup(currentMonth.minusMonths(100), currentMonth.plusMonths(100), daysOfWeek.first())
             scrollToMonth(currentMonth)
-        }
-
-        if (savedInstanceState == null) {
-            binding.calendar.post {
-                // Show today's events initially.
-                selectDate(today)
-            }
-        }
-
-        class DayViewContainer(view: View) : ViewContainer(view) {
-            lateinit var day: CalendarDay // Will be set when this container is bound.
-            val binding = CalendarSelectingDayBinding.bind(view)
-
-            init {
-                view.setOnClickListener {
-                    if (day.owner == DayOwner.THIS_MONTH) {
-                        val date = day.date
-                        if (startDate != null) {
-                            if (date < startDate || endDate != startDate) {
-                                startDate = date
-                                endDate = date
-                            } else if (date != startDate) {
-                                endDate = date
-                            }
-                        } else {
-                            startDate = date
-                            endDate = date
-                        }
-                        this@AddScheduleFragment.binding.calendar.notifyCalendarChanged()
-                        bindSummaryViews()
-                    }
-                }
-            }
         }
 
         //일자 설정(날짜, 일정, 오늘 날짜 등)
@@ -183,11 +174,13 @@ class AddScheduleFragment : Fragment() {
                             day.date == today -> {
                                 roundBgView.makeVisible()
                                 roundBgView.setBackgroundResource(R.drawable.circle_today)
+                                textView.setTextColorRes(R.color.black)
                             }
                             else -> textView.setTextColorRes(R.color.black)
                         }
                     }
-                    // 선택한 날짜가 월이 바뀌었을 경우
+
+                    // 선택한 날짜가 월이 바뀌었을 경우, 일자가 없는 칸도 색칠 해줌
                     DayOwner.PREVIOUS_MONTH ->
                         if (startDate != null && endDate != null && isInDateBetween(day.date, startDate, endDate)) {
                             textView.setBackgroundResource(R.drawable.box_calendar_middle)
@@ -214,45 +207,46 @@ class AddScheduleFragment : Fragment() {
             override fun create(view: View) = MonthViewContainer(view)
             override fun bind(container: MonthViewContainer, month: CalendarMonth) {}
         }
+    }
 
-        addScheduleViewModel.addRequestLiveData.observe(requireActivity()) {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    Toast.makeText(requireContext(), "일정 정보를 입력해주세요", Toast.LENGTH_SHORT).show()
-                    dismissLoading()
-                    requireActivity().finish()
-                }
-                Status.ERROR -> {
-                    Toast.makeText(requireActivity(), it.message!!, Toast.LENGTH_SHORT).show()
-                    dismissLoading()
-                }
-                Status.LOADING -> {
-                    setLoading()
+    //일자 컨테이너 클릭리스너를 일자마다 달아줌
+    inner class DayViewContainer(view: View) : ViewContainer(view) {
+        lateinit var day: CalendarDay // Will be set when this container is bound.
+        val binding = CalendarSelectingDayBinding.bind(view)
+
+        init {
+            view.setOnClickListener {
+                if (day.owner == DayOwner.THIS_MONTH) {
+                    val date = day.date
+                    if (startDate != null) {
+                        if (date < startDate || endDate != startDate) {
+                            startDate = date
+                            endDate = date
+                        } else if (date != startDate) {
+                            endDate = date
+                        }
+                    } else {
+                        startDate = date
+                        endDate = date
+                    }
+                    this@AddScheduleFragment.binding.calendar.notifyCalendarChanged()
+                    bindSummaryViews()
                 }
             }
         }
     }
 
-    private fun setLoading() {
-        binding.progressBarAddSLoading.visibility = View.VISIBLE
-    }
-
-    private fun dismissLoading() {
-        binding.progressBarAddSLoading.visibility = View.GONE
-    }
-
+    //날짜를 선택 : 해당 날짜로 텍스트들도 바꿔준다.
     private fun selectDate(date: LocalDate) {
         if (selectedDate != date) {
             val oldDate = selectedDate
             selectedDate = date
             oldDate?.let { binding.calendar.notifyDateChanged(it) }
             binding.calendar.notifyDateChanged(date)
-//            updateAdapterForDate(date)
-//            binding.selectedMonthText.setText("${date.year}년 ${date.monthValue}월 ")
-            Log.d("xxxxx", "selectDate: $date")
         }
     }
 
+    // 선택한 일자로 텍스트를 바꿔준다.
     private fun bindSummaryViews() {
         binding.startdate.apply {
             if (startDate != null) {
@@ -271,22 +265,13 @@ class AddScheduleFragment : Fragment() {
                 setTextColor(Color.GRAY)
             }
         }
-
-        // Enable save button if a range is selected or no date is selected at all, Airbnb style.
-        //binding.exFourSaveButton.isEnabled = endDate != null || (startDate == null && endDate == null)
     }
 
-    private fun isInDateBetween(inDate: LocalDate, startDate: LocalDate, endDate: LocalDate): Boolean {
-        if (startDate.yearMonth == endDate.yearMonth) return false
-        if (inDate.yearMonth == startDate.yearMonth) return true
-        val firstDateInThisMonth = inDate.plusMonths(1).yearMonth.atDay(1)
-        return firstDateInThisMonth >= startDate && firstDateInThisMonth <= endDate && startDate != firstDateInThisMonth
+    //일정 로딩바
+    private fun setLoading() {
+        binding.progressBarAddSLoading.visibility = View.VISIBLE
     }
-
-    private fun isOutDateBetween(outDate: LocalDate, startDate: LocalDate, endDate: LocalDate): Boolean {
-        if (startDate.yearMonth == endDate.yearMonth) return false
-        if (outDate.yearMonth == endDate.yearMonth) return true
-        val lastDateInThisMonth = outDate.minusMonths(1).yearMonth.atEndOfMonth()
-        return lastDateInThisMonth >= startDate && lastDateInThisMonth <= endDate && endDate != lastDateInThisMonth
+    private fun dismissLoading() {
+        binding.progressBarAddSLoading.visibility = View.GONE
     }
 }

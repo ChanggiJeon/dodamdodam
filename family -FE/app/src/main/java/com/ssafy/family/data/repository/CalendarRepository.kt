@@ -7,9 +7,9 @@ import com.ssafy.family.util.Resource
 
 interface CalendarRepository {
 
-    suspend fun getDaySchedule(day:String): Resource<List<ScheduleRes>>
+    suspend fun getDaySchedule(day:String): Resource<ScheduleRes>
 
-    suspend fun getMonthSchedule(month:String): Resource<List<ScheduleRes>>
+    suspend fun getMonthSchedule(month:String): Resource<ScheduleRes>
 
     suspend fun getSchedule(scheduleId:Int): Resource<ScheduleRes>
 

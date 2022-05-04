@@ -1,15 +1,11 @@
 package com.ssafy.family.data.repository
 
-import com.ssafy.family.R
 import com.ssafy.family.config.BaseResponse
-import com.ssafy.family.data.remote.api.AccountAPI
 import com.ssafy.family.data.remote.api.CalendarAPI
 import com.ssafy.family.data.remote.req.*
-import com.ssafy.family.data.remote.res.LoginRes
 import com.ssafy.family.data.remote.res.ScheduleRes
 import com.ssafy.family.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
@@ -19,7 +15,7 @@ class CalendarRepositoryImpl(
     private val mainDispatcher: CoroutineDispatcher
 ) : CalendarRepository {
 
-    override suspend fun getDaySchedule(day:String): Resource<List<ScheduleRes>>  = withContext(ioDispatcher){
+    override suspend fun getDaySchedule(day:String): Resource<ScheduleRes>  = withContext(ioDispatcher){
         try {
             val response = api.getDaySchedule(day)
             when {
@@ -38,7 +34,7 @@ class CalendarRepositoryImpl(
         }
     }
 
-    override suspend fun getMonthSchedule(month:String): Resource<List<ScheduleRes>> = withContext(ioDispatcher) {
+    override suspend fun getMonthSchedule(month:String): Resource<ScheduleRes> = withContext(ioDispatcher) {
         try {
             val response = api.getMonthSchedule(month)
             when {

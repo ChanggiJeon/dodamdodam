@@ -3,7 +3,6 @@ package com.ssafy.family.data
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.util.*
 
 @Parcelize
 data class ScheduleInfo(
@@ -14,9 +13,9 @@ data class ScheduleInfo(
     @SerializedName("content")
     val content: String,
     @SerializedName("startDate")
-    val startDate: Date,
+    val startDate: String,
     @SerializedName("endDate")
-    val endDate: Date,
+    val endDate: String,
     @SerializedName("role")
     val role: String
 ): Parcelable

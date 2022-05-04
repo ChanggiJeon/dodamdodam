@@ -4,18 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kizitonwose.calendarview.model.CalendarDay
@@ -25,40 +21,39 @@ import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import com.ssafy.family.R
-import com.ssafy.family.data.Event
+import com.ssafy.family.data.ScheduleInfo
 import com.ssafy.family.databinding.CalendarDayBinding
 import com.ssafy.family.databinding.CalendarHeaderBinding
 import com.ssafy.family.databinding.FragmentCalendarBinding
 import com.ssafy.family.ui.Adapter.ScheduleAdapter
 import com.ssafy.family.ui.schedule.ScheduleActivity
-import com.ssafy.family.util.CalendarUtil
+import com.ssafy.family.util.CalendarUtil.dayLocalDateToString
 import com.ssafy.family.util.CalendarUtil.daysOfWeekFromLocale
-import com.ssafy.family.util.CalendarUtil.inputMethodManager
 import com.ssafy.family.util.CalendarUtil.makeInVisible
 import com.ssafy.family.util.CalendarUtil.makeVisible
+import com.ssafy.family.util.CalendarUtil.monthLocalDateToString
 import com.ssafy.family.util.CalendarUtil.setTextColorRes
+import com.ssafy.family.util.CalendarUtil.stringToLocalDate
+import com.ssafy.family.util.Status
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-import java.util.*
 
+@AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
 class CalendarFragment : Fragment() {
 
     private lateinit var binding: FragmentCalendarBinding
+    private val calendarViewModel by activityViewModels<CalendarViewModel>()
 
     private var mContext: Context? = null
-    override fun onDetach() {
-        super.onDetach()
-        mContext = null
-    }
-
-    lateinit var eventsAdapter:ScheduleAdapter
     private var selectedDate: LocalDate? = null
     private val today = LocalDate.now()
-
     private val selectionFormatter = DateTimeFormatter.ofPattern("MMM d일")
-    private val events = mutableMapOf<LocalDate, List<Event>>()
+    private var scheduleMonthList = mutableMapOf<LocalDate, MutableList<ScheduleInfo>>()
+    private var scheduleDayList = mutableListOf<ScheduleInfo>()
+    private var eventsAdapter: ScheduleAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,51 +68,96 @@ class CalendarFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        eventsAdapter = ScheduleAdapter(mContext!!) {
-            AlertDialog.Builder(mContext!!)
-                .setMessage("일정 삭제")
-                .setPositiveButton("삭제") { _, _ ->
-                    deleteEvent(it)
+        //월 단위 일정 요청 및 결과 옵저버
+        calendarViewModel.getMonthSchedule(monthLocalDateToString(today))
+        calendarViewModel.getMonthRequestLiveData.observe(requireActivity()){
+            when (it.status) {
+                Status.SUCCESS -> {
+                    if(!it.data!!.schedules.isNullOrEmpty()){
+                        for (a in it.data.schedules){
+                            var idx = 0L
+                            while(stringToLocalDate(a.startDate).plusDays(idx) != stringToLocalDate(a.endDate).plusDays(1)){
+                                if(scheduleMonthList[stringToLocalDate(a.startDate).plusDays(idx)] !=null){
+                                    val list = scheduleMonthList[stringToLocalDate(a.startDate).plusDays(idx)]!!
+                                    list.add(a)
+                                    scheduleMonthList[stringToLocalDate(a.startDate).plusDays(idx)] = list
+                                }else{
+                                    scheduleMonthList[stringToLocalDate(a.startDate).plusDays(idx)] = mutableListOf(a)
+                                }
+                                idx++
+                            }
+                        }
+                    }
+                    dismissMonthLoading()
+                    initCalendar()
                 }
-                .setNegativeButton("닫기", null)
-                .show()
+                Status.ERROR -> {
+                    Toast.makeText(requireActivity(), it.message!!, Toast.LENGTH_SHORT).show()
+                    dismissMonthLoading()
+                }
+                Status.LOADING -> {
+                    setMonthLoading()
+                }
+            }
         }
 
+        eventsAdapter = ScheduleAdapter {
+            // TODO: 일정 상세 구현
+        }
+
+        // 일 단위 일정 결과 옵저버
+        calendarViewModel.getDayRequestLiveData.observe(requireActivity()){
+            when (it.status) {
+                Status.SUCCESS -> {
+                    if(!it.data!!.schedules.isNullOrEmpty()){
+                        scheduleDayList = it.data.schedules.toMutableList()
+                        updateAdapterForDate()
+                    }else{
+                        scheduleDayList = mutableListOf()
+                        updateAdapterForDate()
+                    }
+                    dismissDayLoading()
+                }
+                Status.ERROR -> {
+                    Toast.makeText(requireActivity(), it.message!!, Toast.LENGTH_SHORT).show()
+                    dismissDayLoading()
+                }
+                Status.LOADING -> {
+                    setDayLoading()
+                }
+            }
+        }
+
+        //리사이클러뷰에 일 단위 일정 어댑터 연결
         binding.recyclerSchedule.apply {
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             adapter = eventsAdapter
         }
 
+        // 새로 고침 버튼
+        binding.refreshButton.setOnClickListener {
+            scheduleMonthList = mutableMapOf()
+            calendarViewModel.getMonthSchedule(monthLocalDateToString(selectedDate!!))
+        }
+
+        //일정 추가 버튼
+        binding.addButton.setOnClickListener {
+            val intent = Intent(requireContext(),ScheduleActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun initCalendar() {
+
+        //달력 기본 설정
         val daysOfWeek = daysOfWeekFromLocale()
         var currentMonth = YearMonth.now()
         binding.calendar.apply {
-            setup(currentMonth.minusMonths(10), currentMonth.plusMonths(10), daysOfWeek.first())
+            setup(currentMonth.minusMonths(100), currentMonth.plusMonths(100), daysOfWeek.first())
             scrollToMonth(currentMonth)
-        }
-
-        if (savedInstanceState == null) {
-            binding.calendar.post {
-                // Show today's events initially.
-                selectDate(today)
-            }
-        }
-
-        //일자 컨테이너 클릭리스너를 일자마다 달아줌
-        class DayViewContainer(view: View) : ViewContainer(view) {
-            lateinit var day: CalendarDay // Will be set when this container is bound.
-            val binding = CalendarDayBinding.bind(view)
-
-            init {
-                view.setOnClickListener {
-                    if (day.owner == DayOwner.THIS_MONTH) {
-                        selectDate(day.date)
-                    }
-                }
-            }
         }
 
         //일자 설정(날짜, 일정, 오늘 날짜 등)
@@ -146,7 +186,7 @@ class CalendarFragment : Fragment() {
                         else -> {
                             textView.setTextColorRes(R.color.black)
                             textView.background = null
-                            dotView.isVisible = events[day.date].orEmpty().isNotEmpty()
+                            dotView.isVisible = scheduleMonthList[day.date].orEmpty().isNotEmpty()
                         }
                     }
                 } else {
@@ -161,7 +201,7 @@ class CalendarFragment : Fragment() {
             selectDate(it.yearMonth.atDay(1))
         }
 
-        //달력 좌우 탐색 버튼
+        //달력 이전 달, 다음 달 탐색 버튼
         binding.claendarAfterButton.setOnClickListener {
             currentMonth = currentMonth.plusMonths(1)
             binding.calendar.scrollToMonth(currentMonth)
@@ -169,13 +209,6 @@ class CalendarFragment : Fragment() {
         binding.claendarBeforeButton.setOnClickListener {
             currentMonth = currentMonth.minusMonths(1)
             binding.calendar.scrollToMonth(currentMonth)
-        }
-
-        //일정 추가 버튼
-        binding.addButton.setOnClickListener {
-//            inputDialog.show()
-            val intent = Intent(requireContext(),ScheduleActivity::class.java)
-            startActivity(intent)
         }
 
         //요일 헤더 선언
@@ -189,78 +222,60 @@ class CalendarFragment : Fragment() {
         }
     }
 
-    private fun selectDate(date: LocalDate) {
+    //일자 컨테이너 클릭리스너를 일자마다 달아줌
+    inner class DayViewContainer(view: View) : ViewContainer(view) {
+        lateinit var day: CalendarDay // Will be set when this container is bound.
+        val binding = CalendarDayBinding.bind(view)
+
+        init {
+            view.setOnClickListener {
+                if (day.owner == DayOwner.THIS_MONTH) {
+                    selectDate(day.date)
+                }
+            }
+        }
+    }
+
+    //날짜를 선택 : 해당 날짜로 텍스트들도 바꿔준다.
+    fun selectDate(date: LocalDate) {
         if (selectedDate != date) {
+            calendarViewModel.getDaySchedule(dayLocalDateToString(date))
             val oldDate = selectedDate
             selectedDate = date
             oldDate?.let { binding.calendar.notifyDateChanged(it) }
             binding.calendar.notifyDateChanged(date)
-            updateAdapterForDate(date)
-            binding.selectedMonthText.setText("${date.year}년 ${date.monthValue}월 ")
-            Log.d("xxxxx", "selectDate: $date")
+            binding.selectedMonthText.text = "${date.year}년 ${date.monthValue}월 "
+            binding.selectedDateText.text = selectionFormatter.format(date)
         }
     }
 
-    private fun saveEvent(text: String) {
-        if (text.isBlank()) {
-            Toast.makeText(requireContext(), "일정 등록 완료", Toast.LENGTH_LONG).show()
-        } else {
-            selectedDate?.let {
-                events[it] = events[it].orEmpty().plus(Event(UUID.randomUUID().toString(), text, it))
-                updateAdapterForDate(it)
-            }
-        }
-    }
-
-    private fun deleteEvent(event: Event) {
-        val date = event.date
-        events[date] = events[date].orEmpty().minus(event)
-        updateAdapterForDate(date)
-    }
-
-    private fun updateAdapterForDate(date: LocalDate) {
-        eventsAdapter.apply {
-            events.clear()
-            events.addAll(this@CalendarFragment.events[date].orEmpty())
+    //선택된 날짜로 리사이클러뷰에 일정 표시하는 어댑터
+    private fun updateAdapterForDate() {
+        eventsAdapter?.apply {
+            scheduleList.clear()
+            scheduleList.addAll(scheduleDayList)
             notifyDataSetChanged()
         }
-        binding.selectedDateText.text = selectionFormatter.format(date)
     }
 
-    private val inputDialog by lazy {
-        val editText = AppCompatEditText(requireContext())
-        val layout = FrameLayout(requireContext()).apply {
-            // Setting the padding on the EditText only pads the input area
-            // not the entire EditText so we wrap it in a FrameLayout.
-            val padding = CalendarUtil.dpToPx(20, requireContext())
-            setPadding(padding, padding, padding, padding)
-            addView(editText, FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            ))
-        }
-        AlertDialog.Builder(requireContext())
-            .setTitle("일정 등록")
-            .setView(layout)
-            .setPositiveButton("저장") { _, _ ->
-                saveEvent(editText.text.toString())
-                // Prepare EditText for reuse.
-                editText.setText("")
-            }
-            .setNegativeButton("닫기", null)
-            .create()
-            .apply {
-                setOnShowListener {
-                    // Show the keyboard
-                    editText.requestFocus()
-                    context.inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-                }
-                setOnDismissListener {
-                    // Hide the keyboard
-                    context.inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0)
-                }
-            }
+    //월 단위 일정 로딩바
+    private fun setMonthLoading() {
+        binding.progressBarMonthLoading.visibility = View.VISIBLE
+    }
+    private fun dismissMonthLoading() {
+        binding.progressBarMonthLoading.visibility = View.GONE
     }
 
+    //일 단위 일정 로딩바
+    private fun setDayLoading() {
+        binding.progressBarDayLoading.visibility = View.VISIBLE
+    }
+    private fun dismissDayLoading() {
+        binding.progressBarDayLoading.visibility = View.GONE
+    }
 
+    override fun onDetach() {
+        super.onDetach()
+        mContext = null
+    }
 }

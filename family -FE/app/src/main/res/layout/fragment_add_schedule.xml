@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.schedule.AddScheduleFragment">
 
-
     <EditText
         android:id="@+id/schedule_title"
         android:layout_width="0dp"

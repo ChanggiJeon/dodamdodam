@@ -82,23 +82,4 @@ object ApiModule {
         return retrofit.create(CalendarAPI::class.java)
     }
 
-//    fun initRetrofit() {
-//        val client: OkHttpClient = OkHttpClient.Builder()
-//            .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
-//            .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
-//            // 로그캣에 okhttp.OkHttpClient로 검색하면 http 통신 내용을 보여줍니다.
-//            .addInterceptor(
-//                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS).setLevel(
-//                    HttpLoggingInterceptor.Level.BODY))
-//            .addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송
-//            .addInterceptor(AddCookiesInterceptor())  //쿠키 전송
-//            .addInterceptor(ReceivedCookiesInterceptor()) //쿠키 추출
-//            .build()
-//
-//        ApplicationClass.sRetrofit = Retrofit.Builder()
-//            .baseUrl(BASE_URL)
-//            .client(client)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//    }
 }

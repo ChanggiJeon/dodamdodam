@@ -6,10 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.family.config.BaseResponse
 import com.ssafy.family.data.remote.req.*
-import com.ssafy.family.data.remote.res.LoginRes
-import com.ssafy.family.data.repository.AccountRepository
 import com.ssafy.family.data.repository.CalendarRepository
-import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -27,7 +24,6 @@ class AddScheduleViewModel @Inject constructor(private val calendarRepository: C
     fun addSchedule(scheduleReq: ScheduleReq) = viewModelScope.launch {
         _addRequestLiveData.postValue(Resource.loading(null))
         _addRequestLiveData.postValue(calendarRepository.addSchedule(scheduleReq))
-
     }
 
 }

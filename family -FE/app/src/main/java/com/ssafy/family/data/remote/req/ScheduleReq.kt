@@ -3,7 +3,6 @@ package com.ssafy.family.data.remote.req
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.time.LocalDate
 
 @Parcelize
 data class ScheduleReq(
@@ -12,8 +11,8 @@ data class ScheduleReq(
     @SerializedName("content")
     val content: String,
     @SerializedName("startDate")
-    val startDate: LocalDate,
+    val startDate: String,
     @SerializedName("endDate")
-    val endDate: LocalDate
+    val endDate: String
 ) : Parcelable
 
