@@ -1,4 +1,4 @@
-package com.ssafy.core.dto.req;
+package com.ssafy.core.dto.res;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,11 +12,9 @@ import javax.validation.constraints.Size;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "DTO Model : MissionReqDto")
-public class MissionReqDto {
+@Schema(description = "DTO Model : MissionResDto")
+public class MissionResDto {
 
-    @NotBlank
-    @Size(max = 10, min = 1)
-    @Schema(description = "미션내용", required = true, example = "")
+    @Schema(description = "미션내용", example = "엄마를 안아주세요!")
     private String missionContent;
 }
