@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.core.dto.req.SuggestionReactionReqDto;
 import com.ssafy.core.dto.res.MainProfileResDto;
+import com.ssafy.core.dto.res.MissionResDto;
 import com.ssafy.core.dto.res.SuggestionReactionResDto;
 import com.ssafy.core.dto.res.SuggestionResDto;
 import com.ssafy.core.entity.Family;
@@ -114,9 +115,9 @@ public class MainService {
                     .isLike(request.isLike())
                     .build());
 
-            if(request.isLike()) {
+            if (request.isLike()) {
                 suggestion.updateLikeCount(1);
-            }else{
+            } else {
                 suggestion.updateDislikeCount(1);
             }
 
@@ -133,9 +134,9 @@ public class MainService {
             suggestion = suggestionRepository.save(suggestion);
         } else {
             suggestionReactionRepository.delete(suggestionReaction);
-            if(request.isLike()) {
+            if (request.isLike()) {
                 suggestion.updateLikeCount(-1);
-            }else{
+            } else {
                 suggestion.updateDislikeCount(-1);
             }
 
@@ -146,6 +147,14 @@ public class MainService {
                 .suggestionId(request.getSuggestionId())
                 .like(suggestion.getLikeCount())
                 .dislike(suggestion.getDislikeCount())
+                .build();
+    }
+
+
+    public MissionResDto getTodayMission(long userPk) {
+        Profile profile = profileRepository.findProfileByUserPk(userPk);
+        return MissionResDto.builder()
+                .missionContent(profile.getMission_content())
                 .build();
     }
 }

@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.album.AddAlbumFragment">
 
-
     <TextView
         android:id="@+id/add_album_title_text"
         android:layout_width="wrap_content"

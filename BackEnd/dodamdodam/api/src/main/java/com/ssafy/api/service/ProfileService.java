@@ -33,6 +33,7 @@ public class ProfileService {
     private final UserService userService;
     private final FamilyRepository familyRepository;
     private final FileService fileService;
+    private final Random random = new Random();
 
     @Transactional(readOnly = false)
     public void enrollProfile(Profile profile){
@@ -72,34 +73,42 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = false)
-    public Profile createMission(Long userPk){
-        Random random = new Random();
+    public Profile createMission(Long userPk) {
+
         Profile profile = profileRepository.findProfileByUserPk(userPk);
 
-        String[] missionList = {"전화하기", "어깨 주물러드리기", "소원들어주기"};
-        Family family = familyRepository.findFamilyByUserPk(userPk);
+        if (profile.getMission_target() == null) {
 
-        List<MainProfileResDto> familyProfiles =profileRepository.getProfileListByFamilyId(family.getId());
-        int roleRandom = random.nextInt(familyProfiles.size());
-        int missionRandom = random.nextInt(missionList.length);
-        if(familyProfiles.get(roleRandom).getRole()==profile.getRole()){
-            roleRandom = (roleRandom+1)%familyProfiles.size();
+            String[] missionList = {"전화하기", "어깨 주물러드리기", "소원들어주기"};
+            Family family = familyRepository.findFamilyByUserPk(userPk);
+
+            List<MainProfileResDto> familyProfiles = profileRepository.getProfileListByFamilyId(family.getId());
+            int roleRandom = random.nextInt(familyProfiles.size());
+            int missionRandom = random.nextInt(missionList.length);
+            if (familyProfiles.get(roleRandom).getRole().equals(profile.getRole())) {
+                roleRandom = (roleRandom + 1) % familyProfiles.size();
+            }
+
+            String missionTarget = familyProfiles.get(roleRandom).getRole();
+
+            String missionContent = missionTarget + missionList[missionRandom];
+
+            profile.updateMissionContent(missionContent);
+
+            profile.updateMissionTarget(missionTarget);
+
         }
-        String missionTarget = familyProfiles.get(roleRandom).getRole();
-        String missionContent = missionTarget+missionList[missionRandom];
-        profile.updateMissionContent(missionContent);
-        profile.updateMissionTarget(missionTarget);
         return profile;
     }
 
 
 
     @Transactional(readOnly = false)
-    public Profile updateStatus(Long userPk, StatusReqDto statusDto){
-        Profile profile = profileRepository.findProfileByUserPk(userPk);
+    public void updateStatus(Profile profile, StatusReqDto statusDto) {
         profile.updateEmotion(statusDto.getEmotion());
         profile.updateComment(statusDto.getComment());
-        return profile;
+
+        profileRepository.save(profile);
     }
 //
 //    @Transactional(readOnly = false)

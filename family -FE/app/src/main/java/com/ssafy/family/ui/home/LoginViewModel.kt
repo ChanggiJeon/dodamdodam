@@ -10,6 +10,7 @@ import com.ssafy.family.data.remote.req.LoginReq
 import com.ssafy.family.data.remote.req.SignUpReq
 import com.ssafy.family.data.remote.req.findIdReq
 import com.ssafy.family.data.remote.res.LoginRes
+import com.ssafy.family.data.remote.res.RefreshTokenRes
 import com.ssafy.family.data.repository.AccountRepository
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Resource
@@ -28,6 +29,10 @@ class LoginViewModel @Inject constructor(private val accountRepository: AccountR
     val loginRequestLiveData: LiveData<Resource<LoginRes>>
         get() = _loginRequestLiveData
 
+    private val _makeRefreshLiveData = MutableLiveData<Resource<RefreshTokenRes>>()
+    val makeRefreshLiveData : LiveData<Resource<RefreshTokenRes>>
+        get() = _makeRefreshLiveData
+
     private val _baseResLiveData = MutableLiveData<Resource<BaseResponse>>()
     val baseResponse: LiveData<Resource<BaseResponse>>
         get() = _baseResLiveData
@@ -44,6 +49,10 @@ class LoginViewModel @Inject constructor(private val accountRepository: AccountR
     val signUpLiveData: LiveData<Resource<BaseResponse>>
         get() = _signUpLiveData
 
+    fun MakeRefresh(refreshToken:String)= viewModelScope.launch {
+        _makeRefreshLiveData.postValue(Resource.loading(null))
+        _makeRefreshLiveData.postValue(accountRepository.MakeRefreshToken(refreshToken))
+    }
     fun Login(user: LoginReq) = viewModelScope.launch {
         _loginRequestLiveData.postValue(Resource.loading(null))
         _loginRequestLiveData.postValue(accountRepository.login(user))
