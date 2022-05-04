@@ -26,10 +26,13 @@ interface AlbumAPI {
     @GET("/api/album/search/{keyword}")
     suspend fun searchAlbum(@Path("keyword") keyword: String): Response<AlbumRes>
 
+    @GET("/api/album/searchDate/{date}")
+    suspend fun seachDateAlbum(@Path("date") date: String): Response<AlbumRes>
+
     @Multipart
     @POST("api/album/create")
     suspend fun addAlbum(
-        @PartMap data : HashMap<String, RequestBody>,
+        @PartMap data: HashMap<String, RequestBody>,
         @Part multipartFiles: ArrayList<MultipartBody.Part>
     ): Response<BaseResponse>
 }

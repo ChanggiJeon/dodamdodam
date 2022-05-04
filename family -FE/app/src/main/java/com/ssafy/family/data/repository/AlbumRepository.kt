@@ -11,6 +11,7 @@ import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Part
 import retrofit2.http.PartMap
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.io.File
 
@@ -21,4 +22,5 @@ interface AlbumRepository {
     suspend fun addReaction(albumReactionReq: AlbumReactionReq):Resource<BaseResponse>
     suspend fun searchAlbum(keyword:String): Resource<AlbumRes>
     suspend fun addAlbum(addAlbum:AddAlbumReq, imagefiles: ArrayList<MultipartBody.Part>):Resource<BaseResponse>
+    suspend fun seachDateAlbum(date: String): Resource<AlbumRes>
 }

@@ -162,6 +162,28 @@ class AlbumRepositoryImpl(
 //            }
         }
 
+    override suspend fun seachDateAlbum(date: String): Resource<AlbumRes> =
+        withContext(ioDispatcher) {
+        withContext(ioDispatcher) {
+            try {
+                val response = api.seachDateAlbum(date)
+                when {
+                    response.isSuccessful -> {
+                        Resource.success(response.body()!!)
+                    }
+                    response.code() == 403 -> {
+                        Resource.expired(response.body()!!)
+                    }
+                    else -> {
+                        Resource.error(null, response.message())
+                    }
+                }
+            } catch (e: Exception) {
+                Resource.error(null, "서버와 연결오류")
+            }
+        }
+    }
+
     private fun getBody(value: Any): RequestBody{
         return value.toString().toRequestBody("text/plain".toMediaTypeOrNull());
     }
