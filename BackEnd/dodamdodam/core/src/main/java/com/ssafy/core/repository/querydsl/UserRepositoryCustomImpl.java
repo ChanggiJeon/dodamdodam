@@ -29,6 +29,16 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
                 .fetchFirst();
     }
 
+    @Override
+    public String findUserFcmTokenByProfileId(Long targetId) {
+        return jpaQueryFactory.select(user.fcmToken)
+                .from(user)
+                .join(profile)
+                .on(user.userPk.eq(profile.user.userPk))
+                .where(profile.id.eq(targetId))
+                .fetchFirst();
+    }
+
     /**
      * QueryDsl 정리
      * 1. cross조인 해결법 -> join문 없이 그냥 where로 연관관계 직접 불러올 때 발생함.

@@ -5,4 +5,6 @@ import com.ssafy.core.dto.req.FindIdReqDto;
 public interface UserRepositoryCustom {
 
     String findUserIdByUserInfo(FindIdReqDto request);
+
+    String findUserFcmTokenByProfileId(Long targetId);
 }
