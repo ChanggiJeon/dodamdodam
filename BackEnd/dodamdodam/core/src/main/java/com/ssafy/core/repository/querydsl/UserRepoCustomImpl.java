@@ -2,6 +2,7 @@ package com.ssafy.core.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.req.FindIdReqDto;
+import com.ssafy.core.entity.QFamily;
 import com.ssafy.core.entity.QProfile;
 import com.ssafy.core.entity.QUser;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryCustomImpl implements UserRepositoryCustom {
+public class UserRepoCustomImpl implements UserRepoCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -28,6 +29,7 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
                         .and(profile.family.code.eq(request.getFamilyCode())))
                 .fetchFirst();
     }
+
 
     /**
      * QueryDsl 정리
