@@ -32,7 +32,7 @@ public class MainService {
     public List<MainProfileResDto> getProfileList(Long userPk) {
         long familyId = familyRepository.findFamilyIdByUserPk(userPk);
 
-        return profileRepository.getProfileListByFamilyId(familyId).stream()
+        return profileRepository.findProfileListByFamilyId(familyId).stream()
                 .filter(profile -> !profile.getUserPk().equals(userPk))
                 .collect(Collectors.toList());
     }
@@ -149,11 +149,8 @@ public class MainService {
     }
 
 
-    public MissionResDto getTodayMission(long userPk) {
-        Profile profile = profileRepository.findProfileByUserPk(userPk);
-        return MissionResDto.builder()
-                .missionContent(profile.getMission_content())
-                .build();
+    public MissionResDto findTodayMission(long userPk) {
+        return profileRepository.findTodayMissionByUserPk(userPk);
     }
 
     public String getTargetFcmToken(Long targetId) {

@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
@@ -128,9 +126,9 @@ public class MainController {
             })
     @GetMapping(value = "mission")
     public SingleResult<MissionResDto> getTodayMission(Authentication authentication) {
+        Long userPk = Long.parseLong(authentication.getName());
 
-        return responseService.getSingleResult(
-                mainService.getTodayMission(Long.parseLong(authentication.getName())));
+        return responseService.getSingleResult(mainService.findTodayMission(userPk));
     }
 
 //    @Operation(summary = "미션 리스트 목록", description = "<strong>미션 리스트<strong>를 조회한다.",
