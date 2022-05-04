@@ -6,18 +6,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayoutMediator
+import com.ssafy.family.R
 import com.ssafy.family.data.remote.res.AllAlbum
 import com.ssafy.family.data.remote.res.HashTag
 import com.ssafy.family.data.remote.res.Picture
 import com.ssafy.family.databinding.FragmentAlbumBinding
 import com.ssafy.family.ui.Adapter.AlbumMonthAdapter
+import com.ssafy.family.ui.Adapter.PagerAdapter
 import com.ssafy.family.ui.album.AlbumActivity
+import com.ssafy.family.ui.album.SearchDateFragment
+import com.ssafy.family.ui.album.SearchTagFragment
 import com.ssafy.family.ui.home.LoginViewModel
+import com.ssafy.family.ui.main.EventFragment
+import com.ssafy.family.ui.main.FamilyFragment
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,12 +62,12 @@ class AlbumFragment : Fragment() {
             super.onScrollStateChanged(recyclerView, newState)
             Log.d("ddddddd", "onScrollStateChanged: " + newState)
             if (!isScrolledDown) {
-                binding.freeIconG.visibility = View.GONE
-                binding.searchButton.visibility = View.GONE
+                binding.tabs.visibility = View.GONE
+                binding.viewpager.visibility = View.GONE
             }
             if (isScrolledDown) {
-                binding.freeIconG.visibility = View.VISIBLE
-                binding.searchButton.visibility = View.VISIBLE
+                binding.tabs.visibility = View.VISIBLE
+                binding.viewpager.visibility = View.VISIBLE
 
             }
 
@@ -85,6 +94,14 @@ class AlbumFragment : Fragment() {
 
     private fun initView() {
         findAllAlbum()
+        val adapter = PagerAdapter(requireActivity())
+        adapter.addFragment(SearchTagFragment(), "태그별")
+        adapter.addFragment(SearchDateFragment(), "날짜별")
+        binding.viewpager.adapter = adapter
+        binding.viewpager.currentItem = 0
+        TabLayoutMediator(binding.tabs, binding.viewpager) { tab, position ->
+            tab.text = adapter.getTabTitle(position)
+        }.attach()
         binding.addAlbumButton.setOnClickListener {
             val intent = Intent(requireActivity(), AlbumActivity::class.java)
             startActivity(intent)
@@ -132,10 +149,7 @@ class AlbumFragment : Fragment() {
                 }
             }
         }
-        binding.searchButton.setOnClickListener {
-            val keyword = binding.searchEditText.text.toString()
-            albumViewModel.searchAlbum(keyword)
-        }
+
         albumViewModel.searchAlbumRequestLiveData.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
@@ -169,7 +183,7 @@ class AlbumFragment : Fragment() {
                 }
                 Status.EXPIRED -> {
                     loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
-                    val keyword = binding.searchEditText.text.toString()
+                    val keyword = binding.viewpager[0].findViewById<EditText>(R.id.search_edit_text).text.toString()
                     albumViewModel.searchAlbum(keyword)
                     dismissLoading()
                 }
