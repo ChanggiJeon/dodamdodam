@@ -39,7 +39,7 @@ public class ScheduleController {
 
     @Operation(summary = "일정 생성", description = "<strong>일정</strong>을 생성한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PostMapping(value = "/create")
     public CommonResult createSchedule(@RequestBody
@@ -55,7 +55,7 @@ public class ScheduleController {
 
     @Operation(summary = "일정 상세 정보", description = "<strong>일정 상세 정보</strong>를 조회한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/{scheduleId}")
     public SingleResult<ScheduleDetailResDto> scheduleDetail(@PathVariable long scheduleId, Authentication authentication) {
@@ -75,7 +75,7 @@ public class ScheduleController {
 
     @Operation(summary = "일정 수정", description = "<strong>일정</strong>을 수정한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PatchMapping(value = "/{scheduleId}")
     public CommonResult updateSchedule(@PathVariable long scheduleId,
@@ -89,7 +89,7 @@ public class ScheduleController {
 
     @Operation(summary = "일정 삭제", description = "<strong>일정</strong>을 삭제한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @DeleteMapping(value = "/{scheduleId}")
     public CommonResult deleteSchedule(@PathVariable long scheduleId, Authentication authentication) {
@@ -101,7 +101,7 @@ public class ScheduleController {
 
     @Operation(summary = "일자 일정 조회", description = "<strong>일자</strong>로 일정을 조회한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/day/{day}")
     public ListResult<ScheduleDetailResDto> scheduleListDay(@PathVariable String day, Authentication authentication) {
@@ -111,7 +111,7 @@ public class ScheduleController {
 
     @Operation(summary = "월별 일정 조회", description = "<strong>해당 월</strong>로 일정을 조회한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/month/{month}")
     public ListResult<ScheduleDetailResDto> scheduleListMonth(@PathVariable String month, Authentication authentication) {

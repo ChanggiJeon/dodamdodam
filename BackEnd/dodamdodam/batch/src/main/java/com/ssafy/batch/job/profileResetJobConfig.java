@@ -32,7 +32,7 @@ public class profileResetJobConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final ProfileRepository profileRepository;
 
-    //    private final int CHUNK_SIZE = 5;
+    private final int CHUNK_SIZE = 5;
 
     @Bean
     public Job profileResetJob(Step profileResetStep) {
@@ -45,11 +45,11 @@ public class profileResetJobConfig {
     @Bean
     @JobScope
     public Step profileResetStep(ItemReader<Profile> missionResetReader,
-                            ItemProcessor<Profile, Profile> missionResetProcessor,
-                            ItemWriter<Profile> missionResetWriter
+                                 ItemProcessor<Profile, Profile> missionResetProcessor,
+                                 ItemWriter<Profile> missionResetWriter
     ) {
         return stepBuilderFactory.get("profileResetStep")
-                .<Profile, Profile>chunk(5)
+                .<Profile, Profile>chunk(CHUNK_SIZE)
                 .reader(missionResetReader)
                 .processor(missionResetProcessor)
                 .writer(missionResetWriter)
@@ -63,7 +63,7 @@ public class profileResetJobConfig {
                 .name("missionResetReader")
                 .repository(profileRepository)
                 .methodName("findBy")
-                .pageSize(5)
+                .pageSize(CHUNK_SIZE)
                 .arguments(List.of())
                 .sorts(Collections.singletonMap("id", Sort.Direction.DESC))
                 .build();
