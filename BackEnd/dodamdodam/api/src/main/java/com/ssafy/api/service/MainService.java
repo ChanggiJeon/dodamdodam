@@ -1,6 +1,5 @@
 package com.ssafy.api.service;
 
-import com.ssafy.core.dto.req.AlarmReqDto;
 import com.ssafy.core.dto.req.SuggestionReactionReqDto;
 import com.ssafy.core.dto.res.MainProfileResDto;
 import com.ssafy.core.dto.res.MissionResDto;
