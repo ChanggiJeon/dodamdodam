@@ -10,6 +10,7 @@ import com.ssafy.api.service.common.CommonResult;
 import com.ssafy.api.service.common.ListResult;
 import com.ssafy.api.service.common.ResponseService;
 import com.ssafy.api.service.common.SingleResult;
+import com.ssafy.core.entity.Profile;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -153,9 +154,10 @@ public class MainController {
     public CommonResult sendAlarm(@RequestBody AlarmReqDto alarmReq,
                                   Authentication authentication) throws IOException {
         Long userPk = Long.parseLong(authentication.getName());
-        String profileNickname = mainService.getOneProfileNickname(userPk);
+        Profile me = mainService.getOneProfileNickname(userPk);
         String fcmToken = mainService.getTargetFcmToken(alarmReq.getTargetId());
-        fcmService.sendMessageTo(fcmToken, profileNickname, alarmReq.getContent());
+        fcmService.sendMessageTo(fcmToken, me.getNickname(), alarmReq.getContent());
+        mainService.recordAlarmCount(me, alarmReq);
         return responseService.getSuccessResult();
     }
 }
