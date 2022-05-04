@@ -10,5 +10,7 @@ public interface AlbumRepoCustom {
     Album findAlbumByAlbumId(long albumId);
     List<Album> findAlbumByHashTag(String hashTag, long familyId);
 
+    List<Album> findAlbumByDate(String date, long familyId);
+
 
 }

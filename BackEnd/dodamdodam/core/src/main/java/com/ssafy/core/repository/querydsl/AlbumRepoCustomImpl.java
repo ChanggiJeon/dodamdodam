@@ -6,6 +6,7 @@ import com.ssafy.core.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -55,9 +56,22 @@ public class AlbumRepoCustomImpl implements AlbumRepoCustom{
                 .fetch();
     }
 
+    @Override
+    public List<Album> findAlbumByDate(String date, long familyId) {
 
+        int year =Integer.parseInt(date.substring(0,4));
+        int month = Integer.parseInt(date.substring(4));
 
-
+//        LocalDate updateDate = LocalDate.of(year, month);
+        return jpaQueryFactory.select(album).distinct()
+                .from(album)
+                .join(family)
+                .on(album.family.id.eq(family.id))
+                .where(album.family.id.eq(familyId))
+                .where(album.date.month().eq(month).and(album.date.year().eq(year)))
+                .orderBy(album.date.desc())
+                .fetch();
+    }
 
 
 }
