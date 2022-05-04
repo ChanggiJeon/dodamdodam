@@ -14,7 +14,8 @@
         android:background="@drawable/box_search_album"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
     <EditText
         android:id="@+id/search_edit_text"
@@ -37,7 +38,8 @@
         android:fontFamily="@font/spoqahansans"
         app:layout_constraintBottom_toBottomOf="@+id/free_icon_g"
         app:layout_constraintEnd_toEndOf="@+id/free_icon_g"
-        app:layout_constraintTop_toTopOf="@+id/free_icon_g" />
+        app:layout_constraintTop_toTopOf="@+id/free_icon_g"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/month_recyclerView"

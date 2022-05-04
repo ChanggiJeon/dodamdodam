@@ -10,7 +10,7 @@ import com.ssafy.family.R
 import com.ssafy.family.data.remote.res.AlbumPicture
 import com.ssafy.family.databinding.AlbumPhotoListBinding
 
-class DetailAlbumPhotoAdapter(private val context: Context) :
+class DetailAlbumPhotoAdapter(private val context: Context,private val isDetail:Boolean) :
     RecyclerView.Adapter<DetailAlbumPhotoAdapter.ViewHolder>() {
 
     var datas = mutableListOf<AlbumPicture>()
@@ -23,15 +23,20 @@ class DetailAlbumPhotoAdapter(private val context: Context) :
             binding.albumPhotoListImg.setOnClickListener {
                 itemClickListener.onClick(item)
             }
-            if (item.main) {
-                itemView.background = ResourcesCompat.getDrawable(
-                    itemView.resources,
-                    R.drawable.list_box_select,
-                    null
-                )
-            } else {
+            if(isDetail){
                 itemView.background = null
+            }else{
+                if (item.main) {
+                    itemView.background = ResourcesCompat.getDrawable(
+                        itemView.resources,
+                        R.drawable.list_box_select,
+                        null
+                    )
+                } else {
+                    itemView.background = null
+                }
             }
+
         }
     }
 

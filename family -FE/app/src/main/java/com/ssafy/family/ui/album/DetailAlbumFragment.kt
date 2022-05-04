@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.family.R
 import com.ssafy.family.data.remote.req.AlbumReactionReq
 import com.ssafy.family.data.remote.res.AlbumPicture
@@ -48,6 +50,7 @@ class DetailAlbumFragment : Fragment() {
     //이모지 삭제버튼
     private val commentItemClickListener = object : DetailAlbumCommentAdapter.ItemClickListener {
         override fun onClick(reactionId: Int) {
+            Log.d("dddddd", "onClick: "+reactionId)
             detailAlbumViewModel.deleteReaction(reactionId)
         }
     }
@@ -167,6 +170,7 @@ class DetailAlbumFragment : Fragment() {
                         commentAdapter.datas.removeIf { it.profileId == LoginUtil.getUserInfo()!!.profileId.toInt() }
                     }
                     commentAdapter.notifyDataSetChanged()
+                    dismissLoading()
                 }
                 Status.ERROR -> {
                     //테스트
@@ -227,7 +231,7 @@ class DetailAlbumFragment : Fragment() {
 
     private fun initView() {
         binding.detailAlbumTitleText.text = ""
-        photoAdapter = DetailAlbumPhotoAdapter(requireActivity())
+        photoAdapter = DetailAlbumPhotoAdapter(requireActivity(),true)
         binding.detailAlbumPhotoRecycler.apply {
             layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)

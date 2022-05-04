@@ -49,7 +49,7 @@ class AddAlbumFragment : Fragment() {
     private fun initView() {
         detailAlbumViewModel.setTitle("앨범 등록")
         detailAlbumViewModel.setBottomButton("취소", "저장")
-        photoAdapter = DetailAlbumPhotoAdapter(requireActivity()).apply {
+        photoAdapter = DetailAlbumPhotoAdapter(requireActivity(),false).apply {
             itemClickListener = this@AddAlbumFragment.photoClickListener
         }
         binding.addAlbumPhotoRecycler.apply {

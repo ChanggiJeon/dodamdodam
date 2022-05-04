@@ -2,23 +2,21 @@ package com.ssafy.family.ui.main.bottomFragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.ssafy.family.R
-import com.ssafy.family.data.remote.res.Album
+import androidx.recyclerview.widget.RecyclerView
 import com.ssafy.family.data.remote.res.AllAlbum
 import com.ssafy.family.data.remote.res.HashTag
 import com.ssafy.family.data.remote.res.Picture
 import com.ssafy.family.databinding.FragmentAlbumBinding
 import com.ssafy.family.ui.Adapter.AlbumMonthAdapter
-import com.ssafy.family.ui.album.AddAlbumFragment
 import com.ssafy.family.ui.album.AlbumActivity
-import com.ssafy.family.ui.album.DetailAlbumFragment
-import com.ssafy.family.ui.home.LoginFragment
 import com.ssafy.family.ui.home.LoginViewModel
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
@@ -40,6 +38,30 @@ class AlbumFragment : Fragment() {
             val intent = Intent(requireActivity(), AlbumActivity::class.java)
             intent.putExtra(FRIEND_INFO, allAlbum)
             startActivity(intent)
+        }
+    }
+    val onScrollListener = object : RecyclerView.OnScrollListener() {
+        var temp: Int = 0
+        private var isScrolledDown = false
+        override fun onScrolled(@NonNull recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            isScrolledDown = dy < 0;
+
+        }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            Log.d("ddddddd", "onScrollStateChanged: " + newState)
+            if (!isScrolledDown) {
+                binding.freeIconG.visibility = View.GONE
+                binding.searchButton.visibility = View.GONE
+            }
+            if (isScrolledDown) {
+                binding.freeIconG.visibility = View.VISIBLE
+                binding.searchButton.visibility = View.VISIBLE
+
+            }
+
         }
     }
 
@@ -70,6 +92,7 @@ class AlbumFragment : Fragment() {
         albumMonthAdapter = AlbumMonthAdapter(requireActivity()).apply {
             itemClickListener = this@AlbumFragment.itemClickListener
         }
+        binding.monthRecyclerView.addOnScrollListener(onScrollListener)
         binding.monthRecyclerView.adapter = albumMonthAdapter
         albumViewModel.allAlbumRequestLiveData.observe(requireActivity()) {
             when (it.status) {
@@ -102,7 +125,7 @@ class AlbumFragment : Fragment() {
                 Status.LOADING -> {
                     setLoading()
                 }
-                Status.EXPIRED ->{
+                Status.EXPIRED -> {
                     loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
                     findAllAlbum()
                     dismissLoading()
@@ -113,9 +136,9 @@ class AlbumFragment : Fragment() {
             val keyword = binding.searchEditText.text.toString()
             albumViewModel.searchAlbum(keyword)
         }
-        albumViewModel.searchAlbumRequestLiveData.observe(requireActivity()){
-            when(it.status){
-                Status.SUCCESS->{
+        albumViewModel.searchAlbumRequestLiveData.observe(requireActivity()) {
+            when (it.status) {
+                Status.SUCCESS -> {
                     albumMonthAdapter.datas = (it.data!!.dataSet as MutableList<AllAlbum>?)!!
                     albumMonthAdapter.notifyDataSetChanged()
                     dismissLoading()
@@ -144,7 +167,7 @@ class AlbumFragment : Fragment() {
                 Status.LOADING -> {
                     setLoading()
                 }
-                Status.EXPIRED ->{
+                Status.EXPIRED -> {
                     loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
                     val keyword = binding.searchEditText.text.toString()
                     albumViewModel.searchAlbum(keyword)
