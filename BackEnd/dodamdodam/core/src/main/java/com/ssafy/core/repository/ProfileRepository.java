@@ -10,6 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProfileRepository extends JpaRepository<Profile, Long>, ProfileRepoCustom {
 
     Page<Profile> findBy(Pageable pageable);
-    Profile findProfileById(long targetId);
+    Profile findProfileById(long targetProfileId);
 
 }

@@ -154,10 +154,25 @@ public class MainController {
     public CommonResult sendAlarm(@RequestBody AlarmReqDto alarmReq,
                                   Authentication authentication) throws IOException {
         Long userPk = Long.parseLong(authentication.getName());
-        Profile me = mainService.getOneProfileNickname(userPk);
-        String fcmToken = mainService.getTargetFcmToken(alarmReq.getTargetId());
+        Profile me = mainService.getProfileByUserPk(userPk);
+        Profile target = mainService.getProfileByProfilePk(alarmReq.getTargetProfileId());
+        mainService.meAndTargetFamilyCheck(me, target);
+        String fcmToken = mainService.getTargetFcmToken(target);
         fcmService.sendMessageTo(fcmToken, me.getNickname(), alarmReq.getContent());
         mainService.recordAlarmCount(me, alarmReq);
         return responseService.getSuccessResult();
+    }
+
+    @Operation(summary = "알림 리스트 받기", description = "<strong>알림 리스트<strong>를 사용 횟수 순으로 받는다.",
+            parameters = {
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
+            })
+    @GetMapping(value = "alarm/{targetProfileId}")
+    public ListResult<AlarmResDto> getAlarmList(@PathVariable long targetProfileId, Authentication authentication) {
+        Long userPk = Long.parseLong(authentication.getName());
+        Profile me = mainService.getProfileByUserPk(userPk);
+        Profile target = mainService.getProfileByProfilePk(targetProfileId);
+        mainService.meAndTargetFamilyCheck(me, target);
+        return responseService.getListResult(mainService.getAlarmList(me, target));
     }
 }
