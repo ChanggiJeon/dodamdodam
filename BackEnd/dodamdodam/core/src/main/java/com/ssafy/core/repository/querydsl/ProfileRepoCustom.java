@@ -1,6 +1,7 @@
 package com.ssafy.core.repository.querydsl;
 
 import com.ssafy.core.dto.res.MainProfileResDto;
+import com.ssafy.core.dto.res.MissionResDto;
 import com.ssafy.core.dto.res.SignInResDto;
 import com.ssafy.core.entity.Profile;
 
@@ -10,8 +11,17 @@ public interface ProfileRepoCustom {
 
     Profile findProfileByUserPk(Long userPK);
 
-    List<MainProfileResDto> getProfileListByFamilyId(Long familyId);
+    Long findProfileIdByUserPk(Long userPk);
+
+    List<MainProfileResDto> findProfileListByFamilyId(Long familyId);
 
     SignInResDto findProfileIdAndFamilyIdByUserPk(Long userPk);
 
+    Long checkRoleByFamilyIdExceptMe(Long familyId, String role, Long profileId);
+
+    Long checkNicknameByFamilyIdExceptMe(Long familyId, String nickname, Long profileId);
+
+    List<Profile> findProfilesByFamilyIdExceptMe(Long familyId, Long profileId);
+
+    MissionResDto findTodayMissionByUserPk(Long userPk);
 }

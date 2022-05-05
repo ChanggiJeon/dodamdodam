@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryCustomImpl implements UserRepositoryCustom {
+public class UserRepoCustomImpl implements UserRepoCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -26,6 +26,16 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
                 .where(user.name.eq(request.getName())
                         .and(user.birthday.eq(request.getBirthday()))
                         .and(profile.family.code.eq(request.getFamilyCode())))
+                .fetchFirst();
+    }
+
+    @Override
+    public String findUserFcmTokenByProfileId(Long targetId) {
+        return jpaQueryFactory.select(user.fcmToken)
+                .from(user)
+                .join(profile)
+                .on(user.userPk.eq(profile.user.userPk))
+                .where(profile.id.eq(targetId))
                 .fetchFirst();
     }
 
