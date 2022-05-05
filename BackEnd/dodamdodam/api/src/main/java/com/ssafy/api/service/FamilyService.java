@@ -16,9 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.Random;
-import java.util.UUID;
+
+import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_NICKNAME;
+import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_ROLE;
 
 @Service
 @Slf4j
@@ -26,7 +27,6 @@ import java.util.UUID;
 public class FamilyService {
     private final FamilyRepository familyRepository;
     private final ProfileRepository profileRepository;
-    private final JwtProvider jwtTokenProvider;
     private final FileService fileService;
 
     // 가족 생성 및 프로필 생성
@@ -144,11 +144,12 @@ public class FamilyService {
         }
     }
 
-    public Long getFamliyIdByUserPk(Long userPk) {
+    public Long getFamilyIdByUserPk(Long userPk) {
         Long familyId = familyRepository.findFamilyIdByUserPk(userPk);
         if (familyId == null) {
             throw new CustomException(CustomErrorCode.NOT_BELONG_FAMILY);
         }
         return familyId;
     }
+
 }

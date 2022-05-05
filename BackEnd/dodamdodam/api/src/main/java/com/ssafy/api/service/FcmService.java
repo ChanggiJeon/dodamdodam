@@ -27,7 +27,6 @@ public class FcmService {
 
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
-//        String token = "cMzARCj6hVZZjIXv-LZTsZ:APA91bEL0L-lJTP_MH9a_-IAptkIP-L7ERO3Yser0OwglCIIlTePEg5z9sTodOiBm8KA3QspkC-y_aEZ4BfR2oQ9nzkRmlG06hdzQ381nTMpeRm03quOPdhyoec8v_x3pcLN-pNl9Y91";
         String message = makeMessage(targetToken, title, body);
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));

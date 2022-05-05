@@ -77,6 +77,12 @@ public class FamilyController {
         Long userPk = Long.parseLong(authentication.getName());
         User user = userService.findByUserPk(userPk);
         familyService.familyExistCheck(userPk);
+
+        //Role 중복 검사
+        profileService.checkRoleByFamilyIdExceptMe(familyRequest.getFamilyId(), familyRequest.getRole(), userPk);
+        //NickName 중복 검사
+        profileService.checkNicknameByFamilyIdExceptMe(familyRequest.getFamilyId(), familyRequest.getNickname(), userPk);
+
         userService.updateBirthdayWithUserPk(userPk, familyRequest.getBirthday());
         Family family = familyService.getFamily(familyRequest.getFamilyId());
         String[] imageInfo = profileService.enrollImage(familyRequest.getImage(), request).split("#");
