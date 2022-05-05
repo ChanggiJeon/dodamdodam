@@ -219,5 +219,17 @@ public class AlbumController {
         return responseService.getListResult(albumList);
     }
 
+    @DeleteMapping(value = "deleteAlbum/{albumId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "앨범 삭제", description = "<strong>앨범 삭제</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            }
+    )
+    public CommonResult deleteAlbum(@PathVariable long albumId,Authentication authentication){
+        Long userPK = Long.parseLong(authentication.getName());
+        albumService.deleteAlbum(albumId, userPK);
+
+        return responseService.getSuccessResult();
+    }
 
 }
