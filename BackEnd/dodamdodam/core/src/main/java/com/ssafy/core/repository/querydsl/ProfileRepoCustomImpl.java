@@ -1,6 +1,7 @@
 package com.ssafy.core.repository.querydsl;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.res.MainProfileResDto;
 import com.ssafy.core.dto.res.MissionResDto;
@@ -65,9 +66,8 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
     public Long checkRoleByFamilyIdExceptMe(Long familyId, String role, Long profileId) {
         return queryFactory.select(profile.id.count())
                 .from(profile)
-                .where(profile.family.id.eq(familyId)
-                        .and(profile.role.eq(role))
-                        .and(profile.id.ne(profileId)))
+                .where(profile.family.id.eq(familyId).and(profile.role.eq(role))
+                        , profileIdNotEquals(profileId))
                 .fetchFirst();
     }
 
@@ -75,9 +75,8 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
     public Long checkNicknameByFamilyIdExceptMe(Long familyId, String nickname, Long profileId) {
         return queryFactory.select(profile.id.count())
                 .from(profile)
-                .where(profile.family.id.eq(familyId)
-                        .and(profile.nickname.eq(nickname))
-                        .and(profile.id.ne(profileId)))
+                .where(profile.family.id.eq(familyId).and(profile.nickname.eq(nickname))
+                        , profileIdNotEquals(profileId))
                 .fetchFirst();
     }
 
@@ -93,10 +92,14 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
     @Override
     public MissionResDto findTodayMissionByUserPk(Long userPk) {
         return queryFactory.select(Projections.fields(MissionResDto.class,
-                profile.mission_content.as("missionContent"),
-                profile.mission_target.as("missionTarget")))
+                        profile.mission_content.as("missionContent"),
+                        profile.mission_target.as("missionTarget")))
                 .from(profile)
                 .where(profile.user.userPk.eq(userPk))
                 .fetchFirst();
+    }
+
+    private BooleanExpression profileIdNotEquals(Long profileId) {
+        return profileId != null ? profile.id.ne(profileId) : null;
     }
 }
