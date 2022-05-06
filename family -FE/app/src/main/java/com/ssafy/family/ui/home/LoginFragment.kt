@@ -23,6 +23,7 @@ import com.ssafy.family.data.remote.req.LoginReq
 import com.ssafy.family.databinding.FragmentLoginBinding
 import com.ssafy.family.ui.main.MainActivity
 import com.ssafy.family.ui.main.MainActivity.Companion.channel_id
+import com.ssafy.family.ui.startsetting.StartSettingActivity
 import com.ssafy.family.util.InputValidUtil
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
@@ -91,7 +92,7 @@ class LoginFragment : Fragment() {
                     // TODO: 에러나는지 확인 attach 
                     val context = requireActivity()
                     getFCM()
-                    startActivity(Intent(context, MainActivity::class.java))
+                    startActivity(Intent(context, StartSettingActivity::class.java))
                     requireActivity().finish()
                     dismissLoading()
                 }

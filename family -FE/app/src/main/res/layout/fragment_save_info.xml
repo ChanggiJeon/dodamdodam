@@ -24,7 +24,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginLeft="25dp"
-            android:src="@drawable/hushed" />
+            android:src="@drawable/default_profile" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

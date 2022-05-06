@@ -8,6 +8,13 @@ import com.ssafy.family.data.remote.res.FamilyRes
 import com.ssafy.family.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.File
 import java.lang.Exception
 
 class FamilyRepositoryImpl(
@@ -17,9 +24,13 @@ class FamilyRepositoryImpl(
 ): FamilyRepository {
     val TAG: String = "로그"
 
-    override suspend fun createFamily(profile: CreateFamilyReq): Resource<FamilyRes> = withContext(ioDispatcher) {
+    override suspend fun createFamily(profile: CreateFamilyReq, imageFile: File?): Resource<FamilyRes> = withContext(ioDispatcher) {
         try {
-            val response = api.createFamily(profile)
+            val role = getBody("role", profile.role)
+            val nickname = getBody("nickname", profile.nickname)
+            val birthday = getBody("birthday", profile.birthday)
+            val image = convertFileToMultipart(imageFile)
+            val response = api.createFamily(role, nickname, birthday, image)
             when {
                 response.isSuccessful -> {
                     Resource.success(response.body()!!)
@@ -30,7 +41,7 @@ class FamilyRepositoryImpl(
                 }
             }
         } catch (e: Exception) {
-            Resource.error(null, "서버 에러")
+            Resource.error(null, "통신 에러 $e")
         }
     }
 
@@ -50,4 +61,16 @@ class FamilyRepositoryImpl(
         }
     }
 
+    private fun convertFileToMultipart(file: File?): MultipartBody.Part? {
+        if (file == null) {
+            return null
+        } else {
+            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            return MultipartBody.Part.createFormData("image", file.name, requestFile)
+        }
+    }
+
+    private fun getBody(name: String, value: Any): MultipartBody.Part {
+        return MultipartBody.Part.createFormData(name, value.toString())
+    }
 }
