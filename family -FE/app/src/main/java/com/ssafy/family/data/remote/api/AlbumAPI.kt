@@ -35,4 +35,14 @@ interface AlbumAPI {
         @PartMap data: HashMap<String, RequestBody>,
         @Part multipartFiles: ArrayList<MultipartBody.Part>
     ): Response<BaseResponse>
+
+    @Multipart
+    @PATCH("/api/album/update")
+    suspend fun updateAlbum(
+        @PartMap data: HashMap<String, RequestBody>,
+        @Part multipartFiles: ArrayList<MultipartBody.Part>?
+    ): Response<BaseResponse>
+
+    @DELETE("/api/album/deleteAlbum/{albumId}")
+    suspend fun deleteAlbum(@Path("albumId") albumId: Int): Response<BaseResponse>
 }
