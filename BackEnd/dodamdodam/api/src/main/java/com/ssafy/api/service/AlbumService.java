@@ -93,7 +93,7 @@ public class AlbumService {
         long familyId = familyRepository.findFamilyIdByUserPk(userPK);
         Album album = albumRepository.findAlbumByAlbumId(albumId);
         if(album.getFamily().getId() != familyId){
-            throw new CustomException(CustomErrorCode.NOT_BELONG_FAMILY);
+            throw new CustomException(ErrorCode.NOT_BELONG_FAMILY);
         }
         albumRepository.delete(album);
 
