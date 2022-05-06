@@ -95,29 +95,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detail_album_tag_recycler" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/edit_album_button"
-        android:layout_width="50dp"
-        android:layout_height="30dp"
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/box_emoji"
-        android:fontFamily="@font/spoqahansans"
-        android:text="수정"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/delete_album_button"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/delete_album_button"
-        android:layout_width="50dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/box_emoji"
-        android:fontFamily="@font/spoqahansans"
-        android:text="삭제"
-        android:textSize="16sp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/ic_baseline_settings"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

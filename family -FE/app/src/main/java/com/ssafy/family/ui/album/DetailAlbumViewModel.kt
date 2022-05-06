@@ -140,7 +140,7 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
         _deleteAlbumRequestLiveData.postValue(albumRepository.deleteAlbum(albumId))
     }
 
-    private fun makeMultiPart(): ArrayList<MultipartBody.Part> {
+    private fun makeMultiPart(): ArrayList<MultipartBody.Part>  {
         val list = arrayListOf<MultipartBody.Part>()
         for (path in paths) {
             Log.d("dddddd", "makeMultiPart: ")

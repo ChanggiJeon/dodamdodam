@@ -95,7 +95,7 @@ class AddAlbumFragment : Fragment() {
             adapter = tagAdapter
         }
         detailAlbumViewModel.setTitle("앨범 등록")
-        detailAlbumViewModel.setBottomButton("취소", "등록")
+        detailAlbumViewModel.setBottomButton("돌아가기", "등록")
         photoAdapter = DetailAlbumPhotoAdapter(requireActivity(), 1).apply {
             itemClickListener = this@AddAlbumFragment.photoClickListener
         }

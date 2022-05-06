@@ -12,6 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -108,8 +111,10 @@ class DetailAlbumFragment : Fragment() {
                     val pathlist = arrayListOf<String>()
                     it.data!!.dataSet!!.pictures.forEach { pathlist.add(it.imagePath) }
                     detailAlbumViewModel.paths = pathlist
-                    detailAlbumViewModel.hashTag= detailAlbumViewModel.saveAlbumLiveData.value!!.hashTags as ArrayList<HashTag>
-                    detailAlbumViewModel.date = detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture!!.date
+                    detailAlbumViewModel.hashTag =
+                        detailAlbumViewModel.saveAlbumLiveData.value!!.hashTags as ArrayList<HashTag>
+                    detailAlbumViewModel.date =
+                        detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture!!.date
 
                     Log.d("dddddddddd", "detailAlbumView: " + it.data!!.dataSet)
                     binding.detailAlbumTitleText.text = it.data!!.dataSet!!.date
@@ -263,8 +268,8 @@ class DetailAlbumFragment : Fragment() {
                 }
             }
         }
-        detailAlbumViewModel.deleteAlbumRequestLiveData.observe(requireActivity()){
-            when(it.status){
+        detailAlbumViewModel.deleteAlbumRequestLiveData.observe(requireActivity()) {
+            when (it.status) {
                 Status.SUCCESS -> {
                     requireActivity().finish()
                     dismissLoading()
@@ -288,28 +293,47 @@ class DetailAlbumFragment : Fragment() {
     }
 
     private fun initView() {
-        binding.editAlbumButton.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.album_frame, UpdateAlbumFragment())
-                .commit()
-        }
-        binding.deleteAlbumButton.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle("앨범 삭제")
-                .setMessage("정말 삭제하시겠습니까?")
-                .setPositiveButton("네", object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface, which: Int) {
-                        detailAlbumViewModel.deleteAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
+        val arrayAdapterView = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_dropdown_item,
+            arrayOf("- 설정 -","앨범 수정","앨범 삭제"))
+        binding.spinner.adapter=arrayAdapterView
+        binding.spinner.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                when (position) {
+                    0->{
+                        view.isEnabled=true
                     }
-                })
-                .setNegativeButton("아니요", object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface, which: Int) {
-                        Log.d("MyTag", "negative")
+                    1 -> {
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.album_frame, UpdateAlbumFragment())
+                            .commit()
                     }
-                })
-                .create()
-                .show()
+                    2 -> {
+                        AlertDialog.Builder(requireContext())
+                            .setTitle("앨범 삭제")
+                            .setMessage("정말 삭제하시겠습니까?")
+                            .setPositiveButton("네", object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface, which: Int) {
+                                    detailAlbumViewModel.deleteAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
+                                }
+                            })
+                            .setNegativeButton("아니요", object : DialogInterface.OnClickListener {
+                                override fun onClick(dialog: DialogInterface, which: Int) {
+                                    Log.d("MyTag", "negative")
+                                }
+                            })
+                            .create()
+                            .show()
 
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         binding.detailAlbumTitleText.text = ""
         photoAdapter = DetailAlbumPhotoAdapter(requireActivity(), 0).apply {
