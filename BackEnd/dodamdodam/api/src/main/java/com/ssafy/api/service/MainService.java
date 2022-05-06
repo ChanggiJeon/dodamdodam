@@ -8,7 +8,7 @@ import com.ssafy.core.dto.res.SuggestionResDto;
 import com.ssafy.core.entity.Family;
 import com.ssafy.core.entity.Profile;
 import com.ssafy.core.entity.Suggestion;
-import com.ssafy.core.exception.CustomErrorCode;
+import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.*;
 import com.ssafy.core.entity.SuggestionReaction;
@@ -41,7 +41,7 @@ public class MainService {
         Family family = familyRepository.findFamilyByUserPk(userPk);
 
         if (family == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST);
+            throw new CustomException(ErrorCode.INVALID_REQUEST);
         }
 
         if (suggestionRepository.countSuggestionByFamily_Id(family.getId()) < 3) {
@@ -50,7 +50,7 @@ public class MainService {
                     .text(text)
                     .build());
         } else {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "의견제시는 가족당 최대 3개까지 입니다!");
+            throw new CustomException(ErrorCode.INVALID_REQUEST, "의견제시는 가족당 최대 3개까지 입니다!");
         }
     }
 
@@ -58,10 +58,10 @@ public class MainService {
         Long familyId = familyRepository.findFamilyIdByUserPk(userPk);
 
         Suggestion suggestion = suggestionRepository.findSuggestionById(suggestionId)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.INVALID_REQUEST));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_REQUEST));
 
         if (suggestion.getFamily().getId() != familyId) {
-            throw new CustomException(CustomErrorCode.NOT_BELONG_FAMILY);
+            throw new CustomException(ErrorCode.NOT_BELONG_FAMILY);
         }
 
         suggestionRepository.delete(suggestion);
@@ -84,19 +84,19 @@ public class MainService {
         Profile profile = profileRepository.findProfileByUserPk(userPk);
 
         if (profile == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST);
+            throw new CustomException(ErrorCode.INVALID_REQUEST);
         }
 
         //step 1. 주어진 pk로 의견을 찾아온다.
         Suggestion suggestion = suggestionRepository.findSuggestionById(request.getSuggestionId())
-                .orElseThrow(() -> new CustomException(CustomErrorCode.INVALID_REQUEST));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_REQUEST));
 
         //step 2. 본인의 가족번호를 찾아온다.
         long familyId = familyRepository.findFamilyIdByUserPk(userPk);
 
         //step 3. 본인 가족 의견이 아니면 Exception 발생
         if (familyId != suggestion.getFamily().getId()) {
-            throw new CustomException(CustomErrorCode.NOT_BELONG_FAMILY);
+            throw new CustomException(ErrorCode.NOT_BELONG_FAMILY);
         }
 
         //step 4. 본인 리엑션을 찾아본다.

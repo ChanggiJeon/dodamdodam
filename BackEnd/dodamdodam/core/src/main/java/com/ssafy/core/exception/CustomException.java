@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class CustomException extends RuntimeException {
-    private CustomErrorCode customErrorCode;
+    private ErrorCode errorCode;
     private String detailMessage;
 
-    public CustomException(CustomErrorCode customErrorCode) {
-        this.customErrorCode = customErrorCode;
-        this.detailMessage = customErrorCode.getMessage();
+    public CustomException(ErrorCode errorCode) {
+        this.errorCode = errorCode;
+        this.detailMessage = errorCode.getMessage();
     }
 
 }

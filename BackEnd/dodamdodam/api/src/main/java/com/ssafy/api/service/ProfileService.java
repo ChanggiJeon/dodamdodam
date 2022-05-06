@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_NICKNAME;
-import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_ROLE;
+import static com.ssafy.core.exception.ErrorCode.DUPLICATE_NICKNAME;
+import static com.ssafy.core.exception.ErrorCode.DUPLICATE_ROLE;
 
 @Service
 @Slf4j
