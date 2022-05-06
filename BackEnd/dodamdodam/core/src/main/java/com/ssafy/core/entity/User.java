@@ -57,7 +57,8 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Builder
-    public User(String userId, String name, String password, @Nullable LocalDate birthday, @Nullable String fcmToken, @Nullable String refreshToken) {
+    public User(String userId, String name, String password,
+                @Nullable LocalDate birthday, @Nullable String fcmToken, @Nullable String refreshToken) {
         Assert.hasText(userId, "userId must be not null");
         Assert.hasText(name, "name must be not null");
         Assert.hasText(password, "password must be not null");
