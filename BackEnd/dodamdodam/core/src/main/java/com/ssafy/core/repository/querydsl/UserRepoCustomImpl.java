@@ -2,6 +2,7 @@ package com.ssafy.core.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.req.FindIdReqDto;
+import com.ssafy.core.entity.Profile;
 import com.ssafy.core.entity.QProfile;
 import com.ssafy.core.entity.QUser;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +31,12 @@ public class UserRepoCustomImpl implements UserRepoCustom {
     }
 
     @Override
-    public String findUserFcmTokenByProfileId(Long targetId) {
+    public String findUserFcmTokenByProfile(Profile target) {
         return jpaQueryFactory.select(user.fcmToken)
                 .from(user)
                 .join(profile)
                 .on(user.userPk.eq(profile.user.userPk))
-                .where(profile.id.eq(targetId))
+                .where(profile.eq(target))
                 .fetchFirst();
     }
 
