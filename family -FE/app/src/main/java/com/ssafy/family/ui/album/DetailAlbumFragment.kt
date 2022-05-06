@@ -1,6 +1,7 @@
 package com.ssafy.family.ui.album
 
-import android.app.ActionBar
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -52,7 +53,7 @@ class DetailAlbumFragment : Fragment() {
         }
 
     }
-    private val tagItemClickListener = object :AlbumTagAdapter.ItemClickListener{
+    private val tagItemClickListener = object : AlbumTagAdapter.ItemClickListener {
         override fun onClick(item: HashTag) {
             TODO("Not yet implemented")
         }
@@ -104,18 +105,23 @@ class DetailAlbumFragment : Fragment() {
         detailAlbumViewModel.detailAlbumRequestLiveData.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
+                    val pathlist = arrayListOf<String>()
+                    it.data!!.dataSet!!.pictures.forEach { pathlist.add(it.imagePath) }
+                    detailAlbumViewModel.paths = pathlist
+                    detailAlbumViewModel.hashTag= detailAlbumViewModel.saveAlbumLiveData.value!!.hashTags as ArrayList<HashTag>
+                    detailAlbumViewModel.date = detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture!!.date
+
                     Log.d("dddddddddd", "detailAlbumView: " + it.data!!.dataSet)
                     binding.detailAlbumTitleText.text = it.data!!.dataSet!!.date
                     photoAdapter.datas = it.data!!.dataSet!!.pictures as MutableList<AlbumPicture>
                     photoAdapter.notifyDataSetChanged()
                     tagAdapter.datas =
-                        detailAlbumViewModel.saveAlbumLiveData.value!!.hashTags.toMutableList()
+                        detailAlbumViewModel.hashTag
                     tagAdapter.notifyDataSetChanged()
+
                     // TODO: 이모티콘 박아야함 어댑터에 지금 R.drawable.xxx 넣으려고 Int로 해놨는데 나중에 서버에 다 저장해놓고 글라이드로 하기위해서 datas String으로 받게하고 String.xml에 주소 array로 다 박아놔야함
-                    emojiAdapter.datas = mutableListOf(
-                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
-                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg"
-                    )
+                    emojiAdapter.datas = mutableListOf()
+                    emojiAdapter.datas.addAll(resources.getStringArray(R.array.emoticon))
                     emojiAdapter.notifyDataSetChanged()
                     commentAdapter.datas =
                         it.data!!.dataSet!!.albumReactions as MutableList<AlbumReaction>
@@ -124,60 +130,60 @@ class DetailAlbumFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     //테스트용
-                    binding.detailAlbumTitleText.text = "2022년 5월 2일"
-                    val tempphotolist = mutableListOf<AlbumPicture>()
-                    tempphotolist.add(
-                        AlbumPicture(
-                            "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
-                            false
-                        )
-                    )
-                    tempphotolist.add(
-                        AlbumPicture(
-                            "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
-                            false
-                        )
-                    )
-                    tempphotolist.add(
-                        AlbumPicture(
-                            "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
-                            false
-                        )
-                    )
-                    photoAdapter.datas = tempphotolist
-                    photoAdapter.notifyDataSetChanged()
-                    val taglist = mutableListOf<HashTag>()
-                    taglist.add(HashTag("#해시"))
-                    taglist.add(HashTag("#태그"))
-                    taglist.add(HashTag("#해시"))
-                    tagAdapter.datas = taglist
-                    tagAdapter.notifyDataSetChanged()
-                    emojiAdapter.datas = mutableListOf(
-                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
-                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg"
-                    )
-                    emojiAdapter.notifyDataSetChanged()
-                    val templist = mutableListOf<AlbumReaction>()
-                    templist.add(
-                        AlbumReaction(
-                            1,
-                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
-                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
-                            "아들",
-                            0
-                        )
-                    )
-                    templist.add(
-                        AlbumReaction(
-                            1,
-                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
-                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
-                            "아들",
-                            1
-                        )
-                    )
-                    commentAdapter.datas = templist
-                    commentAdapter.notifyDataSetChanged()
+//                    binding.detailAlbumTitleText.text = "2022년 5월 2일"
+//                    val tempphotolist = mutableListOf<AlbumPicture>()
+//                    tempphotolist.add(
+//                        AlbumPicture(
+//                            "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
+//                            false
+//                        )
+//                    )
+//                    tempphotolist.add(
+//                        AlbumPicture(
+//                            "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
+//                            false
+//                        )
+//                    )
+//                    tempphotolist.add(
+//                        AlbumPicture(
+//                            "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
+//                            false
+//                        )
+//                    )
+//                    photoAdapter.datas = tempphotolist
+//                    photoAdapter.notifyDataSetChanged()
+//                    val taglist = mutableListOf<HashTag>()
+//                    taglist.add(HashTag("#해시"))
+//                    taglist.add(HashTag("#태그"))
+//                    taglist.add(HashTag("#해시"))
+//                    tagAdapter.datas = taglist
+//                    tagAdapter.notifyDataSetChanged()
+//                    emojiAdapter.datas = mutableListOf(
+//                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg",
+//                        "https://cdn.topstarnews.net/news/photo/201812/540852_209924_4744.jpg"
+//                    )
+//                    emojiAdapter.notifyDataSetChanged()
+//                    val templist = mutableListOf<AlbumReaction>()
+//                    templist.add(
+//                        AlbumReaction(
+//                            1,
+//                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+//                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+//                            "아들",
+//                            0
+//                        )
+//                    )
+//                    templist.add(
+//                        AlbumReaction(
+//                            1,
+//                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+//                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+//                            "아들",
+//                            1
+//                        )
+//                    )
+//                    commentAdapter.datas = templist
+//                    commentAdapter.notifyDataSetChanged()
                     //테스트용 끝
                     Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
                         .show()
@@ -231,17 +237,39 @@ class DetailAlbumFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     //테스트
-                    commentAdapter.datas.add(
-                        AlbumReaction(
-                            1,
-                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
-                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
-                            "아들",
-                            1
-                        )
-                    )
-                    commentAdapter.notifyDataSetChanged()
+//                    commentAdapter.datas.add(
+//                        AlbumReaction(
+//                            1,
+//                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+//                            "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png",
+//                            "아들",
+//                            1
+//                        )
+//                    )
+//                    commentAdapter.notifyDataSetChanged()
                     //테스트 끝
+                    Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
+                        .show()
+                    dismissLoading()
+                }
+                Status.LOADING -> {
+                    setLoading()
+                }
+                Status.EXPIRED -> {
+                    loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
+                    Toast.makeText(requireActivity(), "다시 시도해주세요", Toast.LENGTH_SHORT)
+                        .show()
+                    dismissLoading()
+                }
+            }
+        }
+        detailAlbumViewModel.deleteAlbumRequestLiveData.observe(requireActivity()){
+            when(it.status){
+                Status.SUCCESS -> {
+                    requireActivity().finish()
+                    dismissLoading()
+                }
+                Status.ERROR -> {
                     Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
                         .show()
                     dismissLoading()
@@ -260,9 +288,32 @@ class DetailAlbumFragment : Fragment() {
     }
 
     private fun initView() {
+        binding.editAlbumButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.album_frame, UpdateAlbumFragment())
+                .commit()
+        }
+        binding.deleteAlbumButton.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("앨범 삭제")
+                .setMessage("정말 삭제하시겠습니까?")
+                .setPositiveButton("네", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, which: Int) {
+                        detailAlbumViewModel.deleteAlbum(detailAlbumViewModel.saveAlbumLiveData.value!!.mainPicture.albumId)
+                    }
+                })
+                .setNegativeButton("아니요", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, which: Int) {
+                        Log.d("MyTag", "negative")
+                    }
+                })
+                .create()
+                .show()
+
+        }
         binding.detailAlbumTitleText.text = ""
-        photoAdapter = DetailAlbumPhotoAdapter(requireActivity(), true).apply {
-            itemClickListener=this@DetailAlbumFragment.photoClickListener
+        photoAdapter = DetailAlbumPhotoAdapter(requireActivity(), 0).apply {
+            itemClickListener = this@DetailAlbumFragment.photoClickListener
         }
         binding.detailAlbumPhotoRecycler.apply {
             layoutManager =
@@ -317,10 +368,10 @@ class DetailAlbumFragment : Fragment() {
         val adb = android.app.AlertDialog.Builder(requireContext(), R.style.MyDialogTheme)
             .setView(dialogView)
         val dialog = adb.create()
-        val params:WindowManager.LayoutParams = dialog.window!!.attributes;
+        val params: WindowManager.LayoutParams = dialog.window!!.attributes;
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
-        dialog.window!!.attributes =  params
+        dialog.window!!.attributes = params
 
         //나오는부분말고는 투명하게 해주는것
         dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
