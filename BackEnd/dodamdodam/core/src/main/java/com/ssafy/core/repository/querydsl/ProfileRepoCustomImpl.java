@@ -3,6 +3,7 @@ package com.ssafy.core.repository.querydsl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.core.dto.res.ChattingMemberResDto;
 import com.ssafy.core.dto.res.MainProfileResDto;
 import com.ssafy.core.dto.res.MissionResDto;
 import com.ssafy.core.dto.res.SignInResDto;
@@ -97,6 +98,24 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
                 .from(profile)
                 .where(profile.user.userPk.eq(userPk))
                 .fetchFirst();
+    }
+
+    @Override
+    public List<ChattingMemberResDto> findChattingMemberListByFamilyId(Long familyId) {
+        List<Long> ids = queryFactory
+                .select(profile.id)
+                .from(profile)
+                .where(profile.family.id.eq(familyId))
+                .fetch();
+
+        return queryFactory
+                .select(Projections.fields(ChattingMemberResDto.class,
+                                profile.id.as("profileId"),
+                                profile.imagePath.as("profileImage"),
+                                profile.nickname))
+                .from(profile)
+                .where(profile.id.in(ids))
+                .fetch();
     }
 
     private BooleanExpression profileIdNotEquals(Long profileId) {
