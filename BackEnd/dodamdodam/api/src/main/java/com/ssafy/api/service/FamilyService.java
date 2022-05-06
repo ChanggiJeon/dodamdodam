@@ -56,22 +56,26 @@ public class FamilyService {
         Profile profile = Profile.builder()
                 .role(familyRequest.getRole())
                 .nickname(familyRequest.getNickname())
-                .imagePath(imageInfo[0])
-                .imageName(imageInfo[1])
                 .user(user)
                 .family(family)
                 .build();
+        if (!imageInfo[0].equals(".")) {
+            profile.updateImagePath(imageInfo[0]);
+            profile.updateImageName(imageInfo[1]);
+        }
         profileRepository.save(profile);
     }
     public void createProfileForJoin(Family family, User user, FamilyJoinReqDto familyRequest, String[] imageInfo) {
         Profile profile = Profile.builder()
                 .role(familyRequest.getRole())
                 .nickname(familyRequest.getNickname())
-                .imagePath(imageInfo[0])
-                .imageName(imageInfo[1])
                 .user(user)
                 .family(family)
                 .build();
+        if (!imageInfo[0].equals(".")) {
+            profile.updateImagePath(imageInfo[0]);
+            profile.updateImageName(imageInfo[1]);
+        }
         profileRepository.save(profile);
     }
 
