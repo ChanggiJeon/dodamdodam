@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import com.ssafy.core.common.MissionList;
 import com.ssafy.core.dto.req.ProfileReqDto;
 import com.ssafy.core.dto.req.StatusReqDto;
+import com.ssafy.core.dto.res.ChattingMemberResDto;
 import com.ssafy.core.entity.Profile;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.FamilyRepository;
@@ -17,9 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
-import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_NICKNAME;
-import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_ROLE;
+import static com.ssafy.core.exception.ErrorCode.DUPLICATE_NICKNAME;
+import static com.ssafy.core.exception.ErrorCode.DUPLICATE_ROLE;
 
 @Service
 @Slf4j
@@ -98,7 +100,7 @@ public class ProfileService {
 
             //미션 대상에 맞는 미션 선정
             String[] missions = missionList.get(
-                    missionTarget.length()>2? missionTarget.split(" ")[1]: missionTarget);
+                    missionTarget.length() > 2 ? missionTarget.split(" ")[1] : missionTarget);
             String missionContent = missionTarget + missions[random.nextInt(missions.length)];
             profile.updateMissionContent(missionContent);
 
@@ -188,4 +190,20 @@ public class ProfileService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<ChattingMemberResDto> getProfileListByUserPk(long userPk) {
+        Long familyId = familyRepository.findFamilyIdByUserPk(userPk);
+        Long profileId = profileRepository.findProfileIdByUserPk(userPk);
+
+        return profileRepository.findChattingMemberListByFamilyId(familyId)
+                .stream().map(dto -> {
+                    if (dto.getProfileId().equals(profileId)) {
+                        return ChattingMemberResDto.builder()
+                                .profileId(userPk)
+                                .build();
+                    }
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 }

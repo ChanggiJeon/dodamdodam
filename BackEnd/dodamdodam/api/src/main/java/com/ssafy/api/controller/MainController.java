@@ -127,7 +127,7 @@ public class MainController {
             })
     @GetMapping(value = "mission")
     public SingleResult<MissionResDto> getTodayMission(Authentication authentication) {
-        Long userPk = Long.parseLong(authentication.getName());
+        long userPk = Long.parseLong(authentication.getName());
 
         return responseService.getSingleResult(mainService.findTodayMission(userPk));
     }
