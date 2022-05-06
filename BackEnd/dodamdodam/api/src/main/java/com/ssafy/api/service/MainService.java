@@ -4,7 +4,6 @@ import com.ssafy.core.dto.req.AlarmReqDto;
 import com.ssafy.core.dto.req.SuggestionReactionReqDto;
 import com.ssafy.core.dto.res.*;
 import com.ssafy.core.entity.*;
-import com.ssafy.core.exception.CustomErrorCode;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +15,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.ssafy.core.exception.ErrorCode.INVALID_REQUEST;
+import static com.ssafy.core.exception.ErrorCode.NOT_BELONG_FAMILY;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +42,7 @@ public class MainService {
         Family family = familyRepository.findFamilyByUserPk(userPk);
 
         if (family == null) {
-            throw new CustomException(ErrorCode.INVALID_REQUEST);
+            throw new CustomException(INVALID_REQUEST);
         }
 
         if (suggestionRepository.countSuggestionByFamily_Id(family.getId()) < 3) {
@@ -49,7 +51,7 @@ public class MainService {
                     .text(text)
                     .build());
         } else {
-            throw new CustomException(ErrorCode.INVALID_REQUEST, "의견제시는 가족당 최대 3개까지 입니다!");
+            throw new CustomException(INVALID_REQUEST, "의견제시는 가족당 최대 3개까지 입니다!");
         }
     }
 
@@ -57,10 +59,10 @@ public class MainService {
         Long familyId = familyRepository.findFamilyIdByUserPk(userPk);
 
         Suggestion suggestion = suggestionRepository.findSuggestionById(suggestionId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_REQUEST));
+                .orElseThrow(() -> new CustomException(INVALID_REQUEST));
 
         if (suggestion.getFamily().getId() != familyId) {
-            throw new CustomException(ErrorCode.NOT_BELONG_FAMILY);
+            throw new CustomException(NOT_BELONG_FAMILY);
         }
 
         suggestionRepository.delete(suggestion);
@@ -83,19 +85,19 @@ public class MainService {
         Profile profile = profileRepository.findProfileByUserPk(userPk);
 
         if (profile == null) {
-            throw new CustomException(ErrorCode.INVALID_REQUEST);
+            throw new CustomException(INVALID_REQUEST);
         }
 
         //step 1. 주어진 pk로 의견을 찾아온다.
         Suggestion suggestion = suggestionRepository.findSuggestionById(request.getSuggestionId())
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_REQUEST));
+                .orElseThrow(() -> new CustomException(INVALID_REQUEST));
 
         //step 2. 본인의 가족번호를 찾아온다.
         long familyId = familyRepository.findFamilyIdByUserPk(userPk);
 
         //step 3. 본인 가족 의견이 아니면 Exception 발생
         if (familyId != suggestion.getFamily().getId()) {
-            throw new CustomException(ErrorCode.NOT_BELONG_FAMILY);
+            throw new CustomException(NOT_BELONG_FAMILY);
         }
 
         //step 4. 본인 리엑션을 찾아본다.
@@ -155,7 +157,7 @@ public class MainService {
     public String getTargetFcmToken(Profile target) {
         String fcmToken = userRepository.findUserFcmTokenByProfile(target);
         if (fcmToken == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "fcm 토큰이 없습니다.");
+            throw new CustomException(INVALID_REQUEST, "fcm 토큰이 없습니다.");
         }
         return fcmToken;
 
@@ -163,7 +165,7 @@ public class MainService {
     public Profile getProfileByUserPk(Long userPk) {
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         if (profile == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "소속된 그룹이 없습니다.");
+            throw new CustomException(INVALID_REQUEST, "소속된 그룹이 없습니다.");
         }
         return profile;
     }
@@ -171,7 +173,7 @@ public class MainService {
     public Profile getProfileByProfilePk(long targetProfileId) {
         Profile profile = profileRepository.findProfileById(targetProfileId);
         if (profile == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "소속된 그룹이 없습니다.");
+            throw new CustomException(INVALID_REQUEST, "소속된 그룹이 없습니다.");
         }
         return profile;
     }
@@ -210,7 +212,7 @@ public class MainService {
 
     public void meAndTargetFamilyCheck(Profile me, Profile target) {
         if (me.getFamily().getId() != target.getFamily().getId()) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "다른 가족 그룹 인원에게 알람 전송 불가능");
+            throw new CustomException(INVALID_REQUEST, "다른 가족 그룹 인원에게 알람 전송 불가능");
         }
     }
 }
