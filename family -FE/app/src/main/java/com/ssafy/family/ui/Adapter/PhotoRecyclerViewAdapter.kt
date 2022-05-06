@@ -22,6 +22,7 @@ class PhotoRecyclerViewAdapter(): RecyclerView.Adapter<PhotoRecyclerViewAdapter.
         fun bind(item: Uri) {
             val imageView = itemView.findViewById<ImageView>(R.id.imageView_photoItem_clothes)
             Glide.with(imageView).load(item).centerCrop().into(imageView)
+            itemView.tag = itemView.tag == false
             itemView.setOnClickListener{
                 itemClickListener.onClick(item, itemView, adapterPosition)
                 itemView.tag = itemView.tag == false
