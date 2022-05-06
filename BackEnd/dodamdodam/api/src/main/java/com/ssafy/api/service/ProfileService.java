@@ -152,14 +152,15 @@ public class ProfileService {
     public String enrollImage(MultipartFile multipartFile, HttpServletRequest request) {
 
         try {
-
-            String originFileName = multipartFile.getOriginalFilename();
-            String filePath = fileService.uploadFileV1("profile", multipartFile);
-            return filePath + "#" + originFileName;
+            if (!multipartFile.isEmpty()) {
+                String originFileName = multipartFile.getOriginalFilename();
+                String filePath = fileService.uploadFileV1("profile", multipartFile);
+                return filePath + "#" + originFileName;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return ".#.";
     }
 
     @Transactional

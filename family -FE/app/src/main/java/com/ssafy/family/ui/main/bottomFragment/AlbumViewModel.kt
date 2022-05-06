@@ -23,6 +23,10 @@ class AlbumViewModel @Inject constructor(private val albumRepository: AlbumRepos
     val searchAlbumRequestLiveData : LiveData<Resource<AlbumRes>>
         get() = _searchAlbumRequestLiveData
 
+    private val _searchDateAlbumRequestLiveData = MutableLiveData<Resource<AlbumRes>>()
+    val searchDateAlbumRequestLiveData : LiveData<Resource<AlbumRes>>
+        get() = _searchDateAlbumRequestLiveData
+
     fun findAllAlbum() = viewModelScope.launch {
         _allAlbumRequestLiveData.postValue(Resource.loading(null))
         _allAlbumRequestLiveData.postValue(albumRepository.findAllAlbum())
@@ -30,5 +34,9 @@ class AlbumViewModel @Inject constructor(private val albumRepository: AlbumRepos
     fun searchAlbum(keyword:String) = viewModelScope.launch {
         _searchAlbumRequestLiveData.postValue(Resource.loading(null))
         _searchAlbumRequestLiveData.postValue(albumRepository.searchAlbum(keyword))
+    }
+    fun searchDateAlbum(date:String) = viewModelScope.launch {
+        _searchDateAlbumRequestLiveData.postValue(Resource.loading(null))
+        _searchDateAlbumRequestLiveData.postValue(albumRepository.seachDateAlbum(date))
     }
 }

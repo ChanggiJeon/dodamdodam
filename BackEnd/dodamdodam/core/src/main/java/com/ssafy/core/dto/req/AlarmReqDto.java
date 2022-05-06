@@ -18,10 +18,10 @@ public class AlarmReqDto {
 
     @NotNull
     @Schema(description = "대상 프로필 id", required = true, example = "2")
-    private Long targetId;
+    private Long targetProfileId;
 
     @NotNull
-    @Schema(description = "알림 내용", required = true, example = "고마워요")
+    @Schema(description = "알림 내용", required = true, example = "사랑해")
     private String content;
 
 }
