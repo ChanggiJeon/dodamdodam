@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static com.ssafy.core.exception.CustomErrorCode.*;
+import static com.ssafy.core.exception.ErrorCode.*;
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER;
 
 @Slf4j

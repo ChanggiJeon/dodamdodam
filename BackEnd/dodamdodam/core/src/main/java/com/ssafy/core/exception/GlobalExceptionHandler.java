@@ -1,45 +1,35 @@
 package com.ssafy.core.exception;
 
-import com.ssafy.core.dto.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import static com.ssafy.core.exception.CustomErrorCode.INTERVAL_SERVER_ERROR;
-import static com.ssafy.core.exception.CustomErrorCode.INVALID_REQUEST;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(CustomException e, HttpServletRequest request) {
-        log.error("errorCode: {}, url: {}, message: {}", e.getCustomErrorCode(), request.getRequestURI(), e.getDetailMessage());
+    public ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
 
-        return ErrorResponse.toResponseEntity(e);
+        return new ResponseEntity<>(ErrorResponse.of(e), HttpStatus.valueOf(e.getErrorCode().getStatus()));
     }
 
-    @ExceptionHandler(value = {
-            HttpRequestMethodNotSupportedException.class,
-            MethodArgumentTypeMismatchException.class,
-            MethodArgumentNotValidException.class
-    })
-    public ResponseEntity<ErrorResponse> handleRestException(Exception e, HttpServletRequest request) {
-        log.error("url: {}, message: {}", request.getRequestURI(), e.getMessage());
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleCustomException(MethodArgumentNotValidException e) {
 
-        return ErrorResponse.toResponseEntity(INVALID_REQUEST);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_REQUEST, e.getBindingResult());
+
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ErrorCode.INVALID_REQUEST.getStatus()));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleException(Exception e, HttpServletRequest request) {
-        log.error("url: {}, message: {}", request.getRequestURI(), e.getMessage());
+    public ResponseEntity<ErrorResponse> handleException() {
 
-        return ErrorResponse.toResponseEntity(INTERVAL_SERVER_ERROR);
+        ErrorResponse errorResponse = ErrorResponse.of(ErrorCode.INTERVAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ErrorCode.INTERVAL_SERVER_ERROR.getStatus()));
     }
 }
