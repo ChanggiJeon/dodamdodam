@@ -6,38 +6,42 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.bottomFragment.AlbumFragment">
 
-    <View
-        android:id="@+id/free_icon_g"
-        android:layout_width="330dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/box_search_album"
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabIndicatorColor="@color/gray02"
+        app:tabIndicatorHeight="6dp"
+        app:tabIndicatorGravity="top"
+        app:tabTextColor="@color/gray01"
+        app:tabSelectedTextColor="@color/pink00"
+        app:tabBackground="@drawable/selector_tab">
 
-    <EditText
-        android:id="@+id/search_edit_text"
-        android:layout_width="0dp"
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="태그별" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="날짜별" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintBottom_toBottomOf="@+id/free_icon_g"
-        app:layout_constraintEnd_toStartOf="@+id/search_button"
-        app:layout_constraintStart_toStartOf="@+id/free_icon_g"
-        app:layout_constraintTop_toTopOf="@+id/free_icon_g" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/album_search_button"
-        android:text="@string/album_search"
-        android:fontFamily="@font/spoqahansans"
-        app:layout_constraintBottom_toBottomOf="@+id/free_icon_g"
-        app:layout_constraintEnd_toEndOf="@+id/free_icon_g"
-        app:layout_constraintTop_toTopOf="@+id/free_icon_g" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabs"
+        app:layout_constraintWidth_percent="1" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/month_recyclerView"
@@ -52,7 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/free_icon_g"
+        app:layout_constraintTop_toBottomOf="@+id/viewpager"
         app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/item_month_album" />
 
