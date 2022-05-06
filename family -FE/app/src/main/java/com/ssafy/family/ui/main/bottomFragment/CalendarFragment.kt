@@ -68,11 +68,17 @@ class CalendarFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        //월 단위 일정 요청
+        scheduleMonthList = mutableMapOf()
+        calendarViewModel.getMonthSchedule(monthLocalDateToString(today))
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //월 단위 일정 요청 및 결과 옵저버
-        calendarViewModel.getMonthSchedule(monthLocalDateToString(today))
+        //월 단위 일정 요청결과 옵저버
         calendarViewModel.getMonthRequestLiveData.observe(requireActivity()){
             when (it.status) {
                 Status.SUCCESS -> {
@@ -104,8 +110,11 @@ class CalendarFragment : Fragment() {
             }
         }
 
+        //리사이클러뷰에서 일정 아이템 클릭 시 일정 상세로 이동
         eventsAdapter = ScheduleAdapter {
-            // TODO: 일정 상세 구현
+            val intent = Intent(requireContext(),ScheduleActivity::class.java)
+            intent.putExtra("sID", it.scheduleId)
+            startActivity(intent)
         }
 
         // 일 단위 일정 결과 옵저버

@@ -11,15 +11,24 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
 class ScheduleActivity : AppCompatActivity() {
+
     lateinit var binding: ActivityScheduleBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_schedule)
         binding = ActivityScheduleBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.schedule_frame, AddScheduleFragment())
-            .commit()
+
+        val sId = intent.getLongExtra("sID", -1L)
+        if(sId == -1L){
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.schedule_frame, AddScheduleFragment())
+                .commit()
+        }else{
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.schedule_frame, DetailScheduleFragment.newInstance(sId))
+                .commit()
+        }
     }
 
     fun changeHeader(title: String, left: String, right: String) {

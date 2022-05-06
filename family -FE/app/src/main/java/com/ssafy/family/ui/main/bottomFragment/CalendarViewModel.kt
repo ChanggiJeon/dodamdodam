@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ssafy.family.data.remote.res.ScheduleRes
+import com.ssafy.family.data.remote.res.SchedulesRes
 import com.ssafy.family.data.repository.CalendarRepository
 import com.ssafy.family.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,12 +15,12 @@ import javax.inject.Inject
 class CalendarViewModel @Inject constructor(private val calendarRepository: CalendarRepository) :
     ViewModel() {
 
-    private val _getDayRequestLiveData = MutableLiveData<Resource<ScheduleRes>>()
-    val getDayRequestLiveData: LiveData<Resource<ScheduleRes>>
+    private val _getDayRequestLiveData = MutableLiveData<Resource<SchedulesRes>>()
+    val getDayRequestLiveData: LiveData<Resource<SchedulesRes>>
         get() = _getDayRequestLiveData
 
-    private val _getMonthRequestLiveData = MutableLiveData<Resource<ScheduleRes>>()
-    val getMonthRequestLiveData: LiveData<Resource<ScheduleRes>>
+    private val _getMonthRequestLiveData = MutableLiveData<Resource<SchedulesRes>>()
+    val getMonthRequestLiveData: LiveData<Resource<SchedulesRes>>
         get() = _getMonthRequestLiveData
 
     fun getDaySchedule(day: String) = viewModelScope.launch {

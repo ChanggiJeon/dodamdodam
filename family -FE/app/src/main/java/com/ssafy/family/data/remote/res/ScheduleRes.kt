@@ -6,5 +6,5 @@ import com.ssafy.family.data.ScheduleInfo
 
 class ScheduleRes: BaseResponse() {
     @SerializedName("data")
-    val schedules: List<ScheduleInfo> = listOf()
+    val schedule: ScheduleInfo? = null
 }
