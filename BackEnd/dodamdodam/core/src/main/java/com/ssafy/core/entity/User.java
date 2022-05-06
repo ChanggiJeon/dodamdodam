@@ -1,6 +1,7 @@
 package com.ssafy.core.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mysema.commons.lang.Assert;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.Nullable;
@@ -13,7 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,9 +48,27 @@ public class User extends BaseEntity implements UserDetails {
     @Nullable
     private String refreshToken;
 
-    @Setter
     @Column(nullable = false, columnDefinition = "varchar(20)")
     private String authority;
+
+    @PrePersist
+    public void setAuthority(){
+        this.authority = "ROLE_USE";
+    }
+
+    @Builder
+    public User(String userId, String name, String password, @Nullable LocalDate birthday, @Nullable String fcmToken, @Nullable String refreshToken) {
+        Assert.hasText(userId, "userId must be not null");
+        Assert.hasText(name, "name must be not null");
+        Assert.hasText(password, "password must be not null");
+
+        this.userId = userId;
+        this.name = name;
+        this.password = password;
+        this.birthday = birthday;
+        this.fcmToken = fcmToken;
+        this.refreshToken = refreshToken;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
