@@ -30,7 +30,7 @@ public class FamilyJoinReqDto {
     @Schema(description = "생년월일", required = true, example = "1994-10-25")
     private String birthday;
 
-    @Schema(description = "이미지", required = true, example = "1994-10-25")
+    @Schema(description = "이미지")
     private MultipartFile image;
 
     @Schema(description = "id", required = true, example = "1")
