@@ -79,7 +79,9 @@ public class ScheduleController {
             })
     @PatchMapping(value = "/{scheduleId}")
     public CommonResult updateSchedule(@PathVariable long scheduleId,
-                                       NewScheduleReqDto scheduleReq,
+                                       @RequestBody
+                                       @io.swagger.v3.oas.annotations.parameters.RequestBody
+                                       @Valid NewScheduleReqDto scheduleReq,
                                        Authentication authentication) {
         Family family = familyService.fromUserIdToFamily(authentication);
         Schedule schedule = scheduleService.getSchedule(scheduleId, family);
