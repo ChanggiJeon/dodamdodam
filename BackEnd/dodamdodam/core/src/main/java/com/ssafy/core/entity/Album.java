@@ -7,6 +7,7 @@ import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 @Getter
@@ -27,6 +28,18 @@ public class Album extends BaseEntity{
     @Setter
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate date;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @Column(name = "hashtag_id")
+    private List<HashTag> hashTags;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @Column(name = "album_reaction_id")
+    private List<AlbumReaction> albumReactions;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    @Column(name = "picture_id")
+    private List<Picture> pictures;
 
     public void updateLocalDate(LocalDate date){
         this.date = date;

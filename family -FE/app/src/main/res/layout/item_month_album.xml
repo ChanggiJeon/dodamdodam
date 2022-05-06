@@ -18,7 +18,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/aa" />
+            app:srcCompat="@drawable/aa"
+            app:tint="#80000000"
+            android:tintMode="src_atop" />
 
         <TextView
             android:id="@+id/album_main_date"

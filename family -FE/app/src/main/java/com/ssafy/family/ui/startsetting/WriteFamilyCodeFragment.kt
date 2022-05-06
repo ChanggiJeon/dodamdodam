@@ -1,17 +1,22 @@
 package com.ssafy.family.ui.startsetting
 
 import android.os.Bundle
+import android.os.Handler
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import com.ssafy.family.R
 import com.ssafy.family.databinding.FragmentAskFamilyCodeBinding
 import com.ssafy.family.databinding.FragmentWriteFamilyCodeBinding
+import com.ssafy.family.util.Constants.TAG
 
 class WriteFamilyCodeFragment : Fragment() {
-
     private lateinit var binding: FragmentWriteFamilyCodeBinding
 
     override fun onCreateView(
@@ -27,17 +32,30 @@ class WriteFamilyCodeFragment : Fragment() {
         // 상단 텍스트 수정
         (activity as StartSettingActivity).changeTopMessage("가족 코드를 입력해주세요!")
         // 버튼별 클릭 이벤트 리스너 등록
-        binding.writeFamilyCodeMoveNextBtn.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_in_start_setting, SaveInfoFragment())
-                .addToBackStack(null)
-                .commit()
+        binding.writeFamilyCodeMoveNextBtn.setOnClickListener{
+            handleSearchButtonUI()
         }
-        binding.writeFamilyCodeMoveBeforeBtn.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_in_start_setting, AskFamilyCodeFragment())
-                .commit()
-        }
+    //        binding.writeFamilyCodeMoveNextBtn.setOnClickListener {
+//            parentFragmentManager.beginTransaction()
+//                .replace(R.id.fragment_in_start_setting, SaveInfoFragment())
+//                .addToBackStack(null)
+//                .commit()
+//        }
+//        binding.writeFamilyCodeMoveBeforeBtn.setOnClickListener {
+//            parentFragmentManager.beginTransaction()
+//                .replace(R.id.fragment_in_start_setting, AskFamilyCodeFragment())
+//                .commit()
+//        }
     } //onViewCreated
+    private fun handleSearchButtonUI() {
+        Log.d(TAG, "WriteFamilyCodeFragment - handleSearchButtonUI() called")
+        binding.writeFamilyCodeBtnProgress.visibility = View.VISIBLE
+        binding.writeFamilyCodeMoveNextBtn.visibility = View.INVISIBLE
+
+        Handler().postDelayed({
+            binding.writeFamilyCodeBtnProgress.visibility = View.INVISIBLE
+            binding.writeFamilyCodeMoveNextBtn.visibility = View.VISIBLE
+        }, 1500)
+    }
 
 }

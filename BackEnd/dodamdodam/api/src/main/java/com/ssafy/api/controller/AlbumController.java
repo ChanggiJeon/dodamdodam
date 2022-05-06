@@ -191,5 +191,45 @@ public class AlbumController {
         return responseService.getListResult(albumList);
     }
 
+    @GetMapping(value = "/searchDate/{date}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "앨범 날짜 검색", description = "<strong>앨범 날짜 검색</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            }
+    )
+    public ListResult<AlbumResDto> searchAlbumByDate(@PathVariable String date,Authentication authentication){
+        Long userPK = Long.parseLong(authentication.getName());
+        Family family = albumService.findFamilyByUserPK(userPK);
+        List<Album> albums = albumService.findAlbumsByDate(date, family.getId());
+        List<AlbumResDto> albumList = new ArrayList<>();
+
+        for (int i = 0; i < albums.size(); i++) {
+            Long albumId = albums.get(i).getId();
+            AlbumMainResDto main = albumService.findMainPictureByAlbumId(albumId);
+            List<HashTag> hashTags = albumService.findHashTagsByAlbumId(albumId);
+            AlbumHashTagListResDto albumHashTagListResDto = AlbumHashTagListResDto.builder().build();
+            AlbumResDto albumResDto = AlbumResDto.builder()
+                    .hashTags(albumHashTagListResDto.fromEntity(hashTags))
+                    .mainPicture(main)
+                    .build();
+            albumList.add(albumResDto);
+        }
+
+
+        return responseService.getListResult(albumList);
+    }
+
+    @DeleteMapping(value = "deleteAlbum/{albumId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "앨범 삭제", description = "<strong>앨범 삭제</strong>",
+            parameters = {
+                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+            }
+    )
+    public CommonResult deleteAlbum(@PathVariable long albumId,Authentication authentication){
+        Long userPK = Long.parseLong(authentication.getName());
+        albumService.deleteAlbum(albumId, userPK);
+
+        return responseService.getSuccessResult();
+    }
 
 }

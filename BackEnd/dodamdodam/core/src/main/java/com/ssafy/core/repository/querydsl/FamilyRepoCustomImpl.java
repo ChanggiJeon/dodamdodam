@@ -39,4 +39,14 @@ public class FamilyRepoCustomImpl implements FamilyRepoCustom {
                 .where(user.userPk.eq(userPk))
                 .fetchFirst();
     }
+
+    @Override
+    public Long findFamilyIdByUserPK(Long userPk) {
+        return jpaQueryFactory.select(family.id)
+                .from(family)
+                .join(profile)
+                .on(family.id.eq(profile.family.id))
+                .where(profile.user.userPk.eq(userPk))
+                .fetchFirst();
+    }
 }

@@ -3,6 +3,7 @@ package com.ssafy.core.repository.querydsl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.res.MainProfileResDto;
+import com.ssafy.core.dto.res.MissionResDto;
 import com.ssafy.core.dto.res.SignInResDto;
 import com.ssafy.core.entity.Profile;
 import com.ssafy.core.entity.QProfile;
@@ -27,7 +28,16 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
     }
 
     @Override
-    public List<MainProfileResDto> getProfileListByFamilyId(Long familyId) {
+    public Long findProfileIdByUserPk(Long userPk) {
+        return queryFactory
+                .select(profile.id)
+                .from(profile)
+                .where(profile.user.userPk.eq(userPk))
+                .fetchFirst();
+    }
+
+    @Override
+    public List<MainProfileResDto> findProfileListByFamilyId(Long familyId) {
         return queryFactory
                 .select(Projections.fields(MainProfileResDto.class,
                         profile.imagePath,
@@ -51,4 +61,42 @@ public class ProfileRepoCustomImpl implements ProfileRepoCustom {
                 .fetchFirst();
     }
 
+    @Override
+    public Long checkRoleByFamilyIdExceptMe(Long familyId, String role, Long profileId) {
+        return queryFactory.select(profile.id.count())
+                .from(profile)
+                .where(profile.family.id.eq(familyId)
+                        .and(profile.role.eq(role))
+                        .and(profile.id.ne(profileId)))
+                .fetchFirst();
+    }
+
+    @Override
+    public Long checkNicknameByFamilyIdExceptMe(Long familyId, String nickname, Long profileId) {
+        return queryFactory.select(profile.id.count())
+                .from(profile)
+                .where(profile.family.id.eq(familyId)
+                        .and(profile.nickname.eq(nickname))
+                        .and(profile.id.ne(profileId)))
+                .fetchFirst();
+    }
+
+    @Override
+    public List<Profile> findProfilesByFamilyIdExceptMe(Long familyId, Long profileId) {
+        return queryFactory.select(profile)
+                .from(profile)
+                .where(profile.family.id.eq(familyId)
+                        .and(profile.id.ne(profileId)))
+                .fetch();
+    }
+
+    @Override
+    public MissionResDto findTodayMissionByUserPk(Long userPk) {
+        return queryFactory.select(Projections.fields(MissionResDto.class,
+                profile.mission_content.as("missionContent"),
+                profile.mission_target.as("missionTarget")))
+                .from(profile)
+                .where(profile.user.userPk.eq(userPk))
+                .fetchFirst();
+    }
 }

@@ -1,12 +1,10 @@
 package com.ssafy.api.service;
 
-
-
+import com.ssafy.core.common.MissionList;
 import com.ssafy.core.dto.req.ProfileReqDto;
 import com.ssafy.core.dto.req.StatusReqDto;
-import com.ssafy.core.dto.res.MainProfileResDto;
-import com.ssafy.core.entity.Family;
 import com.ssafy.core.entity.Profile;
+import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.FamilyRepository;
 import com.ssafy.core.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
+
+import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_NICKNAME;
+import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_ROLE;
 
 @Service
 @Slf4j
@@ -30,16 +28,18 @@ import java.util.UUID;
 public class ProfileService {
 
     private final ProfileRepository profileRepository;
-    private final UserService userService;
     private final FamilyRepository familyRepository;
     private final FileService fileService;
+    private final Random random = new Random();
+    private final Map<String, String[]> missionList = MissionList.missionList;
+
 
     @Transactional(readOnly = false)
-    public void enrollProfile(Profile profile){
+    public void enrollProfile(Profile profile) {
         profileRepository.save(profile);
     }
 
-//    @Transactional(readOnly = false)
+    //    @Transactional(readOnly = false)
 //    public void enrollProfile(String userId){
 //        User user = userService.findByUserId(userId);
 //
@@ -58,10 +58,10 @@ public class ProfileService {
 //
 //    }
     @Transactional(readOnly = false)
-    public Profile updateProfile(Long userPK, ProfileReqDto profileDto, MultipartFile multipartFile, HttpServletRequest request){
+    public Profile updateProfile(Long userPK, ProfileReqDto profileDto, MultipartFile multipartFile, HttpServletRequest request) {
         Profile profile = profileRepository.findProfileByUserPk(userPK);
         String originFileName = multipartFile.getOriginalFilename();
-        String filePath = fileService.uploadFileV1("profile",multipartFile);
+        String filePath = fileService.uploadFileV1("profile", multipartFile);
         profile.updateImageName(originFileName);
         profile.updateImagePath(filePath);
 //        updateImage(multipartFile, profile, request);
@@ -71,35 +71,48 @@ public class ProfileService {
         return profile;
     }
 
-    @Transactional(readOnly = false)
-    public Profile createMission(Long userPk){
-        Random random = new Random();
+    @Transactional
+    public Profile createMission(Long userPk) {
+
+        //본인 프로필
         Profile profile = profileRepository.findProfileByUserPk(userPk);
 
-        String[] missionList = {"전화하기", "어깨 주물러드리기", "소원들어주기"};
-        Family family = familyRepository.findFamilyByUserPk(userPk);
+        //본인 가족 Id
+        Long familyId = familyRepository.findFamilyIdByUserPk(userPk);
 
-        List<MainProfileResDto> familyProfiles =profileRepository.getProfileListByFamilyId(family.getId());
-        int roleRandom = random.nextInt(familyProfiles.size());
-        int missionRandom = random.nextInt(missionList.length);
-        if(familyProfiles.get(roleRandom).getRole()==profile.getRole()){
-            roleRandom = (roleRandom+1)%familyProfiles.size();
+        if (profile.getMission_target() == null) {
+
+            //본인을 제외한 가족 profiles 가져오기
+            List<Profile> familyProfiles = profileRepository.findProfilesByFamilyIdExceptMe(familyId, profile.getId());
+
+            //본인 뿐이 없다면, target은 비우고, content만 갱신
+            if (familyProfiles.size() == 0) {
+                profile.updateMissionContent("우리 가족을 초대해 주세요!");
+                return profile;
+            }
+
+            //미션 대상 선정.
+            int targetNumber = random.nextInt(familyProfiles.size());
+            String missionTarget = familyProfiles.get(targetNumber).getRole();
+            profile.updateMissionTarget(missionTarget);
+
+            //미션 대상에 맞는 미션 선정
+            String[] missions = missionList.get(
+                    missionTarget.length()>2? missionTarget.split(" ")[1]: missionTarget);
+            String missionContent = missionTarget + missions[random.nextInt(missions.length)];
+            profile.updateMissionContent(missionContent);
+
         }
-        String missionTarget = familyProfiles.get(roleRandom).getRole();
-        String missionContent = missionTarget+missionList[missionRandom];
-        profile.updateMissionContent(missionContent);
-        profile.updateMissionTarget(missionTarget);
         return profile;
     }
 
 
-
     @Transactional(readOnly = false)
-    public Profile updateStatus(Long userPk, StatusReqDto statusDto){
-        Profile profile = profileRepository.findProfileByUserPk(userPk);
+    public void updateStatus(Profile profile, StatusReqDto statusDto) {
         profile.updateEmotion(statusDto.getEmotion());
         profile.updateComment(statusDto.getComment());
-        return profile;
+
+        profileRepository.save(profile);
     }
 //
 //    @Transactional(readOnly = false)
@@ -134,32 +147,44 @@ public class ProfileService {
 //    }
 
     @Transactional(readOnly = false)
-    public String enrollImage(MultipartFile multipartFile, HttpServletRequest request){
+    public String enrollImage(MultipartFile multipartFile, HttpServletRequest request) {
 
-        try{
+        try {
 
             String originFileName = multipartFile.getOriginalFilename();
-            String filePath = fileService.uploadFileV1("profile",multipartFile);
-            return filePath+"#"+originFileName;
-        }catch (Exception e){
+            String filePath = fileService.uploadFileV1("profile", multipartFile);
+            return filePath + "#" + originFileName;
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
     }
 
     @Transactional
-    public String findImage(Long userPk){
+    public String findImage(Long userPk) {
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         return profile.getImagePath();
     }
 
     @Transactional
-    public Profile findProfileByUserPk(Long userPk){
+    public Profile findProfileByUserPk(Long userPk) {
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         return profile;
     }
 
 
+    public void checkRoleByFamilyIdExceptMe(Long familyId, String role, Long userPk) {
+        Long profileId = profileRepository.findProfileIdByUserPk(userPk);
+        if (profileRepository.checkRoleByFamilyIdExceptMe(familyId, role, profileId) != 0) {
+            throw new CustomException(DUPLICATE_ROLE);
+        }
+    }
 
+    public void checkNicknameByFamilyIdExceptMe(Long familyId, String nickname, Long userPk) {
+        Long profileId = profileRepository.findProfileIdByUserPk(userPk);
+        if (profileRepository.checkNicknameByFamilyIdExceptMe(familyId, nickname, profileId) != 0) {
+            throw new CustomException(DUPLICATE_NICKNAME);
+        }
+    }
 
 }
