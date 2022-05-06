@@ -3,6 +3,11 @@
     package="com.ssafy.family">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".config.ApplicationClass"
@@ -12,21 +17,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Family"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true">
         <activity
             android:name=".ui.status.StatusActivity"
             android:exported="false" />
         <activity
             android:name=".ui.startsetting.StartSettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.home.HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.album.AlbumActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".ui.chagephoto.ChangePhotoActivity"
+            android:exported="true">
+
         </activity>
         <activity
             android:name=".ui.roulette.RouletteActivity"
@@ -36,7 +57,7 @@
              android:exported="true"
              android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.home.HomeActivity"
             android:exported="true">
 
         </activity>

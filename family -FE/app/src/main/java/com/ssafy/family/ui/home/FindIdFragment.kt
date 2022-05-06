@@ -107,7 +107,7 @@ class FindIdFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     dismissLoading()
-                    Toast.makeText(requireActivity(), "서버 에러", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), it.message?:"서버 에러", Toast.LENGTH_SHORT).show()
                 }
             }
         }

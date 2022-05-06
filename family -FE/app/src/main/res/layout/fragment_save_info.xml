@@ -6,24 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.startsetting.SaveInfoFragment">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_layout_select_my_role"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:fontFamily="@font/spoqahansans"
-        android:gravity="center"
-        android:text="@string/save_yourself"
-        android:textColor="@color/pink01"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="320dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/box_white_button"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -53,17 +41,22 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
+
             <Spinner
                 android:id="@+id/save_info_spinner"
-                android:layout_width="wrap_content"
+                android:layout_width="140dp"
                 android:layout_height="40dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:background="@drawable/box_spinner"
+                android:spinnerMode="dialog"
+                android:textAlignment="center" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:fontFamily="@font/spoqahansans"
-                android:text="에요!"
+                android:text="(이)에요!"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -72,31 +65,35 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linear_layout_input_nickname_birthday"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="480dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/box_white_button"
         android:gravity="center_vertical"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_select_my_role">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal">
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="25dp"
                 android:fontFamily="@font/spoqahansans"
                 android:text="@string/nickname"
-                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:textSize="18sp"
-                android:layout_marginLeft="25dp"/>
+                android:textStyle="bold" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout_save_info_nickname"
                 style="@style/TextInputLayoutStyle"
@@ -104,12 +101,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:hint="@string/nickname">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/save_info_input_nickname"
                     style="@style/TextInputStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:background="@color/white"
                     android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -118,46 +117,53 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="25dp"
                 android:fontFamily="@font/spoqahansans"
                 android:text="@string/birthday"
-                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:textSize="18sp"
-                android:layout_marginLeft="25dp"/>
+                android:textStyle="bold" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout_save_info_birthday"
                 style="@style/TextInputLayoutStyle"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
-                android:hint="931212">
+                android:hint="19931212">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/save_info_input_birthday"
                     style="@style/TextInputStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:background="@color/white"
                     android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/save_info_move_next_btn"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="650dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/box_white_button"
         android:gravity="center"
-        android:text="다음"
+        android:text="@string/next"
         android:textColor="@color/pink01"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_input_nickname_birthday" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
