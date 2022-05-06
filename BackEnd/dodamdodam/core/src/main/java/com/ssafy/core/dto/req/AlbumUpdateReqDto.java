@@ -43,7 +43,7 @@ public class AlbumUpdateReqDto {
     @NotNull
     @Schema(description = "메인사진 index", required = true, example = "")
     private int mainIndex;
-    @Null
+
     @Schema(description = "사진들", required = false, example = "")
     private List<MultipartFile> multipartFiles;
 }
