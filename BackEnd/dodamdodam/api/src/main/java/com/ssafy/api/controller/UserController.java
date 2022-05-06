@@ -160,7 +160,7 @@ public class UserController {
 
     @Operation(summary = "fcm 토큰 저장", description = "<strong>fcm토큰<strong> 저장한다.",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PostMapping(value = "fcm", consumes = MediaType.APPLICATION_JSON_VALUE)
     public CommonResult updateFcmToken

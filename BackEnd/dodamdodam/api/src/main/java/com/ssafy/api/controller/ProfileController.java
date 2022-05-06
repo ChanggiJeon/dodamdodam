@@ -3,7 +3,6 @@ package com.ssafy.api.controller;
 import com.ssafy.core.dto.req.ProfileReqDto;
 import com.ssafy.core.dto.req.StatusReqDto;
 import com.ssafy.core.entity.Profile;
-import com.ssafy.core.entity.User;
 import com.ssafy.api.service.ProfileService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.api.service.common.CommonResult;
@@ -17,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +36,7 @@ public class ProfileController {
 
 //    @Operation(summary = "프로필 등록", description = "<strong>프로필 등록</strong>",
 //            parameters = {
-//                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+//                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
 //            })
 //    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    public CommonResult enrollProfile(@RequestBody
@@ -70,7 +68,7 @@ public class ProfileController {
 
     @Operation(summary = "프로필 수정", description = "<strong>프로필 수정</strong>",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PatchMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CommonResult updateProfile(@ModelAttribute
@@ -79,6 +77,11 @@ public class ProfileController {
                                       HttpServletRequest request) {
 
         Long userPk = Long.parseLong(authentication.getName());
+
+        Long familyId = userService.getFamilyIdByUserPk(userPk);
+
+        profileService.checkNicknameByFamilyIdExceptMe(familyId, profileRequest.getNickname(), userPk);
+        profileService.checkRoleByFamilyIdExceptMe(familyId, profileRequest.getRole(), userPk);
 
         Profile updateResult = profileService.updateProfile(userPk, profileRequest, profileRequest.getMultipartFile(), request);
 
@@ -91,7 +94,7 @@ public class ProfileController {
 
 //    @Operation(summary = "미션 등록", notes = "<strong>미션 등록</strong>",
 //            parameters = {
-//                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+//                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
 //            })
 //    @PatchMapping("/mission")
 //    public CommonResult updateMission(@RequestBody @Valid MissionReqDto missionReqDto, Authentication authentication) {
@@ -106,7 +109,7 @@ public class ProfileController {
 
     @Operation(summary = "상태 수정", description = "<strong>상태 수정</strong>",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @PatchMapping(value = "/status", consumes = MediaType.APPLICATION_JSON_VALUE)
     public CommonResult updateStatus(@RequestBody
@@ -115,16 +118,16 @@ public class ProfileController {
 
         Long userPk = Long.parseLong(authentication.getName());
 
-        Profile status = profileService.updateStatus(userPk, statusReqDto);
+        Profile checkMissionProfile = profileService.createMission(userPk);
 
-        profileService.enrollProfile(status);
+        profileService.updateStatus(checkMissionProfile, statusReqDto);
 
         return responseService.getSuccessResult();
     }
 
     @Operation(summary = "프로필이미지 조회", description = "<strong>프로필 이미지 조회</strong>",
             parameters = {
-                    @Parameter(name = "X-Auth-Token", description = "JWT Token", required = true, in = HEADER)
+                    @Parameter(name = "X-AUTH-TOKEN", description = "JWT Token", required = true, in = HEADER)
             })
     @GetMapping(value = "/image")
     public SingleResult<String> getProfileImage(Authentication authentication) {

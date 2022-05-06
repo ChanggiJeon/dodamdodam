@@ -8,15 +8,14 @@ import retrofit2.Response
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.PartMap
 
 interface FamilyAPI {
     @Multipart
     @POST("/api/family/create")
     suspend fun createFamily(
-        @Part("role") role: MultipartBody.Part,
-        @Part("nickname") nickname: MultipartBody.Part,
-        @Part("birthday") birthday: MultipartBody.Part,
-        @Part("image") image: MultipartBody.Part?
+        @PartMap data: HashMap<String, RequestBody>,
+        @Part image: MultipartBody.Part?
     ): Response<FamilyRes>
 
     @Multipart

@@ -14,6 +14,9 @@ class AlbumTagAdapter(private val context: Context) : RecyclerView.Adapter<Album
     inner class ViewHolder(val binding: AddAlbumTagListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item:HashTag){
             binding.addAlbumTagButton.text = item.text
+            binding.addAlbumTagButton.setOnClickListener {
+                itemClickListener.onClick(item)
+            }
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,6 +32,6 @@ class AlbumTagAdapter(private val context: Context) : RecyclerView.Adapter<Album
         holder.bind(datas[position])
     }
     interface ItemClickListener {
-        fun onClick()
+        fun onClick(item: HashTag)
     }
 }

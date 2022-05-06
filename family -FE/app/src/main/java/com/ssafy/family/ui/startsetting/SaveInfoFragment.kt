@@ -1,7 +1,6 @@
 package com.ssafy.family.ui.startsetting
 
 import android.app.Activity.RESULT_OK
-import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -22,6 +21,7 @@ import com.bumptech.glide.Glide
 import com.ssafy.family.R
 import com.ssafy.family.data.remote.req.CreateFamilyReq
 import com.ssafy.family.databinding.FragmentSaveInfoBinding
+import com.ssafy.family.util.Constants.TAG
 import com.ssafy.family.util.FileUtils
 import com.ssafy.family.util.InputValidUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +29,6 @@ import java.io.File
 
 @AndroidEntryPoint
 class SaveInfoFragment : Fragment() {
-    val TAG: String = "로그"
 
     private lateinit var binding: FragmentSaveInfoBinding
     private val familyViewModel by activityViewModels<StartSettingViewModel>()
@@ -175,7 +174,7 @@ class SaveInfoFragment : Fragment() {
     private fun createFamily() {
         val role = binding.saveInfoSpinner.selectedItem.toString()
         val nickname = binding.saveInfoInputNickname.text.toString()
-        val birthday = binding.saveInfoInputBirthday.text.toString()
+        val birthday = InputValidUtil.makeDay(binding.saveInfoInputBirthday.text.toString())
 //        val imageFile = imageUriToFile(imageUri)
         val imageFile = FileUtils.getFile(requireContext(), imageUri!!)
 

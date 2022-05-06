@@ -1,23 +1,19 @@
 package com.ssafy.api.service;
 
+import com.ssafy.core.dto.req.AlarmReqDto;
 import com.ssafy.core.dto.req.SuggestionReactionReqDto;
-import com.ssafy.core.dto.res.MainProfileResDto;
-import com.ssafy.core.dto.res.SuggestionReactionResDto;
-import com.ssafy.core.dto.res.SuggestionResDto;
-import com.ssafy.core.entity.Family;
-import com.ssafy.core.entity.Profile;
-import com.ssafy.core.entity.Suggestion;
+import com.ssafy.core.dto.res.*;
+import com.ssafy.core.entity.*;
 import com.ssafy.core.exception.CustomErrorCode;
 import com.ssafy.core.exception.CustomException;
-import com.ssafy.core.repository.FamilyRepository;
-import com.ssafy.core.repository.ProfileRepository;
-import com.ssafy.core.repository.SuggestionReactionRepository;
-import com.ssafy.core.repository.SuggestionRepository;
-import com.ssafy.core.entity.SuggestionReaction;
+import com.ssafy.core.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,13 +23,15 @@ public class MainService {
 
     private final ProfileRepository profileRepository;
     private final FamilyRepository familyRepository;
+    private final UserRepository userRepository;
     private final SuggestionRepository suggestionRepository;
     private final SuggestionReactionRepository suggestionReactionRepository;
+    private final AlarmRepository alarmRepository;
 
     public List<MainProfileResDto> getProfileList(Long userPk) {
         long familyId = familyRepository.findFamilyIdByUserPk(userPk);
 
-        return profileRepository.getProfileListByFamilyId(familyId).stream()
+        return profileRepository.findProfileListByFamilyId(familyId).stream()
                 .filter(profile -> !profile.getUserPk().equals(userPk))
                 .collect(Collectors.toList());
     }
@@ -114,9 +112,9 @@ public class MainService {
                     .isLike(request.isLike())
                     .build());
 
-            if(request.isLike()) {
+            if (request.isLike()) {
                 suggestion.updateLikeCount(1);
-            }else{
+            } else {
                 suggestion.updateDislikeCount(1);
             }
 
@@ -133,9 +131,9 @@ public class MainService {
             suggestion = suggestionRepository.save(suggestion);
         } else {
             suggestionReactionRepository.delete(suggestionReaction);
-            if(request.isLike()) {
+            if (request.isLike()) {
                 suggestion.updateLikeCount(-1);
-            }else{
+            } else {
                 suggestion.updateDislikeCount(-1);
             }
 
@@ -147,5 +145,72 @@ public class MainService {
                 .like(suggestion.getLikeCount())
                 .dislike(suggestion.getDislikeCount())
                 .build();
+    }
+
+
+    public MissionResDto findTodayMission(long userPk) {
+        return profileRepository.findTodayMissionByUserPk(userPk);
+    }
+
+    public String getTargetFcmToken(Profile target) {
+        String fcmToken = userRepository.findUserFcmTokenByProfile(target);
+        if (fcmToken == null) {
+            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "fcm 토큰이 없습니다.");
+        }
+        return fcmToken;
+
+    }
+    public Profile getProfileByUserPk(Long userPk) {
+        Profile profile = profileRepository.findProfileByUserPk(userPk);
+        if (profile == null) {
+            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "소속된 그룹이 없습니다.");
+        }
+        return profile;
+    }
+
+    public Profile getProfileByProfilePk(long targetProfileId) {
+        Profile profile = profileRepository.findProfileById(targetProfileId);
+        if (profile == null) {
+            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "소속된 그룹이 없습니다.");
+        }
+        return profile;
+    }
+
+    public void recordAlarmCount(Profile me, AlarmReqDto alarmReq) {
+        Profile target = profileRepository.findProfileById(alarmReq.getTargetProfileId());
+        Alarm alarm = alarmRepository.findAlarmByProfileAndTarget(me, target, alarmReq.getContent());
+        if (alarm == null) {
+            alarmRepository.save(Alarm.builder()
+                    .content(alarmReq.getContent())
+                    .me(me)
+                    .target(target)
+                    .count(1)
+                    .build()
+            );
+        } else {
+            alarm.setCount(alarm.getCount()+1);
+            alarmRepository.save(alarm);
+        }
+    }
+
+    public List<AlarmResDto> getAlarmList(Profile me, Profile target) {
+        ArrayList<String> contentList = new ArrayList<>(Arrays.asList("사랑해", "보고싶어", "감사해요!", "이따 봐용~", "오늘도 화이팅", "밥 먹자~"));
+        List<AlarmResDto> dtoList = alarmRepository.findAlarmByProfileAndTargetOrderByCount(me, target);
+        for (AlarmResDto alarmResDto : dtoList) {
+            contentList.remove(alarmResDto.getContent());
+        }
+        Collections.shuffle(contentList);
+        for (String content : contentList) {
+            AlarmResDto dto = new AlarmResDto();
+            dto.setContent(content);
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
+    public void meAndTargetFamilyCheck(Profile me, Profile target) {
+        if (me.getFamily().getId() != target.getFamily().getId()) {
+            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "다른 가족 그룹 인원에게 알람 전송 불가능");
+        }
     }
 }

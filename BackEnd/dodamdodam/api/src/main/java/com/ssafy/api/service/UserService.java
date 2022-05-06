@@ -8,6 +8,7 @@ import com.ssafy.core.common.Validate;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.CustomErrorCode;
 import com.ssafy.core.exception.CustomException;
+import com.ssafy.core.repository.FamilyRepository;
 import com.ssafy.core.repository.ProfileRepository;
 import com.ssafy.core.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,15 @@ import javax.transaction.Transactional;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
+import static com.ssafy.core.exception.CustomErrorCode.NOT_FOUND_FAMILY;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final FamilyRepository familyRepository;
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -96,11 +100,15 @@ public class UserService {
     }
 
     public boolean idValidate(String userId) {
-        if (userId.length() < Validate.USER_ID_MIN.getNumber() ||
-                userId.length() > Validate.USER_ID_MAX.getNumber()) {
-            return false;
-        }
-        return true;
+        return userId.length() >= Validate.USER_ID_MIN.getNumber() &&
+                userId.length() <= Validate.USER_ID_MAX.getNumber();
     }
 
+    public Long getFamilyIdByUserPk(Long userPk) {
+        Long familyId = familyRepository.findFamilyIdByUserPK(userPk);
+        if(familyId == null){
+            throw new CustomException(NOT_FOUND_FAMILY);
+        }
+        return familyId;
+    }
 }

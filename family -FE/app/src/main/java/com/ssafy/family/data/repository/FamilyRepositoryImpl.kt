@@ -5,6 +5,7 @@ import com.ssafy.family.data.remote.api.FamilyAPI
 import com.ssafy.family.data.remote.req.CreateFamilyReq
 import com.ssafy.family.data.remote.req.JoinFamilyReq
 import com.ssafy.family.data.remote.res.FamilyRes
+import com.ssafy.family.util.Constants.TAG
 import com.ssafy.family.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -22,15 +23,25 @@ class FamilyRepositoryImpl(
     private val ioDispatcher: CoroutineDispatcher,
     private val mainDispatcher: CoroutineDispatcher
 ): FamilyRepository {
-    val TAG: String = "로그"
-
-    override suspend fun createFamily(profile: CreateFamilyReq, imageFile: File?): Resource<FamilyRes> = withContext(ioDispatcher) {
+    override suspend fun createFamily(
+        profile: CreateFamilyReq,
+        imageFile: File?
+    ): Resource<FamilyRes> =
+        withContext(ioDispatcher) {
         try {
-            val role = getBody("role", profile.role)
-            val nickname = getBody("nickname", profile.nickname)
-            val birthday = getBody("birthday", profile.birthday)
+            val map = HashMap<String, RequestBody>()
+            map.put("role", getRequestBody(profile.role))
+            map.put("nickname", getRequestBody(profile.nickname))
+            map.put("birthday", getRequestBody(profile.birthday))
+            Log.d(TAG, "FamilyRepositoryImpl - createFamily() role : ${profile.role}")
+            Log.d(TAG, "FamilyRepositoryImpl - createFamily() nickname : ${profile.nickname}")
+            Log.d(TAG, "FamilyRepositoryImpl - createFamily() birthday : ${profile.birthday}")
+            Log.d(TAG, "FamilyRepositoryImpl - createFamily() called $map")
             val image = convertFileToMultipart(imageFile)
-            val response = api.createFamily(role, nickname, birthday, image)
+            Log.d(TAG, "FamilyRepositoryImpl - createFamily() imageF : ${imageFile}")
+            Log.d(TAG, "FamilyRepositoryImpl - createFamily() image : ${image}")
+            val response = api.createFamily(data = map, image)
+//            val response = api.createFamily(data = map)
             when {
                 response.isSuccessful -> {
                     Resource.success(response.body()!!)
@@ -70,7 +81,7 @@ class FamilyRepositoryImpl(
         }
     }
 
-    private fun getBody(name: String, value: Any): MultipartBody.Part {
-        return MultipartBody.Part.createFormData(name, value.toString())
+    private fun getRequestBody(value: Any): RequestBody{
+        return value.toString().toRequestBody("text/plain".toMediaTypeOrNull());
     }
 }

@@ -90,6 +90,17 @@ public class AlbumService {
         return pictureRepository.findMainPictureByAlbumId(albumId);
     }
 
+    @Transactional(readOnly = false)
+    public void deleteAlbum(long albumId, long userPK){
+        long familyId = familyRepository.findFamilyIdByUserPk(userPK);
+        Album album = albumRepository.findAlbumByAlbumId(albumId);
+        if(album.getFamily().getId() != familyId){
+            throw new CustomException(CustomErrorCode.NOT_BELONG_FAMILY);
+        }
+        albumRepository.delete(album);
+
+    }
+
 
     @Transactional(readOnly = false)
     public void createAlbum(AlbumReqDto albumReqDto, Family family, Album album, List<MultipartFile> multipartFiles, HttpServletRequest request) {
@@ -320,6 +331,11 @@ public class AlbumService {
         return albumRepository.findAlbumByHashTag(keyword,albumId);
     }
 
+    @Transactional(readOnly = false)
+    public List<Album> findAlbumsByDate(String date, long albumId){
+
+        return albumRepository.findAlbumByDate(date,albumId);
+    }
 
 
 

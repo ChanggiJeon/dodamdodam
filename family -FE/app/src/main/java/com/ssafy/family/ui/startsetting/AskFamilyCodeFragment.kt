@@ -12,8 +12,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AskFamilyCodeFragment : Fragment() {
-    val TAG: String = "로그"
-
     private lateinit var binding: FragmentAskFamilyCodeBinding
 
     override fun onCreateView(

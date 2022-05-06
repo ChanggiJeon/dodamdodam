@@ -35,8 +35,8 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Nullable
     @Setter
+    @Nullable
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthday;
 

@@ -2,6 +2,7 @@ package com.ssafy.core.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.core.dto.req.FindIdReqDto;
+import com.ssafy.core.entity.Profile;
 import com.ssafy.core.entity.QProfile;
 import com.ssafy.core.entity.QUser;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryCustomImpl implements UserRepositoryCustom {
+public class UserRepoCustomImpl implements UserRepoCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -26,6 +27,16 @@ public class UserRepositoryCustomImpl implements UserRepositoryCustom {
                 .where(user.name.eq(request.getName())
                         .and(user.birthday.eq(request.getBirthday()))
                         .and(profile.family.code.eq(request.getFamilyCode())))
+                .fetchFirst();
+    }
+
+    @Override
+    public String findUserFcmTokenByProfile(Profile target) {
+        return jpaQueryFactory.select(user.fcmToken)
+                .from(user)
+                .join(profile)
+                .on(user.userPk.eq(profile.user.userPk))
+                .where(profile.eq(target))
                 .fetchFirst();
     }
 
