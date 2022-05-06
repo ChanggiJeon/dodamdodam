@@ -16,14 +16,12 @@ import java.util.concurrent.TimeUnit
 @HiltAndroidApp
 class ApplicationClass: Application() {
 
-    val BASE_URL = "http://119.56.162.61:9999"
-    val TIME_OUT = 10000L
     val SP_NAME = "fcm_message"
 
     companion object {
 
         // JWT Token Header 키 값
-        const val X_AUTH_TOKEN = "X-Auth-Token"
+        const val X_AUTH_TOKEN = "X-AUTH-TOKEN"
         const val SHARED_PREFERENCES_NAME = "DoDamDoDam"
         const val COOKIES_KEY_NAME = "cookies"
         const val AUTO_LOGIN = "auto_login_flag"

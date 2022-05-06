@@ -8,6 +8,7 @@ import com.ssafy.family.config.ReceivedCookiesInterceptor
 import com.ssafy.family.config.XAccessTokenInterceptor
 import com.ssafy.family.data.remote.api.AccountAPI
 import com.ssafy.family.data.remote.api.CalendarAPI
+import com.ssafy.family.data.remote.api.AlbumAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -82,4 +83,28 @@ object ApiModule {
         return retrofit.create(CalendarAPI::class.java)
     }
 
+    @Singleton
+    @Provides
+    fun provideAlbumApiService(retrofit: Retrofit): AlbumAPI {
+        return retrofit.create(AlbumAPI::class.java)
+    }
+//    fun initRetrofit() {
+//        val client: OkHttpClient = OkHttpClient.Builder()
+//            .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+//            .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+//            // 로그캣에 okhttp.OkHttpClient로 검색하면 http 통신 내용을 보여줍니다.
+//            .addInterceptor(
+//                HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS).setLevel(
+//                    HttpLoggingInterceptor.Level.BODY))
+//            .addNetworkInterceptor(XAccessTokenInterceptor()) // JWT 자동 헤더 전송
+//            .addInterceptor(AddCookiesInterceptor())  //쿠키 전송
+//            .addInterceptor(ReceivedCookiesInterceptor()) //쿠키 추출
+//            .build()
+//
+//        ApplicationClass.sRetrofit = Retrofit.Builder()
+//            .baseUrl(BASE_URL)
+//            .client(client)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//    }
 }
