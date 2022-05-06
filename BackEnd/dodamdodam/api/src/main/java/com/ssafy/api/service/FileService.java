@@ -4,7 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import com.ssafy.core.common.FileUtil;
-import com.ssafy.core.exception.CustomErrorCode;
+import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +36,7 @@ public class FileService {
             amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            throw new CustomException(CustomErrorCode.FILE_SIZE_EXCEED);
+            throw new CustomException(ErrorCode.FILE_SIZE_EXCEED);
         }
 
         return amazonS3Client.getUrl(bucketName, fileName).toString();
@@ -44,7 +44,7 @@ public class FileService {
 
     private void validateFileExists(MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
-            throw new CustomException(CustomErrorCode.FILE_DOES_NOT_EXIST);
+            throw new CustomException(ErrorCode.FILE_DOES_NOT_EXIST);
         }
     }
     public byte[] downloadFileV1(String resourcePath) {
@@ -55,13 +55,13 @@ public class FileService {
         try {
             return IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
-            throw new CustomException(CustomErrorCode.FILE_DOWNLOAD_FAIL);
+            throw new CustomException(ErrorCode.FILE_DOWNLOAD_FAIL);
         }
     }
 
     private void validateFileExistsAtUrl(String resourcePath) {
         if (!amazonS3Client.doesObjectExist(bucketName, resourcePath)) {
-            throw new CustomException(CustomErrorCode.FILE_DOES_NOT_EXIST);
+            throw new CustomException(ErrorCode.FILE_DOES_NOT_EXIST);
         }
     }
 
