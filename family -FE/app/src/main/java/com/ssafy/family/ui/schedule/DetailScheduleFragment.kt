@@ -11,8 +11,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import com.ssafy.family.R
 import com.ssafy.family.databinding.FragmentDetailScheduleBinding
+import com.ssafy.family.util.CalendarUtil.stringToLocalDate
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.format.DateTimeFormatter
 
 private const val ScheduleId = "sId"
 
@@ -23,11 +25,16 @@ class DetailScheduleFragment : Fragment() {
     private lateinit var binding: FragmentDetailScheduleBinding
     private val detailScheduleViewModel by activityViewModels<DetailScheduleViewModel>()
     private var scheduleId: Long? = null
+    private val headerDateFormatter = DateTimeFormatter.ofPattern("MMM d'일'")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             scheduleId = it.getLong(ScheduleId)
+            if(scheduleId == null){
+                Toast.makeText(requireActivity(), "존재하지 않는 일정입니다.", Toast.LENGTH_SHORT).show()
+                requireActivity().finish()
+            }
         }
     }
 
@@ -46,7 +53,8 @@ class DetailScheduleFragment : Fragment() {
         (activity as ScheduleActivity).apply {
             changeHeader("일정 상세","수정", "삭제")
             binding.scheduleButtonInclude.button.setOnClickListener {
-                parentFragmentManager.beginTransaction().replace(R.id.schedule_frame, EditScheduleFragment())
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.schedule_frame, EditScheduleFragment.newInstance(scheduleId!!))
                     .commit()
             }
             binding.scheduleButtonInclude.button2.setOnClickListener {
@@ -63,16 +71,17 @@ class DetailScheduleFragment : Fragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     if(it.data!!.schedule != null){
-                        binding.startdate.text = it.data.schedule!!.startDate
-                        binding.enddate.text = it.data.schedule.endDate
+                        binding.startdate.text = headerDateFormatter.format(stringToLocalDate(it.data.schedule!!.startDate))
+                        binding.enddate.text = headerDateFormatter.format(stringToLocalDate(it.data.schedule.endDate))
                         binding.scheduleTitle.text = it.data.schedule.title
                         binding.scheduleContent.setText(it.data.schedule.content)
                     }
                     dismissLoading()
                 }
                 Status.ERROR -> {
-                    Toast.makeText(requireActivity(), it.message!!, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireActivity(), "존재하지 않는 일정입니다.", Toast.LENGTH_SHORT).show()
                     dismissLoading()
+                    requireActivity().finish()
                 }
                 Status.LOADING -> {
                     setLoading()

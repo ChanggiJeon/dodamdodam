@@ -37,8 +37,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toStartOf="@+id/claendar_after_button"
         app:layout_constraintStart_toEndOf="@+id/claendar_before_button"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="7 Jan, 2019" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/claendar_before_button"
@@ -101,8 +100,7 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="7 Jan, 2019" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/refresh_button"

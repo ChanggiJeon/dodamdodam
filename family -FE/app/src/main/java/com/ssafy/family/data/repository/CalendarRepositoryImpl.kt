@@ -92,9 +92,9 @@ class CalendarRepositoryImpl(
         }
     }
 
-    override suspend fun editSchedule(scheduleId: Long): Resource<BaseResponse> = withContext(ioDispatcher) {
+    override suspend fun editSchedule(scheduleId: Long, scheduleReq: ScheduleReq): Resource<BaseResponse> = withContext(ioDispatcher) {
         try {
-            val response = api.editSchedule(scheduleId)
+            val response = api.editSchedule(scheduleId, scheduleReq)
             when {
                 response.isSuccessful -> {
                     Resource.success(response.body()!!)

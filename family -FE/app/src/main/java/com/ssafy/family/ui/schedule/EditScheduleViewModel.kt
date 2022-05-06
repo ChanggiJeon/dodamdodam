@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.family.config.BaseResponse
+import com.ssafy.family.data.remote.req.*
 import com.ssafy.family.data.remote.res.ScheduleRes
 import com.ssafy.family.data.repository.CalendarRepository
 import com.ssafy.family.util.Resource
@@ -13,25 +14,25 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailScheduleViewModel @Inject constructor(private val calendarRepository: CalendarRepository) :
+class EditScheduleViewModel @Inject constructor(private val calendarRepository: CalendarRepository) :
     ViewModel() {
+
+    private val _editRequestLiveData = MutableLiveData<Resource<BaseResponse>>()
+    val editRequestLiveData: LiveData<Resource<BaseResponse>>
+        get() = _editRequestLiveData
 
     private val _getOneRequestLiveData = MutableLiveData<Resource<ScheduleRes>>()
     val getOneRequestLiveData: LiveData<Resource<ScheduleRes>>
         get() = _getOneRequestLiveData
 
-    private val _deleteRequestLiveData = MutableLiveData<Resource<BaseResponse>>()
-    val deleteRequestLiveData: LiveData<Resource<BaseResponse>>
-        get() = _deleteRequestLiveData
+    fun editSchedule(scheduleId: Long, scheduleReq: ScheduleReq) = viewModelScope.launch {
+        _editRequestLiveData.postValue(Resource.loading(null))
+        _editRequestLiveData.postValue(calendarRepository.editSchedule(scheduleId, scheduleReq))
+    }
 
     fun getOneSchedule(scheduleId: Long) = viewModelScope.launch {
         _getOneRequestLiveData.postValue(Resource.loading(null))
         _getOneRequestLiveData.postValue(calendarRepository.getSchedule(scheduleId))
-    }
-
-    fun deleteSchedule(scheduleId: Long) = viewModelScope.launch {
-        _deleteRequestLiveData.postValue(Resource.loading(null))
-        _deleteRequestLiveData.postValue(calendarRepository.deleteSchedule(scheduleId))
     }
 
 }
