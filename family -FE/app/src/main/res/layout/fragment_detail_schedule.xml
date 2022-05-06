@@ -7,17 +7,18 @@
     tools:context=".ui.schedule.DetailScheduleFragment">
 
 
-    <EditText
+    <TextView
         android:id="@+id/schedule_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:fontFamily="@font/spoqahansans"
         android:hint="제목"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,21 +28,27 @@
         android:id="@+id/outlinedTextField"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
         android:hint="내용"
+        app:boxBackgroundColor="@color/beige01"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startdate"
-        app:layout_constraintVertical_bias="0.161"
-        app:boxBackgroundColor="@color/beige01">
+        app:layout_constraintTop_toBottomOf="@+id/startdate">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/schedule_content"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="match_parent"
+            android:enabled="false"
+            android:textStyle="bold"
+            android:fontFamily="@font/spoqahansans"
+            android:textColor="@color/black"
+            android:gravity="top"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,25 +56,31 @@
         android:id="@+id/enddate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:text=" 2022년 4월 19일 "
-        android:backgroundTint="@color/beige01"
         android:background="@drawable/box_roulette"
+        android:backgroundTint="@color/beige01"
+        android:textStyle="bold"
+        android:fontFamily="@font/spoqahansans"
+        android:text=" 2022년 4월 19일 "
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/schedule_title" />
+        app:layout_constraintTop_toBottomOf="@+id/schedule_title" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/startdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="150dp"
-        android:text=" 2022년 4월 19일 "
+        android:layout_marginTop="32dp"
         android:background="@drawable/box_roulette"
         android:backgroundTint="@color/beige01"
+        android:textStyle="bold"
+        android:fontFamily="@font/spoqahansans"
+        android:text=" 2022년 4월 19일 "
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/schedule_title" />
+        app:layout_constraintTop_toBottomOf="@+id/schedule_title" />
 
 
     <ImageView
@@ -75,12 +88,20 @@
         android:layout_width="50dp"
         android:layout_height="30dp"
         android:src="@drawable/ic_baseline_arrow_forward_24"
-        app:layout_constraintBottom_toTopOf="@+id/outlinedTextField"
+        app:layout_constraintBottom_toBottomOf="@+id/startdate"
         app:layout_constraintEnd_toStartOf="@+id/enddate"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toEndOf="@+id/startdate"
-        app:layout_constraintTop_toBottomOf="@+id/schedule_title"
-        app:layout_constraintVertical_bias="0.554" />
+        app:layout_constraintTop_toTopOf="@+id/startdate" />
 
+    <ProgressBar
+        android:id="@+id/progressBar_detailS_loading"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

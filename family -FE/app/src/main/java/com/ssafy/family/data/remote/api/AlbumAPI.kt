@@ -5,6 +5,7 @@ import com.ssafy.family.data.remote.req.AlbumReactionReq
 import com.ssafy.family.data.remote.res.AlbumDetailRes
 import com.ssafy.family.data.remote.res.AlbumRes
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -16,7 +17,7 @@ interface AlbumAPI {
     @GET("/api/album/{albumId}")
     suspend fun detailAlbum(@Path("albumId") albumId: Int): Response<AlbumDetailRes>
 
-    @DELETE("/api/album/{reactionId}}")
+    @DELETE("/api/album/{reactionId}")
     suspend fun deleteReaction(@Path("reactionId") reactionId: Int): Response<BaseResponse>
 
     @POST("/api/album/reaction")
@@ -25,12 +26,13 @@ interface AlbumAPI {
     @GET("/api/album/search/{keyword}")
     suspend fun searchAlbum(@Path("keyword") keyword: String): Response<AlbumRes>
 
+    @GET("/api/album/searchDate/{date}")
+    suspend fun seachDateAlbum(@Path("date") date: String): Response<AlbumRes>
+
     @Multipart
     @POST("api/album/create")
     suspend fun addAlbum(
-        @Part("hashTags") hashTags: ArrayList<MultipartBody.Part>,
-        @Part("date") date:MultipartBody.Part,
-        @Part("mainIndex") mainIndex:MultipartBody.Part,
-        @Part("multipartFiles") multipartFiles: ArrayList<MultipartBody.Part>
+        @PartMap data: HashMap<String, RequestBody>,
+        @Part multipartFiles: ArrayList<MultipartBody.Part>
     ): Response<BaseResponse>
 }
