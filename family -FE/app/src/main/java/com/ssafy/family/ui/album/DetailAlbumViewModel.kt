@@ -10,6 +10,7 @@ import com.ssafy.family.data.remote.req.AddAlbumReq
 import com.ssafy.family.data.remote.req.AlbumReactionReq
 import com.ssafy.family.data.remote.res.AlbumDetailRes
 import com.ssafy.family.data.remote.res.AllAlbum
+import com.ssafy.family.data.remote.res.HashTag
 import com.ssafy.family.data.repository.AlbumRepository
 import com.ssafy.family.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,6 +58,12 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
 
     var selectedImgUriList =  arrayListOf<Uri>()
 
+    var paths = arrayListOf<String>()
+    var hashTag = arrayListOf<HashTag>()
+    var date = ""
+    var mainIndex = 0
+    var files = arrayListOf<File>()
+
     fun setSelectedImgUri(uri: Uri){
         selectedImgUriList.add(uri)
     }
@@ -91,12 +98,20 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
         _addReactionRequestLiveData.postValue(albumRepository.addReaction(albumReactionReq))
     }
 
-    fun addAlbum(addAlbum: AddAlbumReq, imagefiles: ArrayList<File>)=viewModelScope.launch {
-        _addAlbumRequestLiveData.postValue(Resource.loading(null))
-        _addAlbumRequestLiveData.postValue(albumRepository.addAlbum(addAlbum,imagefiles))
+    fun addAlbum(addAlbum: AddAlbumReq)=viewModelScope.launch {
+        if(!paths.isNullOrEmpty()){
+            _addAlbumRequestLiveData.postValue(Resource.loading(null))
+            _addAlbumRequestLiveData.postValue(albumRepository.addAlbum(addAlbum,makeMultiPart()))
+        }
     }
-    private fun makeMultiPart(path: String): MultipartBody.Part {
-        val imgFile = File(path)
-        return MultipartBody.Part.createFormData("photo", imgFile.name, imgFile.asRequestBody("image/*".toMediaType()))
+    private fun makeMultiPart(): ArrayList<MultipartBody.Part> {
+        val list = arrayListOf<MultipartBody.Part>()
+        for (path in paths) {
+            val imgFile = File(path)
+            list.add(MultipartBody.Part.createFormData("multipartFiles", imgFile.name, imgFile.asRequestBody("image/*".toMediaType())))
+        }
+        return list
+
     }
+
 }
