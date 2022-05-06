@@ -159,7 +159,7 @@ public class AlbumController {
 
         Long userPK = Long.parseLong(authentication.getName());
         Album album = albumService.findByAlbum(albumUpdateReqDto.getAlbumId());
-        albumService.updateAlbum(userPK, album, albumUpdateReqDto, albumUpdateReqDto.getMultipartFiles(), authentication, request);
+        albumService.updateAlbum(userPK, album, albumUpdateReqDto, authentication, request);
         return responseService.getSuccessResult();
     }
 
