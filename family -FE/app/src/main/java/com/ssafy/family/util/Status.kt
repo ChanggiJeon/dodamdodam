@@ -4,7 +4,10 @@ object Constants {
     const val TAG : String = "로그"
 }
 
-enum class 
+enum class UiMode {
+    PROGRESS,
+    READY
+}
 
 enum class Status {
     SUCCESS,

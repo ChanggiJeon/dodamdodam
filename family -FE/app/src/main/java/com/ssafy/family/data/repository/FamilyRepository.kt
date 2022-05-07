@@ -10,4 +10,6 @@ interface FamilyRepository {
     suspend fun createFamily(profile: CreateFamilyReq, imageFile: File?): Resource<FamilyRes>
 
     suspend fun joinFamily(profile: JoinFamilyReq): Resource<FamilyRes>
+
+    suspend fun checkFamilyCode(familyCode: String): Resource<FamilyRes>
 }
