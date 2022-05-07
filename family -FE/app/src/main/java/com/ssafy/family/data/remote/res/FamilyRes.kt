@@ -4,6 +4,6 @@ import com.google.gson.annotations.SerializedName
 import com.ssafy.family.config.BaseResponse
 
 class FamilyRes: BaseResponse() {
-    @SerializedName("data.familyId")
-    val familyId: Int? = null
+    @SerializedName("data")
+    val dataset: FamilyId? = null
 }

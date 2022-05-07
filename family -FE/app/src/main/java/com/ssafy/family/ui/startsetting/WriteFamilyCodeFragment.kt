@@ -11,13 +11,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.activityViewModels
 import com.ssafy.family.R
 import com.ssafy.family.databinding.FragmentAskFamilyCodeBinding
 import com.ssafy.family.databinding.FragmentWriteFamilyCodeBinding
 import com.ssafy.family.util.Constants.TAG
+import com.ssafy.family.util.UiMode
 
 class WriteFamilyCodeFragment : Fragment() {
     private lateinit var binding: FragmentWriteFamilyCodeBinding
+    private val familyViewModel by activityViewModels<StartSettingViewModel>()
+    lateinit var familyCode: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +37,15 @@ class WriteFamilyCodeFragment : Fragment() {
         (activity as StartSettingActivity).changeTopMessage("가족 코드를 입력해주세요!")
         // 버튼별 클릭 이벤트 리스너 등록
         binding.writeFamilyCodeMoveNextBtn.setOnClickListener{
-            handleSearchButtonUI()
+
+            familyCode = binding.writeFamilyCodeInputText.text.toString()
+            if (familyCode.count() == 15) {
+                handleButtonUI(UiMode.PROGRESS)
+                val code = familyCode.uppercase()
+                Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() familyCode : $code")
+                familyViewModel.checkFamilyCode(familyCode)
+                Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() familyId : ${familyViewModel.familyId.value}")
+            }
         }
     //        binding.writeFamilyCodeMoveNextBtn.setOnClickListener {
 //            parentFragmentManager.beginTransaction()
@@ -47,15 +59,19 @@ class WriteFamilyCodeFragment : Fragment() {
 //                .commit()
 //        }
     } //onViewCreated
-    private fun handleSearchButtonUI() {
-        Log.d(TAG, "WriteFamilyCodeFragment - handleSearchButtonUI() called")
-        binding.writeFamilyCodeBtnProgress.visibility = View.VISIBLE
-        binding.writeFamilyCodeMoveNextBtn.visibility = View.INVISIBLE
 
-        Handler().postDelayed({
-            binding.writeFamilyCodeBtnProgress.visibility = View.INVISIBLE
-            binding.writeFamilyCodeMoveNextBtn.visibility = View.VISIBLE
-        }, 1500)
+    // 프로그래스바 설정
+    private fun handleButtonUI(mode: UiMode) {
+        when (mode) {
+            UiMode.PROGRESS -> {
+                binding.writeFamilyCodeBtnProgress.visibility = View.VISIBLE
+                binding.writeFamilyCodeMoveNextBtn.visibility = View.INVISIBLE
+            }
+            UiMode.READY -> {
+                binding.writeFamilyCodeBtnProgress.visibility = View.INVISIBLE
+                binding.writeFamilyCodeMoveNextBtn.visibility = View.VISIBLE
+            }
+        }
     }
 
 }

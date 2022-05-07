@@ -8,7 +8,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/text_input_layout_write_family_code"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/TextInputLayoutStyle"
         android:background="@drawable/box_white_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,9 +17,7 @@
         android:hint="@string/family_code_input"
         app:hintTextColor="@color/pink01"
         android:textColorHint="@color/pink01"
-        app:boxStrokeColor="@color/pink01"
-        app:counterEnabled="true"
-        app:counterMaxLength="15"
+        app:boxStrokeColor="@color/pink00"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:background="@color/white"
             android:inputType="text"
             android:maxLength="15" />

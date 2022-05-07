@@ -28,49 +28,70 @@ class FamilyRepositoryImpl(
         imageFile: File?
     ): Resource<FamilyRes> =
         withContext(ioDispatcher) {
-        try {
-            val map = HashMap<String, RequestBody>()
-            map.put("role", getRequestBody(profile.role))
-            map.put("nickname", getRequestBody(profile.nickname))
-            map.put("birthday", getRequestBody(profile.birthday))
-            Log.d(TAG, "FamilyRepositoryImpl - createFamily() role : ${profile.role}")
-            Log.d(TAG, "FamilyRepositoryImpl - createFamily() nickname : ${profile.nickname}")
-            Log.d(TAG, "FamilyRepositoryImpl - createFamily() birthday : ${profile.birthday}")
-            Log.d(TAG, "FamilyRepositoryImpl - createFamily() called $map")
-            val image = convertFileToMultipart(imageFile)
-            Log.d(TAG, "FamilyRepositoryImpl - createFamily() imageF : ${imageFile}")
-            Log.d(TAG, "FamilyRepositoryImpl - createFamily() image : ${image}")
-            val response = api.createFamily(data = map, image)
-//            val response = api.createFamily(data = map)
-            when {
-                response.isSuccessful -> {
-                    Resource.success(response.body()!!)
-                }
-                else -> {
-                    Log.d(TAG, "FamilyRepositoryImpl - createFamily() ErrorCode:${response.code().toString()}")
-                    Resource.error(null, "응답 에러")
-                }
-            }
-        } catch (e: Exception) {
-            Resource.error(null, "통신 에러 $e")
-        }
-    }
+            try {
+                val map = HashMap<String, RequestBody>()
+                map.put("role", getRequestBody(profile.role))
+                map.put("nickname", getRequestBody(profile.nickname))
+                map.put("birthday", getRequestBody(profile.birthday))
+                val image = convertFileToMultipart(imageFile)
+                val response = api.createFamily(data = map, image)
+                when {
+                    response.isSuccessful -> {
+                        Resource.success(response.body()!!)
+                    }
+                    else -> {
 
-    override suspend fun joinFamily(profile: JoinFamilyReq): Resource<FamilyRes> = withContext(ioDispatcher) {
-        try {
-            val response = api.joinFamily(profile)
-            when {
-                response.isSuccessful -> {
-                    Resource.success(response.body()!!)
+                        Resource.error(null, "응답 에러")
+                    }
                 }
-                else -> {
-                    Resource.error(null, "응답 에러")
-                }
+            } catch (e: Exception) {
+                Resource.error(null, "통신 에러 $e")
             }
-        } catch (e: Exception) {
-            Resource.error(null, "서버 에러")
         }
-    }
+
+    override suspend fun joinFamily(profile: JoinFamilyReq): Resource<FamilyRes> =
+        withContext(ioDispatcher) {
+            try {
+                val response = api.joinFamily(profile)
+                when {
+                    response.isSuccessful -> {
+                        Resource.success(response.body()!!)
+                    }
+                    else -> {
+                        Resource.error(null, "응답 에러")
+                    }
+                }
+            } catch (e: Exception) {
+                Resource.error(null, "서버 에러")
+            }
+        }
+
+    override suspend fun checkFamilyCode(familyCode: String): Resource<FamilyRes> =
+        withContext(ioDispatcher){
+            try {
+                Log.d(TAG, "FamilyRepositoryImpl - checkFamilyCode() called")
+                val response = api.checkFamilyCode(familyCode)
+                Log.d(TAG, "response $response")
+                when {
+                    response.isSuccessful -> {
+                        Log.d(TAG, "FamilyRepositoryImpl - checkFamilyCode() ${Resource.success(response.body()!!)}")
+                        Resource.success(response.body()!!)
+                    }
+                    else -> {
+                        Log.d(
+                            TAG,
+                            "FamilyRepositoryImpl - createFamily() ErrorCode:${
+                                response.code().toString()
+                            }"
+                        )
+                        Resource.error(null, "응답 에러")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "api 요청 실패")
+                Resource.error(null, "서버 에러 $e")
+            }
+        }
 
     private fun convertFileToMultipart(file: File?): MultipartBody.Part? {
         if (file == null) {
