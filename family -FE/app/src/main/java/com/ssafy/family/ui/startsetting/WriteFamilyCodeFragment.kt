@@ -1,21 +1,17 @@
 package com.ssafy.family.ui.startsetting
 
 import android.os.Bundle
-import android.os.Handler
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.activityViewModels
 import com.ssafy.family.R
-import com.ssafy.family.databinding.FragmentAskFamilyCodeBinding
 import com.ssafy.family.databinding.FragmentWriteFamilyCodeBinding
 import com.ssafy.family.util.Constants.TAG
+import com.ssafy.family.util.Status
 import com.ssafy.family.util.UiMode
 
 class WriteFamilyCodeFragment : Fragment() {
@@ -35,29 +31,31 @@ class WriteFamilyCodeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // 상단 텍스트 수정
         (activity as StartSettingActivity).changeTopMessage("가족 코드를 입력해주세요!")
-        // 버튼별 클릭 이벤트 리스너 등록
+        // 클릭 이벤트 등록
         binding.writeFamilyCodeMoveNextBtn.setOnClickListener{
-
             familyCode = binding.writeFamilyCodeInputText.text.toString()
             if (familyCode.count() == 15) {
                 handleButtonUI(UiMode.PROGRESS)
                 val code = familyCode.uppercase()
-                Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() familyCode : $code")
-                familyViewModel.checkFamilyCode(familyCode)
-                Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() familyId : ${familyViewModel.familyId.value}")
+                val res = familyViewModel.checkFamilyCode(code)
+                Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() called $res")
             }
         }
-    //        binding.writeFamilyCodeMoveNextBtn.setOnClickListener {
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.fragment_in_start_setting, SaveInfoFragment())
-//                .addToBackStack(null)
-//                .commit()
-//        }
-//        binding.writeFamilyCodeMoveBeforeBtn.setOnClickListener {
-//            parentFragmentManager.beginTransaction()
-//                .replace(R.id.fragment_in_start_setting, AskFamilyCodeFragment())
-//                .commit()
-//        }
+        // 뷰모델 데이터 변화 감지
+        familyViewModel.isChecked.observe(requireActivity()){
+            // 가족코드 변화 감지
+            Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() familyId observe $it")
+            // 가족코드 검증 성공 시 화면 전환
+            if (it == UiMode.READY) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_in_start_setting, SaveInfoFragment())
+                    .commit()
+
+            } else if (it == UiMode.FAIL) {
+                Toast.makeText(requireContext(), "가족 코드를 다시 확인해주세요", Toast.LENGTH_SHORT).show()
+                handleButtonUI(UiMode.READY)
+            }
+        }
     } //onViewCreated
 
     // 프로그래스바 설정
@@ -67,7 +65,7 @@ class WriteFamilyCodeFragment : Fragment() {
                 binding.writeFamilyCodeBtnProgress.visibility = View.VISIBLE
                 binding.writeFamilyCodeMoveNextBtn.visibility = View.INVISIBLE
             }
-            UiMode.READY -> {
+            else -> {
                 binding.writeFamilyCodeBtnProgress.visibility = View.INVISIBLE
                 binding.writeFamilyCodeMoveNextBtn.visibility = View.VISIBLE
             }

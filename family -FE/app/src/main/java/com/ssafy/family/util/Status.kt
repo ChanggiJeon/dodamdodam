@@ -6,7 +6,8 @@ object Constants {
 
 enum class UiMode {
     PROGRESS,
-    READY
+    READY,
+    FAIL
 }
 
 enum class Status {

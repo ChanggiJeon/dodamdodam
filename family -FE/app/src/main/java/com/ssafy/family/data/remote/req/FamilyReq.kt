@@ -9,7 +9,7 @@ import retrofit2.http.Part
 import java.io.File
 
 @Parcelize
-data class CreateFamilyReq(
+data class FamilyReq(
     @SerializedName("role")
     val role: String,
     @SerializedName("nickname")
