@@ -27,6 +27,7 @@ import com.ssafy.family.ui.startsetting.StartSettingActivity
 import com.ssafy.family.util.InputValidUtil
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.Status
+import com.ssafy.family.util.UiMode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -82,6 +83,17 @@ class LoginFragment : Fragment() {
         binding.loginPageSignBtn.setOnClickListener {
             parentFragmentManager.beginTransaction().replace(R.id.home_frame, SignFragment())
                 .commit()
+        }
+        loginViewModel.loginResult.observe(requireActivity()) {
+            when (it) {
+                UiMode.SUCCESS -> {
+                    startActivity(Intent(requireContext(), StartSettingActivity::class.java))
+                    requireActivity().finish()
+                }
+                else -> {
+                    Toast.makeText(requireContext(), "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
         loginViewModel.loginRequestLiveData.observe(requireActivity()) {
             when (it.status) {
