@@ -19,7 +19,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.ssafy.family.R
-import com.ssafy.family.data.remote.req.CreateFamilyReq
+import com.ssafy.family.data.remote.req.FamilyReq
 import com.ssafy.family.databinding.FragmentSaveInfoBinding
 import com.ssafy.family.util.Constants.TAG
 import com.ssafy.family.util.FileUtils
@@ -178,7 +178,7 @@ class SaveInfoFragment : Fragment() {
 //        val imageFile = imageUriToFile(imageUri)
         val imageFile = FileUtils.getFile(requireContext(), imageUri!!)
 
-        familyViewModel.createFamily(CreateFamilyReq(role, nickname, birthday), imageFile)
+        familyViewModel.createFamily(FamilyReq(role, nickname, birthday), imageFile)
     }
 
     // 이미지 선택 런쳐 실행 함수

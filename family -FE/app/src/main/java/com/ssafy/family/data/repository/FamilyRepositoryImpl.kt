@@ -2,14 +2,13 @@ package com.ssafy.family.data.repository
 
 import android.util.Log
 import com.ssafy.family.data.remote.api.FamilyAPI
-import com.ssafy.family.data.remote.req.CreateFamilyReq
+import com.ssafy.family.data.remote.req.FamilyReq
 import com.ssafy.family.data.remote.req.JoinFamilyReq
 import com.ssafy.family.data.remote.res.FamilyRes
 import com.ssafy.family.util.Constants.TAG
 import com.ssafy.family.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -24,7 +23,7 @@ class FamilyRepositoryImpl(
     private val mainDispatcher: CoroutineDispatcher
 ): FamilyRepository {
     override suspend fun createFamily(
-        profile: CreateFamilyReq,
+        profile: FamilyReq,
         imageFile: File?
     ): Resource<FamilyRes> =
         withContext(ioDispatcher) {
