@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ssafy.family.data.remote.req.FamilyReq
-import com.ssafy.family.data.remote.req.JoinFamilyReq
 import com.ssafy.family.data.remote.res.FamilyRes
 import com.ssafy.family.data.repository.FamilyRepository
 import com.ssafy.family.util.Resource
@@ -41,9 +40,9 @@ class StartSettingViewModel @Inject constructor(private val familyRepository: Fa
         _familyResponseLiveData.postValue(familyRepository.createFamily(profile, imageFile))
     }
 
-    fun joinFamily(profile: JoinFamilyReq) = viewModelScope.launch {
+    fun joinFamily(profile: FamilyReq, familyId: Int, imageFile: File?) = viewModelScope.launch {
         _familyResponseLiveData.postValue(Resource.loading(null))
-        _familyResponseLiveData.postValue(familyRepository.joinFamily(profile))
+        _familyResponseLiveData.postValue(familyRepository.joinFamily(profile, familyId, imageFile))
     }
 
     fun checkFamilyCode(familyCode: String) = viewModelScope.launch {

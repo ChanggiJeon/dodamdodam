@@ -36,19 +36,20 @@ class WriteFamilyCodeFragment : Fragment() {
         // 클릭 이벤트 등록
         binding.writeFamilyCodeMoveNextBtn.setOnClickListener{
             familyCode = binding.writeFamilyCodeInputText.text.toString()
-            if (setErrorOnFamilyCode(familyCode)) {
+            if (checkFamilyCode(familyCode)) {
+                // 유효성 검사 통과하면 실행
                 handleButtonUI(UiMode.PROGRESS)
                 val code = familyCode.uppercase()
+                // 요청 성공 시 뷰모델 checkFamilyCodeRes(familyId), isChecked(화면전환) 설정
                 val res = familyViewModel.checkFamilyCode(code)
                 Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() called $res")
             } else {
+                // 유효성 검사 실패 시 로그확인
                 Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() called $familyCode")
             }
         }
         // 뷰모델 데이터 변화 감지
         familyViewModel.isChecked.observe(requireActivity()){
-            // 가족코드 변화 감지
-            Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() familyId observe $it")
             // 가족코드 검증 성공 시 화면 전환
             if (it == UiMode.READY) {
                 parentFragmentManager.beginTransaction()
@@ -85,7 +86,7 @@ class WriteFamilyCodeFragment : Fragment() {
         }
     }
     // 유효성 검사
-    private fun setErrorOnFamilyCode(familyCode: String): Boolean {
+    private fun checkFamilyCode(familyCode: String): Boolean {
         var flag = 1
         if (InputValidUtil.isValidFamilyCode(familyCode)) {
             dismissErrorOnFamilyCode()
