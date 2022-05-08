@@ -3,7 +3,6 @@ package com.ssafy.family.data.repository
 import android.util.Log
 import com.ssafy.family.data.remote.api.FamilyAPI
 import com.ssafy.family.data.remote.req.FamilyReq
-import com.ssafy.family.data.remote.req.JoinFamilyReq
 import com.ssafy.family.data.remote.res.FamilyRes
 import com.ssafy.family.util.Constants.TAG
 import com.ssafy.family.util.Resource
@@ -48,10 +47,16 @@ class FamilyRepositoryImpl(
             }
         }
 
-    override suspend fun joinFamily(profile: JoinFamilyReq): Resource<FamilyRes> =
+    override suspend fun joinFamily(profile: FamilyReq, familyId: Int, imageFile: File?): Resource<FamilyRes> =
         withContext(ioDispatcher) {
             try {
-                val response = api.joinFamily(profile)
+                val map = HashMap<String, RequestBody>()
+                map.put("role", getRequestBody(profile.role))
+                map.put("nickname", getRequestBody(profile.nickname))
+                map.put("birthday", getRequestBody(profile.birthday))
+                map.put("familyId", getRequestBody(familyId))
+                val image = convertFileToMultipart(imageFile)
+                val response = api.joinFamily(data = map, image)
                 when {
                     response.isSuccessful -> {
                         Resource.success(response.body()!!)

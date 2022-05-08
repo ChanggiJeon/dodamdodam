@@ -30,6 +30,7 @@ import com.ssafy.family.util.SharedPreferencesUtil
 import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
+import kotlin.reflect.typeOf
 
 @AndroidEntryPoint
 class SaveInfoFragment : Fragment() {
@@ -104,7 +105,15 @@ class SaveInfoFragment : Fragment() {
         // 가족 생성
         binding.saveInfoMoveNextBtn.setOnClickListener {
             if (isValidForm()) {
-                createFamily()
+                val viewModelFamilyId = familyViewModel.checkFamilyCodeRes.value?.data?.dataset?.familyId
+                // 가족코드 검증을 하고 온 경우 : 뷰모델의 familyId가 존재 -> 기존 가족에 가입
+                if (viewModelFamilyId is Int) {
+                    Log.d(TAG, "viewModelFamilyId : $viewModelFamilyId")
+                    joinFamily(viewModelFamilyId)
+                } else { // 바로 온 경우 가족 및 프로필 생성
+                    Log.d(TAG, "viewModelFamilyId : $viewModelFamilyId")
+                    createFamily()
+                }
             }
         }
         // 닉네임 유효성 검사 통과 시 에러메시지 삭제
@@ -125,15 +134,15 @@ class SaveInfoFragment : Fragment() {
         // LiveData observe
         familyViewModel.familyResponseLiveData.observe(requireActivity()) {
             if (it.status == Status.SUCCESS){
+                // 가족 생성 요청 성공 시 sharedpreference에 familyId 저장
                 SharedPreferencesUtil(requireContext()).setString("familyId", it.data?.dataset?.familyId.toString())
+                Toast.makeText(requireContext(), "프로필 생성에 성공했습니다.", Toast.LENGTH_SHORT).show()
                 startActivity(Intent(requireContext(), StatusActivity::class.java))
                 requireActivity().finish()
-            } else {
+            } else if(it.status == Status.ERROR) {
                 Toast.makeText(requireContext(), "프로필 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
-
-
     } // initView
 
     // 데이터 유효성 검사
@@ -183,10 +192,23 @@ class SaveInfoFragment : Fragment() {
         val role = binding.saveInfoSpinner.selectedItem.toString()
         val nickname = binding.saveInfoInputNickname.text.toString()
         val birthday = InputValidUtil.makeDay(binding.saveInfoInputBirthday.text.toString())
-//        val imageFile = imageUriToFile(imageUri)
-        val imageFile = FileUtils.getFile(requireContext(), imageUri!!)
+        var imageFile: File? = null
+        if (imageUri != null) {
+            imageFile = FileUtils.getFile(requireContext(), imageUri!!)
+        }
 
         familyViewModel.createFamily(FamilyReq(role, nickname, birthday), imageFile)
+    }
+    private fun joinFamily(familyId: Int) {
+        val role = binding.saveInfoSpinner.selectedItem.toString()
+        val nickname = binding.saveInfoInputNickname.text.toString()
+        val birthday = InputValidUtil.makeDay(binding.saveInfoInputBirthday.text.toString())
+        var imageFile: File? = null
+        if (imageUri != null) {
+            imageFile = FileUtils.getFile(requireContext(), imageUri!!)
+        }
+
+        familyViewModel.joinFamily(FamilyReq(role, nickname, birthday), familyId, imageFile)
     }
 
     // 이미지 선택 런쳐 실행 함수
