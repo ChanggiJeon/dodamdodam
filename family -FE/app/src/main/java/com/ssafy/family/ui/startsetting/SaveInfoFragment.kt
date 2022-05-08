@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
@@ -21,9 +22,12 @@ import com.bumptech.glide.Glide
 import com.ssafy.family.R
 import com.ssafy.family.data.remote.req.FamilyReq
 import com.ssafy.family.databinding.FragmentSaveInfoBinding
+import com.ssafy.family.ui.status.StatusActivity
 import com.ssafy.family.util.Constants.TAG
 import com.ssafy.family.util.FileUtils
 import com.ssafy.family.util.InputValidUtil
+import com.ssafy.family.util.SharedPreferencesUtil
+import com.ssafy.family.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 
@@ -119,10 +123,14 @@ class SaveInfoFragment : Fragment() {
         }
 
         // LiveData observe
-        familyViewModel.familyRequestLiveData.observe(requireActivity()) {
-            Log.d(TAG, "SaveInfoFragment // family id = ${it.data}")
-            Log.d(TAG, "SaveInfoFragment // family message = ${it.message}")
-            Log.d(TAG, "SaveInfoFragment // family status = ${it.status}")
+        familyViewModel.familyResponseLiveData.observe(requireActivity()) {
+            if (it.status == Status.SUCCESS){
+                SharedPreferencesUtil(requireContext()).setString("familyId", it.data?.dataset?.familyId.toString())
+                startActivity(Intent(requireContext(), StatusActivity::class.java))
+                requireActivity().finish()
+            } else {
+                Toast.makeText(requireContext(), "프로필 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
 
 

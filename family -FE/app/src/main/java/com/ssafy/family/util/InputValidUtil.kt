@@ -19,6 +19,8 @@ object InputValidUtil {
     val birthDayRegex = "([0-9]{4}(0[1-9]|1[0-2])(0[1-9]|[1,2][0-9]|3[0,1]))".toRegex()
     val phoneRegex = "^\\d{3}\\d{3,4}\\d{4}$".toRegex()
 
+    val familyCodeRegex = "^[0-9a-zA-Z]{15}$".toRegex()
+
     fun isValidId(Id: String): Boolean {
         val result = Id.matches(idRegex)
         return result
@@ -84,5 +86,9 @@ object InputValidUtil {
 
     fun isValidPhoneNumber(phoneNumber: String): Boolean {
         return phoneNumber.matches(phoneRegex)
+    }
+
+    fun isValidFamilyCode(code: String): Boolean {
+        return code.matches(familyCodeRegex)
     }
 }

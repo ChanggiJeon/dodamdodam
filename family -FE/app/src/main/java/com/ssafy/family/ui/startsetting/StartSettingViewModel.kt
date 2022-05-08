@@ -22,18 +22,19 @@ class StartSettingViewModel @Inject constructor(private val familyRepository: Fa
 
     // 가족 생성/가입 시 받아온 id
     private val _familyResponseLiveData = MutableLiveData<Resource<FamilyRes>>()
-    // 가족코드 검증 시 받아온 id
-    private val _checkFamilyCodeRes = MutableLiveData<Resource<FamilyRes?>>()
-    // 가족코드 검증 성공 시 화면 전환을 위한 체크
-    private val _isChecked = MutableLiveData<UiMode>()
-
-    val familyRequestLiveData: LiveData<Resource<FamilyRes>>
+    val familyResponseLiveData: LiveData<Resource<FamilyRes>>
         get() = _familyResponseLiveData
 
+    // 가족코드 검증 시 받아온 id
+    private val _checkFamilyCodeRes = MutableLiveData<Resource<FamilyRes?>>()
     val checkFamilyCodeRes: LiveData<Resource<FamilyRes?>>
         get() = _checkFamilyCodeRes
+
+    // 가족코드 검증 성공 시 화면 전환을 위한 체크
+    private val _isChecked = MutableLiveData<UiMode>()
     val isChecked: LiveData<UiMode>
         get() = _isChecked
+
 
     fun createFamily(profile: FamilyReq, imageFile : File?) = viewModelScope.launch {
         _familyResponseLiveData.postValue(Resource.loading(null))
