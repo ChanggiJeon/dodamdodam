@@ -33,7 +33,7 @@ class LoginViewModel @Inject constructor(private val accountRepository: AccountR
     val loginRequestLiveData: LiveData<Resource<LoginRes>>
         get() = _loginRequestLiveData
 
-    private var _loginResult = MutableLiveData<UiMode>()
+    private val _loginResult = MutableLiveData<UiMode>()
     val loginResult: LiveData<UiMode>
         get() = _loginResult
 

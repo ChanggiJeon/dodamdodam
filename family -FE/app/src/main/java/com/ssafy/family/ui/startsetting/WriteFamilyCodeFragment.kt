@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.ssafy.family.R
 import com.ssafy.family.databinding.FragmentWriteFamilyCodeBinding
 import com.ssafy.family.util.Constants.TAG
+import com.ssafy.family.util.InputValidUtil
 import com.ssafy.family.util.Status
 import com.ssafy.family.util.UiMode
 
@@ -34,11 +36,13 @@ class WriteFamilyCodeFragment : Fragment() {
         // 클릭 이벤트 등록
         binding.writeFamilyCodeMoveNextBtn.setOnClickListener{
             familyCode = binding.writeFamilyCodeInputText.text.toString()
-            if (familyCode.count() == 15) {
+            if (setErrorOnFamilyCode(familyCode)) {
                 handleButtonUI(UiMode.PROGRESS)
                 val code = familyCode.uppercase()
                 val res = familyViewModel.checkFamilyCode(code)
                 Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() called $res")
+            } else {
+                Log.d(TAG, "WriteFamilyCodeFragment - onViewCreated() called $familyCode")
             }
         }
         // 뷰모델 데이터 변화 감지
@@ -56,6 +60,15 @@ class WriteFamilyCodeFragment : Fragment() {
                 handleButtonUI(UiMode.READY)
             }
         }
+        // 유효성 검사
+        binding.writeFamilyCodeInputText.addTextChangedListener {
+            val input = it.toString()
+            if (InputValidUtil.isValidId(input)) {
+                dismissErrorOnFamilyCode()
+            } else {
+                setErrorOnFamilyCode()
+            }
+        }
     } //onViewCreated
 
     // 프로그래스바 설정
@@ -71,5 +84,22 @@ class WriteFamilyCodeFragment : Fragment() {
             }
         }
     }
-
+    // 유효성 검사
+    private fun setErrorOnFamilyCode(familyCode: String): Boolean {
+        var flag = 1
+        if (InputValidUtil.isValidFamilyCode(familyCode)) {
+            dismissErrorOnFamilyCode()
+        } else {
+            flag = 0
+            setErrorOnFamilyCode()
+        }
+        return flag == 1
+    }
+    private fun dismissErrorOnFamilyCode() {
+        binding.writeFamilyCodeInputText.error = null
+    }
+    private fun setErrorOnFamilyCode() {
+        binding.writeFamilyCodeInputText.error =
+            resources.getString(R.string.familyCodeErrorMessage)
+    }
 }
