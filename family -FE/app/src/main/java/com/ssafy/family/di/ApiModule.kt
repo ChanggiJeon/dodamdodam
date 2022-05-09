@@ -9,6 +9,7 @@ import com.ssafy.family.config.XAccessTokenInterceptor
 import com.ssafy.family.data.remote.api.AccountAPI
 import com.ssafy.family.data.remote.api.CalendarAPI
 import com.ssafy.family.data.remote.api.AlbumAPI
+import com.ssafy.family.data.remote.api.ChattingAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -87,6 +88,12 @@ object ApiModule {
     @Provides
     fun provideAlbumApiService(retrofit: Retrofit): AlbumAPI {
         return retrofit.create(AlbumAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideChatApiService(retrofit: Retrofit): ChattingAPI {
+        return retrofit.create(ChattingAPI::class.java)
     }
 //    fun initRetrofit() {
 //        val client: OkHttpClient = OkHttpClient.Builder()
