@@ -7,9 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.family.data.remote.res.MissionRes
 import com.ssafy.family.data.repository.MainFamilyRepository
 import com.ssafy.family.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+@HiltViewModel
 class MainFamilyViewModel @Inject constructor(private val mainFamilyRepository: MainFamilyRepository) :
     ViewModel() {
 
