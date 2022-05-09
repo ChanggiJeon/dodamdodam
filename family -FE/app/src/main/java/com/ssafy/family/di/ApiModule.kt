@@ -7,6 +7,7 @@ import com.ssafy.family.config.AddCookiesInterceptor
 import com.ssafy.family.config.ReceivedCookiesInterceptor
 import com.ssafy.family.config.XAccessTokenInterceptor
 import com.ssafy.family.data.remote.api.AccountAPI
+import com.ssafy.family.data.remote.api.FamilyAPI
 import com.ssafy.family.data.remote.api.CalendarAPI
 import com.ssafy.family.data.remote.api.AlbumAPI
 import dagger.Module
@@ -16,9 +17,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -80,6 +79,12 @@ object ApiModule {
     @Provides
     fun provideAccountApiService(retrofit: Retrofit): AccountAPI {
         return retrofit.create(AccountAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFamilyApiService(retrofit: Retrofit): FamilyAPI {
+        return retrofit.create(FamilyAPI::class.java)
     }
 
     @Singleton
