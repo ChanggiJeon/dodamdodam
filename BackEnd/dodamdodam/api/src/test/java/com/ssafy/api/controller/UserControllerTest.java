@@ -1,57 +1,47 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.ControllerTestSupport;
-import com.ssafy.api.config.jwt.JwtProvider;
+import com.ssafy.api.service.UserService;
 import com.ssafy.core.dto.req.FindIdReqDto;
+import com.ssafy.core.dto.req.UserInfoReqDto;
+import com.ssafy.core.dto.res.ReIssueTokenResDto;
 import com.ssafy.core.dto.res.SignInResDto;
-import com.ssafy.core.entity.User;
-import com.ssafy.core.repository.ProfileRepository;
-import com.ssafy.core.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Optional;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class UserControllerTest extends ControllerTestSupport {
 
     @MockBean
-    private UserRepository userRepository;
+    private UserService userService;
 
-    @MockBean
-    private ProfileRepository profileRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final ReIssueTokenResDto defaultReIssueTokenResDto = ReIssueTokenResDto.builder()
+            .jwtToken("dodamdodam.access.token")
+            .refreshToken("dodamdodam.refresh.token")
+            .build();
 
-    @MockBean
-    private JwtProvider jwtProvider;
-
-    @MockBean
-    private User user;
-
-    private User makeDefaultUser() {
-        return User.builder()
-                .userId("test")
-                .name("test")
-                .password(passwordEncoder.encode("test123!"))
-                .build();
-    }
+    private final SignInResDto defaultSignInResDto = SignInResDto.builder()
+            .name("test")
+            .jwtToken("accessToken")
+            .refreshToken("refreshToken")
+            .profileId(1L)
+            .familyId(1L)
+            .build();
 
     @Test
     void idCheck_사용가능한_아이디() throws Exception {
 
         //given
-        given(userRepository.existsUserByUserId(any(String.class))).willReturn(false);
+        willDoNothing().given(userService).checkExistId(any(String.class));
 
         //when
         ResultActions result = mockMvc.perform(
@@ -64,14 +54,14 @@ class UserControllerTest extends ControllerTestSupport {
     }
 
     @Test
-    void idCheck_이미사용중인_아이디() throws Exception {
+    void idCheck_아이디_공백포함() throws Exception {
 
         //given
-        given(userRepository.existsUserByUserId(any(String.class))).willReturn(true);
+        willDoNothing().given(userService).checkExistId(any(String.class));
 
         //when
         ResultActions result = mockMvc.perform(
-                get("/api/user/{userId}", "test")
+                get("/api/user/{userId}", "tes t")
                         .contentType(MediaType.APPLICATION_JSON)
         );
         //then
@@ -79,10 +69,10 @@ class UserControllerTest extends ControllerTestSupport {
     }
 
     @Test
-    void idCheck_아이디_형식_틀림() throws Exception {
+    void idCheck_아이디_특수문자_포함() throws Exception {
 
         //given
-        given(userRepository.existsUserByUserId(any(String.class))).willReturn(false);
+        willDoNothing().given(userService).checkExistId(any(String.class));
 
         //when
         ResultActions result = mockMvc.perform(
@@ -146,12 +136,10 @@ class UserControllerTest extends ControllerTestSupport {
 
     @Test
     void userSignIn_정상입력() throws Exception {
-        //given, when
-        given(userRepository.findUserByUserId(any(String.class)))
-                .willReturn(Optional.of(makeDefaultUser()));
-        given(profileRepository.findProfileIdAndFamilyIdByUserPk(any(Long.class)))
-                .willReturn(SignInResDto.builder().familyId(1L).profileId(1L).build());
+        //given
+        given(userService.signIn(any(UserInfoReqDto.class))).willReturn(defaultSignInResDto);
 
+        //when
         ResultActions result = mockMvc.perform(
                 post("/api/user/signin")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -163,12 +151,10 @@ class UserControllerTest extends ControllerTestSupport {
 
     @Test
     void userSignIn_비밀번호_형식_틀림() throws Exception {
-        //given, when
-        given(userRepository.findUserByUserId(any(String.class)))
-                .willReturn(Optional.of(makeDefaultUser()));
-        given(profileRepository.findProfileIdAndFamilyIdByUserPk(any(Long.class)))
-                .willReturn(new SignInResDto());
+        //given
+        given(userService.signIn(any(UserInfoReqDto.class))).willReturn(defaultSignInResDto);
 
+        //when
         ResultActions result = mockMvc.perform(
                 post("/api/user/signin")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -179,15 +165,12 @@ class UserControllerTest extends ControllerTestSupport {
     }
 
 
-    //아이디와 비밀번호 잘못된 입력값을 찾아내는게 맞나?
     @Test
     void userSignIn_아이디_공백() throws Exception {
-        //given, when
-        given(userRepository.findUserByUserId(any(String.class)))
-                .willReturn(Optional.of(makeDefaultUser()));
-        given(profileRepository.findProfileIdAndFamilyIdByUserPk(any(Long.class)))
-                .willReturn(new SignInResDto());
+        //given
+        given(userService.signIn(any(UserInfoReqDto.class))).willReturn(defaultSignInResDto);
 
+        //when
         ResultActions result = mockMvc.perform(
                 post("/api/user/signin")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -202,18 +185,8 @@ class UserControllerTest extends ControllerTestSupport {
     @WithMockUser
     void reissueAccessToken_정상입력() throws Exception {
         //given
-        given(jwtProvider.getUserPkFromExpiredToken(any(String.class)))
-                .willReturn(1L);
-        given(jwtProvider.validateToken(any(String.class))).willReturn(true);
-
-        given(userRepository.findUserByUserPk(any(Long.class)))
-                .willReturn(Optional.of(makeDefaultUser()));
-
-        given(jwtProvider.createAccessToken(any(User.class)))
-                .willReturn("access.token.123");
-
-        given(jwtProvider.createRefreshToken())
-                .willReturn("refresh.token.123");
+        given(userService.reissueAccessToken(any(String.class),any(String.class)))
+                .willReturn(defaultReIssueTokenResDto);
 
         //when
         ResultActions result = mockMvc.perform(
@@ -230,7 +203,7 @@ class UserControllerTest extends ControllerTestSupport {
     @Test
     void findUserIdWithUserInfo_정상입력() throws Exception {
         //given
-        given(userRepository.findUserIdByUserInfo(any(FindIdReqDto.class)))
+        given(userService.findUserIdWithUserInfo(any(FindIdReqDto.class)))
                 .willReturn("test");
 
         //when
@@ -243,26 +216,26 @@ class UserControllerTest extends ControllerTestSupport {
         result.andExpect(status().isOk());
     }
 
-//    @Test
-//    void findUserIdWithUserInfo_날짜_형식_틀림() throws Exception {
-//        //given
-//        given(userRepository.findUserIdByUserInfo(any(FindIdReqDto.class)))
-//                .willReturn("test");
-//
-//        //when
-//        ResultActions result = mockMvc.perform(
-//                post("/api/user/findId")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(readJson("/user/findId/wrongDate.json"))
-//        );
-//        //then
-//        result.andExpect(status().is4xxClientError());
-//    }
+    @Test
+    void findUserIdWithUserInfo_날짜_형식_틀림() throws Exception {
+        //given
+        given(userService.findUserIdWithUserInfo(any(FindIdReqDto.class)))
+                .willReturn("test");
+
+        //when
+        ResultActions result = mockMvc.perform(
+                post("/api/user/findId")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(readJson("/user/findId/wrongDate.json"))
+        );
+        //then
+        result.andExpect(status().is4xxClientError());
+    }
 
     @Test
     void findUserIdWithUserInfo_가족코드_형식_틀림() throws Exception {
         //given
-        given(userRepository.findUserIdByUserInfo(any(FindIdReqDto.class)))
+        given(userService.findUserIdWithUserInfo(any(FindIdReqDto.class)))
                 .willReturn("test");
 
         //when
@@ -278,8 +251,7 @@ class UserControllerTest extends ControllerTestSupport {
     @Test
     void updatePassword_정상입력() throws Exception {
         //given
-        given(userRepository.findUserByUserId(any(String.class)))
-                .willReturn(Optional.of(makeDefaultUser()));
+        willDoNothing().given(userService).updatePassword(any(UserInfoReqDto.class));
 
         //when
         ResultActions result = mockMvc.perform(
@@ -294,8 +266,7 @@ class UserControllerTest extends ControllerTestSupport {
     @Test
     void updatePassword_아이디_공백() throws Exception {
         //given
-        given(userRepository.findUserByUserId(any(String.class)))
-                .willReturn(Optional.of(makeDefaultUser()));
+        willDoNothing().given(userService).updatePassword(any(UserInfoReqDto.class));
 
         //when
         ResultActions result = mockMvc.perform(
@@ -310,8 +281,7 @@ class UserControllerTest extends ControllerTestSupport {
     @Test
     void updatePassword_비밀번호_형식_틀림() throws Exception {
         //given
-        given(userRepository.findUserByUserId(any(String.class)))
-                .willReturn(Optional.of(makeDefaultUser()));
+        willDoNothing().given(userService).updatePassword(any(UserInfoReqDto.class));
 
         //when
         ResultActions result = mockMvc.perform(
