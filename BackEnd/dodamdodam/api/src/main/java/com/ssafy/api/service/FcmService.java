@@ -70,10 +70,11 @@ public class FcmService {
                         )
                         .build()
                 )
-                .validate_only(false)
+                .data(FcmMessageResDto.data.builder().body(body).title(title).build())
                 .build();
         return objectMapper.writeValueAsString(fcmMessage);
     }
+
     private String getAccessToken() throws IOException {
 
         GoogleCredentials googleCredentials = GoogleCredentials
