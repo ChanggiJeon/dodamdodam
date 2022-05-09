@@ -40,6 +40,7 @@ class SaveInfoFragment : Fragment() {
 
     // 이미지 업로드 관련 변수들
     var imageUri: Uri? = null
+    var role: String = "아빠"
     lateinit var imagePickerLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,10 +61,10 @@ class SaveInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // 상단 텍스트 수정
         (activity as StartSettingActivity).changeTopMessage("'나'를 저장하세요!")
-        // 스피너(다이얼로그 형) 설정
-        val roleData = resources.getStringArray(R.array.family_role)
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.spinner_item, roleData)
-        binding.saveInfoSpinner.adapter = adapter
+        // 스피너(다이얼로그 형) 한개짜리 설정
+        val Data = resources.getStringArray(R.array.family_role)
+        val Adapter = ArrayAdapter<String>(requireContext(), R.layout.spinner_item, Data)
+        binding.saveInfoSpinner.adapter = Adapter
         binding.saveInfoSpinner.setSelection(0)
         binding.saveInfoSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -73,10 +74,55 @@ class SaveInfoFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    Log.d(TAG, "선택한 role : " + binding.saveInfoSpinner.selectedItem.toString())
+                    // data setting
+                    binding.saveInfoSpinnerNumber.setSelection(0)
+                    binding.saveInfoSpinnerRole.setSelection(position)
+                    role = binding.saveInfoSpinner.selectedItem.toString()
+                    Log.d(TAG, "SaveInfoFragment - onItemSelected() 1: $role")
+                    // vision toggle
+                    spinnerToggle(position)
                 }
-
                 override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
+        // 스피너(다이얼로그 형) 두개짜리 설정
+        val numberData = resources.getStringArray(R.array.family_number)
+        val numberAdapter = ArrayAdapter<String>(requireContext(), R.layout.spinner_item, numberData)
+        val roleData = resources.getStringArray(R.array.family_role)
+        val roleAdapter = ArrayAdapter<String>(requireContext(), R.layout.spinner_item, roleData)
+        binding.saveInfoSpinnerNumber.adapter = numberAdapter
+        binding.saveInfoSpinnerRole.adapter = roleAdapter
+        // 첫째 ~ 넷째 선택
+        binding.saveInfoSpinnerNumber.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long) {
+                    role = binding.saveInfoSpinnerNumber.selectedItem.toString() + " " + binding.saveInfoSpinnerRole.selectedItem.toString()
+                    Log.d(TAG, "SaveInfoFragment - onItemSelected() 2: $role")
+                }
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                }
+            }
+        // 위에서 첫쨰~넷째 선택 후 role 선택
+        binding.saveInfoSpinnerRole.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    // data setting
+                    binding.saveInfoSpinner.setSelection(position)
+                    role = binding.saveInfoSpinnerNumber.selectedItem.toString() + " " + binding.saveInfoSpinnerRole.selectedItem.toString()
+                    Log.d(TAG, "SaveInfoFragment - onItemSelected() 3: $role")
+                    // vision toggle
+                    spinnerToggle(position)
+                }
+                override fun onNothingSelected(p0: AdapterView<*>?) {
                 }
             }
         // 이미지 선택 런처 등록
@@ -109,10 +155,10 @@ class SaveInfoFragment : Fragment() {
                 // 가족코드 검증을 하고 온 경우 : 뷰모델의 familyId가 존재 -> 기존 가족에 가입
                 if (viewModelFamilyId is Int) {
                     Log.d(TAG, "viewModelFamilyId : $viewModelFamilyId")
-                    joinFamily(viewModelFamilyId)
+                    joinFamily(role, viewModelFamilyId)
                 } else { // 바로 온 경우 가족 및 프로필 생성
                     Log.d(TAG, "viewModelFamilyId : $viewModelFamilyId")
-                    createFamily()
+                    createFamily(role)
                 }
             }
         }
@@ -188,8 +234,8 @@ class SaveInfoFragment : Fragment() {
     }
 
     // ***중요*** 네트워크(profile 데이터 보내고 familyId 받아오는 함수)
-    private fun createFamily() {
-        val role = binding.saveInfoSpinner.selectedItem.toString()
+    private fun createFamily(role: String) {
+        val selectedRole = role.trim()
         val nickname = binding.saveInfoInputNickname.text.toString()
         val birthday = InputValidUtil.makeDay(binding.saveInfoInputBirthday.text.toString())
         var imageFile: File? = null
@@ -197,10 +243,10 @@ class SaveInfoFragment : Fragment() {
             imageFile = FileUtils.getFile(requireContext(), imageUri!!)
         }
 
-        familyViewModel.createFamily(FamilyReq(role, nickname, birthday), imageFile)
+        familyViewModel.createFamily(FamilyReq(selectedRole, nickname, birthday), imageFile)
     }
-    private fun joinFamily(familyId: Int) {
-        val role = binding.saveInfoSpinner.selectedItem.toString()
+    private fun joinFamily(role: String, familyId: Int) {
+        val selectedRole = role.trim()
         val nickname = binding.saveInfoInputNickname.text.toString()
         val birthday = InputValidUtil.makeDay(binding.saveInfoInputBirthday.text.toString())
         var imageFile: File? = null
@@ -208,8 +254,21 @@ class SaveInfoFragment : Fragment() {
             imageFile = FileUtils.getFile(requireContext(), imageUri!!)
         }
 
-        familyViewModel.joinFamily(FamilyReq(role, nickname, birthday), familyId, imageFile)
+        familyViewModel.joinFamily(FamilyReq(selectedRole, nickname, birthday), familyId, imageFile)
     }
+
+    // 스피너 UI 토글 함수 (한개 or 두개)
+    fun spinnerToggle(role: Int) {
+        // 아빠: 0, 엄마: 1, 아들: 2, 딸: 3
+        if (role == 0 || role == 1) {
+            binding.saveInfoSpinner.visibility = View.VISIBLE
+            binding.saveInfoDoubleSpinnerLayout.visibility = View.GONE
+        } else {
+            binding.saveInfoSpinner.visibility = View.GONE
+            binding.saveInfoDoubleSpinnerLayout.visibility = View.VISIBLE
+        }
+    }
+
 
     // 이미지 선택 런쳐 실행 함수
     private fun getProfileImage() {
