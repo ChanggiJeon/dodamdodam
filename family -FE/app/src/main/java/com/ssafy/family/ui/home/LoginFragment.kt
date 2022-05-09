@@ -98,15 +98,17 @@ class LoginFragment : Fragment() {
         loginViewModel.loginRequestLiveData.observe(requireActivity()) {
             when (it.status) {
                 Status.SUCCESS -> {
+
                     LoginUtil.setAutoLogin(loginViewModel.isAutoLogin)
                     LoginUtil.saveUserInfo(it.data!!.dataSet!!)
                     Log.d("dddd", "initView: " + LoginUtil.getUserInfo())
-                    // TODO: 에러나는지 확인 attach 
+                    // TODO: 에러나는지 확인 attach
+                    dismissLoading()
                     val context = requireActivity()
                     getFCM()
                     startActivity(Intent(context, StartSettingActivity::class.java))
                     requireActivity().finish()
-                    dismissLoading()
+
                 }
                 Status.EXPIRED->{
                     loginViewModel.MakeRefresh(LoginUtil.getUserInfo()!!.refreshToken)
