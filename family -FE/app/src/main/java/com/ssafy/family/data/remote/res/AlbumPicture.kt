@@ -9,7 +9,9 @@ data class AlbumPicture(
     @SerializedName("imagePath")
     val imagePath: String,
     @SerializedName("main")
-    var main: Boolean
+    var main: Boolean,
+    @SerializedName("pictureId")
+    var pictureId:Int
 
 ): Parcelable
 

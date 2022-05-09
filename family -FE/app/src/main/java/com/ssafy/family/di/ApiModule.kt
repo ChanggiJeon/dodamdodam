@@ -8,6 +8,7 @@ import com.ssafy.family.config.ReceivedCookiesInterceptor
 import com.ssafy.family.config.XAccessTokenInterceptor
 import com.ssafy.family.data.remote.api.AccountAPI
 import com.ssafy.family.data.remote.api.FamilyAPI
+import com.ssafy.family.data.remote.api.CalendarAPI
 import com.ssafy.family.data.remote.api.AlbumAPI
 import dagger.Module
 import dagger.Provides
@@ -32,10 +33,13 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
-        val TIME_OUT = 10000L
+        val TIME_OUT = 100000L
         OkHttpClient.Builder()
             .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+            .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
             .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+//            .connectionPool(ConnectionPool(0, 1, TimeUnit.NANOSECONDS))
+            //.protocols(listOf(Protocol.HTTP_1_1))
             // 로그캣에 okhttp.OkHttpClient로 검색하면 http 통신 내용을 보여줍니다.
             .addInterceptor(
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS).setLevel(
@@ -81,6 +85,12 @@ object ApiModule {
     @Provides
     fun provideFamilyApiService(retrofit: Retrofit): FamilyAPI {
         return retrofit.create(FamilyAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCalendarApiService(retrofit: Retrofit): CalendarAPI {
+        return retrofit.create(CalendarAPI::class.java)
     }
 
     @Singleton

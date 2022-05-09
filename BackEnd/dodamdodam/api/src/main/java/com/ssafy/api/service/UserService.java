@@ -6,7 +6,7 @@ import com.ssafy.core.dto.req.SignUpReqDto;
 import com.ssafy.core.dto.res.SignInResDto;
 import com.ssafy.core.common.Validate;
 import com.ssafy.core.entity.User;
-import com.ssafy.core.exception.CustomErrorCode;
+import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.FamilyRepository;
 import com.ssafy.core.repository.ProfileRepository;
@@ -21,7 +21,7 @@ import javax.transaction.Transactional;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 
-import static com.ssafy.core.exception.CustomErrorCode.NOT_FOUND_FAMILY;
+import static com.ssafy.core.exception.ErrorCode.NOT_FOUND_FAMILY;
 
 @Service
 @Slf4j
@@ -35,26 +35,21 @@ public class UserService {
 
     public User findByUserId(String userId) {
         return userRepository.findUserByUserId(userId)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.NO_SUCH_USER));
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_USER));
     }
 
     public User findByUserPk(Long userPk){
         return userRepository.findUserByUserPk(userPk)
-                .orElseThrow(() -> new CustomException(CustomErrorCode.NO_SUCH_USER));
+                .orElseThrow(() -> new CustomException(ErrorCode.NO_SUCH_USER));
     }
 
     @Transactional()
     public void userSignUp(SignUpReqDto singUpRequest) {
 
-        if (userRepository.getByUserId(singUpRequest.getUserId()) != null) {
-            throw new CustomException(CustomErrorCode.DUPLICATE_USER_ID);
-        }
-
         userRepository.save(User.builder()
                 .userId(singUpRequest.getUserId())
                 .name(singUpRequest.getName())
                 .password(passwordEncoder.encode(singUpRequest.getPassword()))
-                .authority("ROLE_USER")
                 .build());
     }
 
@@ -64,7 +59,7 @@ public class UserService {
 
     public void checkId(String userId) {
         if(userRepository.findUserByUserId(userId).isPresent()){
-            throw new CustomException(CustomErrorCode.DUPLICATE_USER_ID);
+            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
         }
     }
 
@@ -80,11 +75,11 @@ public class UserService {
 
         try {
             if (list[0].length() != 4 || list[1].length() != 2 || list[2].length() != 2) {
-                throw new CustomException(CustomErrorCode.INVALID_REQUEST);
+                throw new CustomException(ErrorCode.INVALID_REQUEST);
             }
             user.setBirthday(LocalDate.of(Integer.parseInt(list[0]), Integer.parseInt(list[1]), Integer.parseInt(list[2])));
         } catch (NumberFormatException | DateTimeException e) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST);
+            throw new CustomException(ErrorCode.INVALID_REQUEST);
         }
 
         userRepository.save(user);

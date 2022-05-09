@@ -6,18 +6,19 @@ import com.ssafy.family.config.BaseResponse
 import com.ssafy.family.data.remote.api.AlbumAPI
 import com.ssafy.family.data.remote.req.AddAlbumReq
 import com.ssafy.family.data.remote.req.AlbumReactionReq
+import com.ssafy.family.data.remote.req.UpdateAlbumReq
 import com.ssafy.family.data.remote.res.AlbumDetailRes
 import com.ssafy.family.data.remote.res.AlbumRes
 import com.ssafy.family.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Response
 import java.io.File
 
 class AlbumRepositoryImpl(
@@ -164,7 +165,6 @@ class AlbumRepositoryImpl(
 
     override suspend fun seachDateAlbum(date: String): Resource<AlbumRes> =
         withContext(ioDispatcher) {
-        withContext(ioDispatcher) {
             try {
                 val response = api.seachDateAlbum(date)
                 when {
@@ -181,6 +181,79 @@ class AlbumRepositoryImpl(
             } catch (e: Exception) {
                 Resource.error(null, "서버와 연결오류")
             }
+    }
+
+    override suspend fun updateAlbum(updateAlbumReq: UpdateAlbumReq, albumId: Int,
+                                     imagefiles: ArrayList<MultipartBody.Part>
+    ): Resource<BaseResponse> =
+        withContext(ioDispatcher) {
+//            try {
+            val map = HashMap<String,RequestBody>()
+            var hashtagdata = ""
+            for(i in updateAlbumReq.hashTags.indices){
+                if(i!=0){
+                    hashtagdata+=","
+                }
+                hashtagdata+=updateAlbumReq.hashTags[i].text
+            }
+            var pictureIddata=""
+
+            for(i  in updateAlbumReq.pictureIdList.indices){
+                if(i!=0){
+                    pictureIddata+=","
+                }
+                pictureIddata+=updateAlbumReq.pictureIdList[i]
+            }
+            map.put("hashTags",getBody(hashtagdata))
+            map.put("date",getBody(updateAlbumReq.date))
+            map.put("mainIndex",getBody(updateAlbumReq.mainIndex))
+            map.put("albumId",getBody(albumId))
+            map.put("pictureIdList",getBody(pictureIddata))
+            Log.d("ddddd", "updateAlbum: "+map)
+            Log.d("ddddd", "updateAlbum: "+imagefiles)
+            val response:Response<BaseResponse>
+            if(imagefiles.isEmpty()){
+                response =
+                    api.updateAlbum(data = map, null)
+            }else{
+                response =
+                    api.updateAlbum(data = map, imagefiles)
+            }
+
+            when {
+                response.isSuccessful -> {
+                    Resource.success(response.body()!!)
+                }
+                response.code() == 403 -> {
+                    Resource.expired(response.body()!!)
+                }
+                else -> {
+                    Log.d("ddddd", "addAlbum: err")
+                    Resource.error(null, response.message())
+                }
+            }
+//            } catch (e: Exception) {
+//                Log.d("ddddd", "addAlbum: exception")
+//                Resource.error(null, "서버와 연결오류")
+//            }
+    }
+
+    override suspend fun deleteAlbum(albumId: Int): Resource<BaseResponse>  = withContext(ioDispatcher) {
+        try {
+            val response = api.deleteAlbum(albumId)
+            when {
+                response.isSuccessful -> {
+                    Resource.success(response.body()!!)
+                }
+                response.code() == 403 -> {
+                    Resource.expired(response.body()!!)
+                }
+                else -> {
+                    Resource.error(null, response.message())
+                }
+            }
+        } catch (e: Exception) {
+            Resource.error(null, "서버와 연결오류")
         }
     }
 

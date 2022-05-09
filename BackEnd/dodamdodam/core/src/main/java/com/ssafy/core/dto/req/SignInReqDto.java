@@ -1,10 +1,10 @@
 package com.ssafy.core.dto.req;
 
+import com.ssafy.core.validation.Password;
+import com.ssafy.core.validation.UserId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Builder
 @Getter
@@ -14,13 +14,11 @@ import javax.validation.constraints.Size;
 @Schema(description = "DTO Model : SignInReqDto")
 public class SignInReqDto {
 
-    @NotBlank
-    @Size(max = 20, min = 4)
+    @UserId
     @Schema(description = "아이디", required = true, example = "ssafy")
     private String userId;
 
-    @NotBlank
-    @Size(max = 20, min = 8)
+    @Password
     @Schema(description = "비밀번호", required = true, example = "ssafy61!")
     private String password;
 
