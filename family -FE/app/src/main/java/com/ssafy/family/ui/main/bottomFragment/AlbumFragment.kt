@@ -73,7 +73,11 @@ class AlbumFragment : Fragment() {
 
         }
     }
-
+    
+    override fun onResume() {
+        super.onResume()
+        findAllAlbum()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -120,20 +124,20 @@ class AlbumFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     //테스트용
-                    val taglist = mutableListOf<HashTag>()
-                    taglist.add(HashTag("#해시"))
-                    taglist.add(HashTag("#해시"))
-                    val temppicture = Picture(
-                        1,
-                        "2022년 5월 2일",
-                        "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png"
-                    )
-                    val allalbumlist = mutableListOf<AllAlbum>()
-                    allalbumlist.add(AllAlbum(taglist, temppicture))
-                    allalbumlist.add(AllAlbum(taglist, temppicture))
-                    allalbumlist.add(AllAlbum(taglist, temppicture))
-                    albumMonthAdapter.datas = (allalbumlist)
-                    albumMonthAdapter.notifyDataSetChanged()
+//                    val taglist = mutableListOf<HashTag>()
+//                    taglist.add(HashTag("#해시"))
+//                    taglist.add(HashTag("#해시"))
+//                    val temppicture = Picture(
+//                        1,
+//                        "2022년 5월 2일",
+//                        "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png"
+//                    )
+//                    val allalbumlist = mutableListOf<AllAlbum>()
+//                    allalbumlist.add(AllAlbum(taglist, temppicture))
+//                    allalbumlist.add(AllAlbum(taglist, temppicture))
+//                    allalbumlist.add(AllAlbum(taglist, temppicture))
+//                    albumMonthAdapter.datas = (allalbumlist)
+//                    albumMonthAdapter.notifyDataSetChanged()
                     //테스트용 끝
                     Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
                         .show()
@@ -159,20 +163,20 @@ class AlbumFragment : Fragment() {
                 }
                 Status.ERROR -> {
                     //테스트용
-                    val taglist = mutableListOf<HashTag>()
-                    taglist.add(HashTag("#해시"))
-                    taglist.add(HashTag("#해시"))
-                    val temppicture = Picture(
-                        1,
-                        "2022년 5월 2일",
-                        "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png"
-                    )
-                    val allalbumlist = mutableListOf<AllAlbum>()
-                    allalbumlist.add(AllAlbum(taglist, temppicture))
-                    allalbumlist.add(AllAlbum(taglist, temppicture))
-                    allalbumlist.add(AllAlbum(taglist, temppicture))
-                    albumMonthAdapter.datas = (allalbumlist)
-                    albumMonthAdapter.notifyDataSetChanged()
+//                    val taglist = mutableListOf<HashTag>()
+//                    taglist.add(HashTag("#해시"))
+//                    taglist.add(HashTag("#해시"))
+//                    val temppicture = Picture(
+//                        1,
+//                        "2022년 5월 2일",
+//                        "https://cdn.pixabay.com/photo/2019/08/01/12/36/illustration-4377408_960_720.png"
+//                    )
+//                    val allalbumlist = mutableListOf<AllAlbum>()
+//                    allalbumlist.add(AllAlbum(taglist, temppicture))
+//                    allalbumlist.add(AllAlbum(taglist, temppicture))
+//                    allalbumlist.add(AllAlbum(taglist, temppicture))
+//                    albumMonthAdapter.datas = (allalbumlist)
+//                    albumMonthAdapter.notifyDataSetChanged()
                     //테스트용 끝
                     Toast.makeText(requireActivity(), it.message ?: "서버 에러", Toast.LENGTH_SHORT)
                         .show()

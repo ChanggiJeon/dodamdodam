@@ -6,7 +6,7 @@ import com.ssafy.core.entity.Family;
 import com.ssafy.core.entity.Profile;
 import com.ssafy.core.entity.Schedule;
 import com.ssafy.core.entity.User;
-import com.ssafy.core.exception.CustomErrorCode;
+import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.FamilyRepository;
 import com.ssafy.core.repository.ProfileRepository;
@@ -19,7 +19,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.ssafy.core.exception.CustomErrorCode.INVALID_REQUEST;
+import static com.ssafy.core.exception.ErrorCode.INVALID_REQUEST;
 
 @Service
 @Slf4j
@@ -70,7 +70,7 @@ public class ScheduleService {
         if (schedule == null) {
             throw new CustomException(INVALID_REQUEST, "해당 일정이 없습니다.");
         } else if (schedule.getFamily().getId() != family.getId()) {
-            throw new CustomException(CustomErrorCode.NOT_BELONG_FAMILY);
+            throw new CustomException(ErrorCode.NOT_BELONG_FAMILY);
         }
         return scheduleRepository.findScheduleById(scheduleId);
     }

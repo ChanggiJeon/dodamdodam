@@ -2,11 +2,10 @@ package com.ssafy.api.service;
 
 import com.ssafy.core.dto.req.FamilyCreateReqDto;
 import com.ssafy.core.dto.req.FamilyJoinReqDto;
-import com.ssafy.api.config.jwt.JwtProvider;
 import com.ssafy.core.entity.Family;
 import com.ssafy.core.entity.Profile;
 import com.ssafy.core.entity.User;
-import com.ssafy.core.exception.CustomErrorCode;
+import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.FamilyRepository;
 import com.ssafy.core.repository.ProfileRepository;
@@ -17,9 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Random;
-
-import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_NICKNAME;
-import static com.ssafy.core.exception.CustomErrorCode.DUPLICATE_ROLE;
 
 @Service
 @Slf4j
@@ -83,7 +79,7 @@ public class FamilyService {
     public Family getFamily(long familyId) {
         Family family = familyRepository.findFamilyById(familyId);
         if (family == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "해당 그룹이 없습니다.");
+            throw new CustomException(ErrorCode.INVALID_REQUEST, "해당 그룹이 없습니다.");
         }
         return family;
     }
@@ -92,7 +88,7 @@ public class FamilyService {
     public Family checkCode(String code) {
         Family family = familyRepository.findFamilyByCode(code);
         if (family == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "해당 그룹이 없습니다.");
+            throw new CustomException(ErrorCode.INVALID_REQUEST, "해당 그룹이 없습니다.");
         }
         return family;
     }
@@ -100,7 +96,7 @@ public class FamilyService {
 
     public void familyExistCheck(Long userPK) {
         if (profileRepository.findProfileByUserPk(userPK) != null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "이미 가입된 그룹이 있습니다.");
+            throw new CustomException(ErrorCode.INVALID_REQUEST, "이미 가입된 그룹이 있습니다.");
         }
     }
 
@@ -108,7 +104,7 @@ public class FamilyService {
         Long userPk = Long.parseLong(authentication.getName());
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         if (profile == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "소속된 그룹이 없습니다.");
+            throw new CustomException(ErrorCode.INVALID_REQUEST, "소속된 그룹이 없습니다.");
         }
         long familyId = profile.getFamily().getId();
         return familyRepository.findFamilyById(familyId);
@@ -144,14 +140,14 @@ public class FamilyService {
         Long userPk = Long.parseLong(authentication.getName());
         Profile profile = profileRepository.findProfileByUserPk(userPk);
         if (profile == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST, "그룹에 권한이 없습니다.");
+            throw new CustomException(ErrorCode.INVALID_REQUEST, "그룹에 권한이 없습니다.");
         }
     }
 
     public Long getFamilyIdByUserPk(Long userPk) {
         Long familyId = familyRepository.findFamilyIdByUserPk(userPk);
         if (familyId == null) {
-            throw new CustomException(CustomErrorCode.NOT_BELONG_FAMILY);
+            throw new CustomException(ErrorCode.NOT_BELONG_FAMILY);
         }
         return familyId;
     }

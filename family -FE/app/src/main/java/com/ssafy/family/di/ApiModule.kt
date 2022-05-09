@@ -17,7 +17,9 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -33,10 +35,13 @@ object ApiModule {
     @Singleton
     @Provides
     fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
-        val TIME_OUT = 10000L
+        val TIME_OUT = 100000L
         OkHttpClient.Builder()
             .readTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+            .writeTimeout(TIME_OUT, TimeUnit.SECONDS)
             .connectTimeout(TIME_OUT, TimeUnit.MILLISECONDS)
+//            .connectionPool(ConnectionPool(0, 1, TimeUnit.NANOSECONDS))
+            //.protocols(listOf(Protocol.HTTP_1_1))
             // 로그캣에 okhttp.OkHttpClient로 검색하면 http 통신 내용을 보여줍니다.
             .addInterceptor(
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.HEADERS).setLevel(

@@ -1,5 +1,6 @@
 package com.ssafy.core.repository.querydsl;
 
+import com.ssafy.core.dto.res.ChattingMemberResDto;
 import com.ssafy.core.dto.res.MainProfileResDto;
 import com.ssafy.core.dto.res.MissionResDto;
 import com.ssafy.core.dto.res.SignInResDto;
@@ -24,4 +25,6 @@ public interface ProfileRepoCustom {
     List<Profile> findProfilesByFamilyIdExceptMe(Long familyId, Long profileId);
 
     MissionResDto findTodayMissionByUserPk(Long userPk);
+
+    List<ChattingMemberResDto> findChattingMemberListByFamilyId(Long familyId);
 }

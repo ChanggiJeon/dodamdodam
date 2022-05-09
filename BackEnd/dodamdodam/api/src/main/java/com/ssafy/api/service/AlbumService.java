@@ -7,7 +7,7 @@ import com.ssafy.core.dto.req.AlbumUpdateReqDto;
 import com.ssafy.core.dto.res.AlbumMainResDto;
 import com.ssafy.core.dto.res.AlbumReactionListResDto;
 import com.ssafy.core.entity.*;
-import com.ssafy.core.exception.CustomErrorCode;
+import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +68,7 @@ public class AlbumService {
     public Family findFamilyByUserPK(Long userPK){
         Family family = familyRepository.findFamilyByUserPk(userPK);
         if (family == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST);
+            throw new CustomException(ErrorCode.INVALID_REQUEST);
         }
         System.out.println(family.toString());
         return family;
@@ -95,7 +93,7 @@ public class AlbumService {
         long familyId = familyRepository.findFamilyIdByUserPk(userPK);
         Album album = albumRepository.findAlbumByAlbumId(albumId);
         if(album.getFamily().getId() != familyId){
-            throw new CustomException(CustomErrorCode.NOT_BELONG_FAMILY);
+            throw new CustomException(ErrorCode.NOT_BELONG_FAMILY);
         }
         albumRepository.delete(album);
 

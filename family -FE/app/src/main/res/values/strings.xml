@@ -76,5 +76,27 @@
     <string name="please_input_family_code">가족 코드를 입력해주세요!</string>
     <string name="nickname">나의 애칭</string>
 
+    <string-array name="emoticon">
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/worried_1651796157938.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/tongue_1651796200157.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/thinking_1651796217293.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/sweat_1651796229546.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/sunglasses_1651796248926.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/smiling_1651796259441.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/sleepy_1651796273416.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/rolling%20eyes_1651796286143.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/relieved_1651796300873.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/pouting_1651796318280.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/mask_1651796329279.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/laughing_1651796988741.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/kiss_1651796999956.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/hushed_1651797014053.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/determined_1651797027613.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/crying_1651797037512.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/astonished_1651797046845.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/amusing_1651797058209.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/3099549_face_expressionless_1651797073670.png</item>
+        <item>https://s3-dodamdodam.s3.ap-northeast-2.amazonaws.com/emoticon/3099548_face_confused_1651797084596.png</item>
+    </string-array>
 </resources>
 
