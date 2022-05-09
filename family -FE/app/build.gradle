@@ -118,4 +118,7 @@ dependencies {
     //firebase
     implementation platform('com.google.firebase:firebase-bom:28.2.1')
     implementation 'com.google.firebase:firebase-database:20.0.0'
+
+    //calendar
+    implementation 'com.github.kizitonwose:CalendarView:1.0.4'
 }

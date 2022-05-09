@@ -2,9 +2,11 @@ package com.ssafy.family.di
 
 import com.google.firebase.database.FirebaseDatabase
 import com.ssafy.family.data.remote.api.AccountAPI
-import com.ssafy.family.data.remote.api.AlbumAPI
+import com.ssafy.family.data.remote.api.FamilyAPI
+import com.ssafy.family.data.remote.api.CalendarAPI
 import com.ssafy.family.data.remote.api.MainFamilyAPI
 import com.ssafy.family.data.repository.*
+import com.ssafy.family.data.remote.api.AlbumAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +29,15 @@ object RepositoryModule {
 
     @Singleton
     @Provides
+    fun provideFamilyRepository(
+        apiAPI: FamilyAPI,
+        @DispatcherModule.IoDispatcher ioDispatcher: CoroutineDispatcher,
+        @DispatcherModule.MainDispatcher mainDispatcher: CoroutineDispatcher
+    ): FamilyRepository
+            = FamilyRepositoryImpl(apiAPI, ioDispatcher,mainDispatcher)
+
+    @Singleton
+    @Provides
     fun provideChatRepository(
         @DispatcherModule.IoDispatcher ioDispatcher: CoroutineDispatcher,
         @DispatcherModule.MainDispatcher mainDispatcher: CoroutineDispatcher
@@ -40,6 +51,15 @@ object RepositoryModule {
         @DispatcherModule.MainDispatcher mainDispatcher: CoroutineDispatcher
     ): AlbumRepository
             = AlbumRepositoryImpl(albumAPI,ioDispatcher,mainDispatcher)
+
+    @Singleton
+    @Provides
+    fun provideCalendarRepository(
+        apiAPI: CalendarAPI,
+        @DispatcherModule.IoDispatcher ioDispatcher: CoroutineDispatcher,
+        @DispatcherModule.MainDispatcher mainDispatcher: CoroutineDispatcher
+    ): CalendarRepository
+            = CalendarRepositoryImpl(apiAPI,ioDispatcher,mainDispatcher)
 
     @Singleton
     @Provides
