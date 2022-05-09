@@ -7,7 +7,7 @@ import com.ssafy.core.dto.req.AlbumUpdateReqDto;
 import com.ssafy.core.dto.res.AlbumMainResDto;
 import com.ssafy.core.dto.res.AlbumReactionListResDto;
 import com.ssafy.core.entity.*;
-import com.ssafy.core.exception.CustomErrorCode;
+import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.exception.CustomException;
 import com.ssafy.core.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +68,7 @@ public class AlbumService {
     public Family findFamilyByUserPK(Long userPK){
         Family family = familyRepository.findFamilyByUserPk(userPK);
         if (family == null) {
-            throw new CustomException(CustomErrorCode.INVALID_REQUEST);
+            throw new CustomException(ErrorCode.INVALID_REQUEST);
         }
         System.out.println(family.toString());
         return family;
@@ -95,7 +93,7 @@ public class AlbumService {
         long familyId = familyRepository.findFamilyIdByUserPk(userPK);
         Album album = albumRepository.findAlbumByAlbumId(albumId);
         if(album.getFamily().getId() != familyId){
-            throw new CustomException(CustomErrorCode.NOT_BELONG_FAMILY);
+            throw new CustomException(ErrorCode.NOT_BELONG_FAMILY);
         }
         albumRepository.delete(album);
 
@@ -167,13 +165,23 @@ public class AlbumService {
 
     @Transactional(readOnly = false)
     public void updateAlbum(long userPk, Album album, AlbumUpdateReqDto albumUpdateReqDto,
-                            List<MultipartFile> multipartFiles, Authentication authentication, HttpServletRequest request){
+                             Authentication authentication, HttpServletRequest request){
         Family family = findFamilyByUserPK(userPk);
         album.updateLocalDate(createDate(albumUpdateReqDto.getDate()));
         albumRepository.save(album);
+        boolean flag;
         List<String> updateHashTags =albumUpdateReqDto.getHashTags();
         List<HashTag> hashTags = hashTagRepository.findHashTagsByAlbumId(album.getId());
         List<Picture> pictures = pictureRepository.findPicturesByAlbumId(album.getId());
+        List<MultipartFile> multipartFiles = new ArrayList<>();
+        if(albumUpdateReqDto.getMultipartFiles()==null){
+            flag = false;
+        }else{
+            multipartFiles = albumUpdateReqDto.getMultipartFiles();
+            flag = true;
+
+        }
+        int[] deleteIdList = albumUpdateReqDto.getPictureIdList();
 
         //해시태그가 기존보다 추가 된 경우
         if(updateHashTags.size()>=hashTags.size()){
@@ -205,73 +213,118 @@ public class AlbumService {
         }
         int mainIndex = albumUpdateReqDto.getMainIndex();
         boolean isMain = false;
-//        String savePath = request.getServletContext().getRealPath("/resources/Album/"+family.getCode());
-//        File dir= new File(request.getServletContext().getRealPath("/resources/Album/"+family.getCode()));
-//        if(!dir.exists()){
-//            dir.mkdirs();
-//        }
-        //사진 수가 기존보다 많은 경우
-        if(multipartFiles.size()>=pictures.size()){
-            for(int i = 0 ; i< multipartFiles.size();i++){
-                UUID uuid = UUID.randomUUID();
-                String originFileName = multipartFiles.get(i).getOriginalFilename();
-//                String saveFileName = UUID.randomUUID().toString() + originFileName.substring(originFileName.lastIndexOf("."));
-                String filePath = fileService.uploadFileV1("album",multipartFiles.get(i));
-                if(mainIndex==i){
-                    isMain = true;
-                }
-                else {
-                    isMain = false;
-                }
-                //기존 사진 수정
-                if(i<pictures.size()){
-                    pictures.get(i).updateOriginName(originFileName);
-                    pictures.get(i).updatePathName(filePath);
-                    pictures.get(i).updateIsMain(isMain);
-                    pictureRepository.save(pictures.get(i));
+        //삭제할 사진이 있는 경우
+        if (deleteIdList!=null){
+            for(int i = 0 ; i<deleteIdList.length ; i++){
+                Picture picture = pictureRepository.findPictureByPictureId(deleteIdList[i]);
+                pictureRepository.delete(picture);
+            }
+                //추가된 사진 저장
+            if(flag) {
+                for (int j = 0; j < multipartFiles.size(); j++) {
+                    String originFileName = multipartFiles.get(j).getOriginalFilename();
+                    String filePath = fileService.uploadFileV1("album", multipartFiles.get(j));
 
-                }
-                else{
                     Picture picture = Picture.builder()
                             .album(album)
                             .origin_name(originFileName)
                             .path_name(filePath)
-                            .is_main(isMain)
                             .build();
                     pictureRepository.save(picture);
                 }
-//                File file = new File(savePath+"/"+saveFileName);
-//                try {
-//                    multipartFiles.get(i).transferTo(file);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+            }
+            //메인 사진 업데이트
+            List<Picture> newPictureList = pictureRepository.findPicturesByAlbumId(album.getId());
+            for(int k = 0 ; k<newPictureList.size();k++){
+                if(mainIndex==k){
+                    newPictureList.get(k).updateIsMain(true);
+                    break;
+                }
 
             }
         }
-        //사진 수가 기존보다 적은 경우
+        //삭제할 사진이 없는 경우
         else{
-            for(int i = 0; i<pictures.size();i++){
-                if(mainIndex==i){
-                    isMain = true;
+            //추가된 사진 저장
+            if(flag) {
+                for (int j = 0; j < multipartFiles.size(); j++) {
+                    String originFileName = multipartFiles.get(j).getOriginalFilename();
+                    String filePath = fileService.uploadFileV1("album", multipartFiles.get(j));
+
+                    Picture picture = Picture.builder()
+                            .album(album)
+                            .origin_name(originFileName)
+                            .path_name(filePath)
+                            .build();
+                    pictureRepository.save(picture);
                 }
-                else {
-                    isMain = false;
-                }
-                if(i<multipartFiles.size()){
-                    String originFileName = multipartFiles.get(i).getOriginalFilename();
-                    String filePath =fileService.uploadFileV1("album",multipartFiles.get(i));
-                    pictures.get(i).updateOriginName(originFileName);
-                    pictures.get(i).updatePathName(filePath);
-                    pictures.get(i).updateIsMain(isMain);
-                    pictureRepository.save(pictures.get(i));
-                }
-                else{
-                    pictureRepository.delete(pictures.get(i));
+            }
+            //메인 사진 업데이트
+            List<Picture> newPictureList = pictureRepository.findPicturesByAlbumId(album.getId());
+            for(int k = 0 ; k<newPictureList.size();k++){
+                if(mainIndex==k){
+                    newPictureList.get(k).updateIsMain(true);
+                    break;
                 }
 
             }
         }
+//        //사진 수가 기존보다 많은 경우
+//        if(multipartFiles.size()>=pictures.size()){
+//            for(int i = 0 ; i< multipartFiles.size();i++){
+//
+//                String originFileName = multipartFiles.get(i).getOriginalFilename();
+//
+//                String filePath = fileService.uploadFileV1("album",multipartFiles.get(i));
+//                if(mainIndex==i){
+//                    isMain = true;
+//                }
+//                else {
+//                    isMain = false;
+//                }
+//                //기존 사진 수정
+//                if(i<pictures.size()){
+//                    pictures.get(i).updateOriginName(originFileName);
+//                    pictures.get(i).updatePathName(filePath);
+//                    pictures.get(i).updateIsMain(isMain);
+//                    pictureRepository.save(pictures.get(i));
+//
+//                }
+//                else{
+//                    Picture picture = Picture.builder()
+//                            .album(album)
+//                            .origin_name(originFileName)
+//                            .path_name(filePath)
+//                            .is_main(isMain)
+//                            .build();
+//                    pictureRepository.save(picture);
+//                }
+//
+//            }
+//        }
+//        //사진 수가 기존보다 적은 경우
+//        else{
+//            for(int i = 0; i<pictures.size();i++){
+//                if(mainIndex==i){
+//                    isMain = true;
+//                }
+//                else {
+//                    isMain = false;
+//                }
+//                if(i<multipartFiles.size()){
+//                    String originFileName = multipartFiles.get(i).getOriginalFilename();
+//                    String filePath =fileService.uploadFileV1("album",multipartFiles.get(i));
+//                    pictures.get(i).updateOriginName(originFileName);
+//                    pictures.get(i).updatePathName(filePath);
+//                    pictures.get(i).updateIsMain(isMain);
+//                    pictureRepository.save(pictures.get(i));
+//                }
+//                else{
+//                    pictureRepository.delete(pictures.get(i));
+//                }
+//
+//            }
+//        }
 
 
 

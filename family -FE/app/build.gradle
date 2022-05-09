@@ -84,6 +84,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
 
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.4.1"
@@ -117,4 +118,7 @@ dependencies {
     //firebase
     implementation platform('com.google.firebase:firebase-bom:28.2.1')
     implementation 'com.google.firebase:firebase-database:20.0.0'
+
+    //calendar
+    implementation 'com.github.kizitonwose:CalendarView:1.0.4'
 }

@@ -1,5 +1,9 @@
 package com.ssafy.core.dto.req;
 
+import com.ssafy.core.validation.Password;
+import com.ssafy.core.validation.UserId;
+import com.ssafy.core.validation.UserIdUnique;
+import com.ssafy.core.validation.UserName;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -14,18 +18,16 @@ import javax.validation.constraints.Size;
 @Schema(description = "DTO Model : SignUpReqDto")
 public class SignUpReqDto {
 
-    @NotBlank
-    @Size(max = 20, min = 4)
+    @UserId
+    @UserIdUnique
     @Schema(description = "아이디", required = true, example = "ssafy")
     private String userId;
 
-    @NotBlank
-    @Size(max = 20, min = 8)
+    @Password
     @Schema(description = "비밀번호", required = true, example = "ssafy61!")
     private String password;
 
-    @NotBlank
-    @Size(max = 10, min = 1)
+    @UserName
     @Schema(description = "이름", required = true, example = "싸피")
     private String name;
 

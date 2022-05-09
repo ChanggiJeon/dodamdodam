@@ -95,8 +95,8 @@ class AddAlbumFragment : Fragment() {
             adapter = tagAdapter
         }
         detailAlbumViewModel.setTitle("앨범 등록")
-        detailAlbumViewModel.setBottomButton("취소", "등록")
-        photoAdapter = DetailAlbumPhotoAdapter(requireActivity(), false).apply {
+        detailAlbumViewModel.setBottomButton("돌아가기", "등록")
+        photoAdapter = DetailAlbumPhotoAdapter(requireActivity(), 1).apply {
             itemClickListener = this@AddAlbumFragment.photoClickListener
         }
         binding.addAlbumPhotoRecycler.apply {
@@ -106,7 +106,7 @@ class AddAlbumFragment : Fragment() {
         }
         val uriList = detailAlbumViewModel.selectedImgUriList
         val albumpictureList = arrayListOf<AlbumPicture>()
-        uriList.forEach { albumpictureList.add(AlbumPicture(getAbsolutePath(it) ?: "", false)) }
+        uriList.forEach { albumpictureList.add(AlbumPicture(getAbsolutePath(it) ?: "", false,0)) }
         photoAdapter.datas = albumpictureList
         photoAdapter.notifyDataSetChanged()
 
