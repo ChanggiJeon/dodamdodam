@@ -61,14 +61,14 @@ class HomeActivity : AppCompatActivity() {
             when (it.status) {
                 Status.SUCCESS -> {
                     dismissLoading()
-                    startActivity(Intent(this, StartSettingActivity::class.java))
+                    startActivity(Intent(this, MainActivity::class.java))
                 }
                 Status.LOADING -> {
                     setLoading()
                 }
                 Status.ERROR -> {
                     dismissLoading()
-                    startActivity(Intent(this, StartSettingActivity::class.java))
+                    startActivity(Intent(this, MainActivity::class.java))
                 }
             }
         }
