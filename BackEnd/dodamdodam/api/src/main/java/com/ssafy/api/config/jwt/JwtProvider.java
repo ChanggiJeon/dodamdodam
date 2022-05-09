@@ -1,7 +1,7 @@
 package com.ssafy.api.config.jwt;
 
 import com.ssafy.core.entity.User;
-import com.ssafy.core.exception.CustomErrorCode;
+import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.exception.CustomException;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
@@ -86,12 +86,12 @@ public class JwtProvider {
             Jws<Claims> claims = Jwts.parserBuilder().setSigningKeyResolver(SigningKeyResolver.instance)
                     .build().parseClaimsJws(jwtToken);
             if (claims.getBody().getExpiration().before(new Date())) {
-                throw new CustomException(CustomErrorCode.INVALID_TOKEN);
+                throw new CustomException(ErrorCode.INVALID_TOKEN);
             }
         } catch (ExpiredJwtException e) {
             return Long.parseLong(e.getClaims().getSubject());
         } catch (Exception e) {
-            throw new CustomException(CustomErrorCode.INVALID_TOKEN);
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
         return null;
     }

@@ -1,6 +1,7 @@
 package com.ssafy.family.ui.album
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.ssafy.family.config.BaseResponse
 import com.ssafy.family.data.remote.req.AddAlbumReq
 import com.ssafy.family.data.remote.req.AlbumReactionReq
+import com.ssafy.family.data.remote.req.UpdateAlbumReq
 import com.ssafy.family.data.remote.res.AlbumDetailRes
+import com.ssafy.family.data.remote.res.AlbumPicture
 import com.ssafy.family.data.remote.res.AllAlbum
 import com.ssafy.family.data.remote.res.HashTag
 import com.ssafy.family.data.repository.AlbumRepository
@@ -56,20 +59,33 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
     val addAlbumRequestLiveData: LiveData<Resource<BaseResponse>>
         get() = _addAlbumRequestLiveData
 
-    var selectedImgUriList =  arrayListOf<Uri>()
+    private val _updateAlbumRequestLiveData = MutableLiveData<Resource<BaseResponse>>()
+    val updateAlbumRequestLiveData: LiveData<Resource<BaseResponse>>
+        get() = _updateAlbumRequestLiveData
 
+    private val _deleteAlbumRequestLiveData = MutableLiveData<Resource<BaseResponse>>()
+    val deleteAlbumRequestLiveData: LiveData<Resource<BaseResponse>>
+        get() = _deleteAlbumRequestLiveData
+
+    var selectedImgUriList = arrayListOf<Uri>()
+
+    var isUpdate = false
     var paths = arrayListOf<String>()
     var hashTag = arrayListOf<HashTag>()
     var date = ""
     var mainIndex = 0
     var files = arrayListOf<File>()
+    var pictureIdList = arrayListOf<Int>()
+    var PhotoList = arrayListOf<AlbumPicture>()
 
-    fun setSelectedImgUri(uri: Uri){
+    fun setSelectedImgUri(uri: Uri) {
         selectedImgUriList.add(uri)
     }
-    fun deleteImgUri(uri: Uri){
+
+    fun deleteImgUri(uri: Uri) {
         selectedImgUriList.remove(uri)
     }
+
     fun setBottomButton(left: String, right: String) = viewModelScope.launch {
         _bottombuttonLeftLivedate.value = left
         _bottombuttonRightLivedate.value = right
@@ -93,22 +109,49 @@ class DetailAlbumViewModel @Inject constructor(private val albumRepository: Albu
         _deleteReactionRequestLiveData.postValue(albumRepository.deleteReaction(reactionId))
     }
 
-    fun addReaction(albumReactionReq: AlbumReactionReq)=viewModelScope.launch {
+    fun addReaction(albumReactionReq: AlbumReactionReq) = viewModelScope.launch {
         _addReactionRequestLiveData.postValue(Resource.loading(null))
         _addReactionRequestLiveData.postValue(albumRepository.addReaction(albumReactionReq))
     }
 
-    fun addAlbum(addAlbum: AddAlbumReq)=viewModelScope.launch {
-        if(!paths.isNullOrEmpty()){
+    fun addAlbum(addAlbum: AddAlbumReq) = viewModelScope.launch {
+        if (!paths.isNullOrEmpty()) {
             _addAlbumRequestLiveData.postValue(Resource.loading(null))
-            _addAlbumRequestLiveData.postValue(albumRepository.addAlbum(addAlbum,makeMultiPart()))
+            _addAlbumRequestLiveData.postValue(albumRepository.addAlbum(addAlbum, makeMultiPart()))
         }
     }
-    private fun makeMultiPart(): ArrayList<MultipartBody.Part> {
+
+    fun updateAlbum(updateAlbum: UpdateAlbumReq, albumId: Int) = viewModelScope.launch {
+
+        _updateAlbumRequestLiveData.postValue(Resource.loading(null))
+        _updateAlbumRequestLiveData.postValue(
+            albumRepository.updateAlbum(
+                updateAlbum,
+                albumId,
+                makeMultiPart()
+            )
+        )
+
+    }
+
+    fun deleteAlbum(albumId: Int) = viewModelScope.launch {
+        Log.d("dddddd", "deleteAlbum: " + albumId)
+        _deleteAlbumRequestLiveData.postValue(Resource.loading(null))
+        _deleteAlbumRequestLiveData.postValue(albumRepository.deleteAlbum(albumId))
+    }
+
+    private fun makeMultiPart(): ArrayList<MultipartBody.Part>  {
         val list = arrayListOf<MultipartBody.Part>()
         for (path in paths) {
+            Log.d("dddddd", "makeMultiPart: ")
             val imgFile = File(path)
-            list.add(MultipartBody.Part.createFormData("multipartFiles", imgFile.name, imgFile.asRequestBody("image/*".toMediaType())))
+            list.add(
+                MultipartBody.Part.createFormData(
+                    "multipartFiles",
+                    imgFile.name,
+                    imgFile.asRequestBody("image/*".toMediaType())
+                )
+            )
         }
         return list
 
