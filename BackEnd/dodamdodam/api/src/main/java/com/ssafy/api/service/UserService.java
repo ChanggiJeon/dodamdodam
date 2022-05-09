@@ -7,7 +7,6 @@ import com.ssafy.core.dto.req.UserInfoReqDto;
 import com.ssafy.core.dto.req.SignUpReqDto;
 import com.ssafy.core.dto.res.ReIssueTokenResDto;
 import com.ssafy.core.dto.res.SignInResDto;
-import com.ssafy.core.common.Validate;
 import com.ssafy.core.entity.User;
 import com.ssafy.core.exception.ErrorCode;
 import com.ssafy.core.exception.CustomException;
@@ -59,7 +58,11 @@ public class UserService {
     }
 
     public String findUserIdWithUserInfo(FindIdReqDto request) {
-        return userRepository.findUserIdByUserInfo(request);
+        return userRepository.findUserIdByUserInfo(
+                request.getName(),
+                LocalDate.parse(request.getBirthday()),
+                request.getFamilyCode()
+        );
     }
 
     public void updateBirthdayWithUserPk(Long userPk, String birthday) {

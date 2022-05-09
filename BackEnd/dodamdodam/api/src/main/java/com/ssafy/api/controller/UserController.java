@@ -54,13 +54,6 @@ public class UserController {
         return responseService.getSuccessResult("사용 가능한 아이디입니다.");
     }
 
-    private boolean idValidate(String userId) {
-        Pattern pattern = Pattern.compile("[a-zA-Z0-9]+");
-        Matcher matcher = pattern.matcher(userId);
-
-        return !(userId.isBlank() || !matcher.matches() ||
-                userId.length() < USER_ID_MIN || userId.length() > USER_ID_MAX);
-    }
 
     @PostMapping(value = "signup", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "회원 가입", description = "<strong>아이디, 패스워드, 이름</strong> 정보를 받아 회원가입 한다.")
@@ -103,8 +96,7 @@ public class UserController {
              @io.swagger.v3.oas.annotations.parameters.RequestBody
              @Valid FindIdReqDto request) {
 
-        return responseService.getSuccessResult(
-                userService.findUserIdWithUserInfo(request));
+        return responseService.getSuccessResult(userService.findUserIdWithUserInfo(request));
     }
 
     @PostMapping(value = "newpassword", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -135,5 +127,14 @@ public class UserController {
         User user = userService.findByUserPk(userPk);
         userService.updateFcmToken(user, fcmReq);
         return responseService.getSuccessResult("성공적으로 저장되었습니다.");
+    }
+
+
+    private boolean idValidate(String userId) {
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9]+");
+        Matcher matcher = pattern.matcher(userId);
+
+        return !(userId.isBlank() || !matcher.matches() ||
+                userId.length() < USER_ID_MIN || userId.length() > USER_ID_MAX);
     }
 }
