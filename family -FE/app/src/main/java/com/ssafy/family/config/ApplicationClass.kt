@@ -39,6 +39,7 @@ class ApplicationClass: Application() {
 
         //badge
         lateinit var livePush: MutableLiveData<Int>
+        lateinit var isChatting:MutableLiveData<Boolean>
     }
 
     override fun onCreate() {
@@ -49,6 +50,7 @@ class ApplicationClass: Application() {
 
         //badge
         livePush= MutableLiveData(readSharedPreference("fcm").size)
+        isChatting=MutableLiveData(false)
     }
 
     // 레트로핏 인스턴스를 생성하고, 레트로핏에 각종 설정값들을 지정해줍니다.
