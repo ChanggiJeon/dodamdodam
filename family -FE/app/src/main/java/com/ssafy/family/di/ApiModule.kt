@@ -9,6 +9,7 @@ import com.ssafy.family.config.XAccessTokenInterceptor
 import com.ssafy.family.data.remote.api.AccountAPI
 import com.ssafy.family.data.remote.api.CalendarAPI
 import com.ssafy.family.data.remote.api.AlbumAPI
+import com.ssafy.family.data.remote.api.MainEventAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,6 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -92,6 +92,12 @@ object ApiModule {
     @Provides
     fun provideAlbumApiService(retrofit: Retrofit): AlbumAPI {
         return retrofit.create(AlbumAPI::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMainEventApiService(retrofit: Retrofit): MainEventAPI {
+        return retrofit.create(MainEventAPI::class.java)
     }
 //    fun initRetrofit() {
 //        val client: OkHttpClient = OkHttpClient.Builder()
