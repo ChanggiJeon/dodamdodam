@@ -24,7 +24,7 @@ class FamilyFragment : Fragment() {
     private val alarmClickListener = object :AlarmAdapter.ItemClickListener{
 
         override fun onClick(item: String, familyProfile: FamilyProfile) {
-           mainFamilyViewModel.sendAlarm(SendPushReq(familyProfile.userPk.toString(),item))
+           mainFamilyViewModel.sendAlarm(SendPushReq(familyProfile.profileId.toString(),item))
         }
 
     }
