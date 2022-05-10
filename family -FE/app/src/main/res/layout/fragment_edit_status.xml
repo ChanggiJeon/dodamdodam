@@ -71,10 +71,10 @@
                 style="@style/TextInputStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:background="@color/white"
-                android:inputType="textPersonName"
-                android:maxLength="20" />
+                android:textSize="24sp"
+                android:maxLength="20"
+                android:textColor="@color/gray03" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

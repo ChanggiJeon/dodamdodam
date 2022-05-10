@@ -1,7 +1,12 @@
 package com.ssafy.family.data.repository
 
+import android.util.Log
+import com.ssafy.family.config.BaseResponse
 import com.ssafy.family.data.remote.api.StatusAPI
+import com.ssafy.family.data.remote.req.EditStatusReq
 import com.ssafy.family.data.remote.res.FamilyPictureRes
+import com.ssafy.family.data.remote.res.StatusRes
+import com.ssafy.family.util.Constants.TAG
 import com.ssafy.family.util.Resource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -11,14 +16,50 @@ class StatusRepositoryImpl(
     private val api: StatusAPI,
     private val ioDispatcher: CoroutineDispatcher,
     private val mainDispatcher: CoroutineDispatcher
-): StatusRepository {
+) : StatusRepository {
     override suspend fun getFamilyPicture():
-        Resource<FamilyPictureRes> =
+            Resource<FamilyPictureRes> =
         withContext(ioDispatcher) {
             try {
                 val response = api.getFamilyPicture()
                 when {
                     response.isSuccessful -> {
+                        Resource.success(response.body()!!)
+                    }
+                    else -> {
+                        Resource.error(null, "응답 에러")
+                    }
+                }
+            } catch (e: Exception) {
+                Resource.error(null, "통신 에러 $e")
+            }
+        }
+
+    override suspend fun getMyStatus(): Resource<StatusRes> =
+        withContext(ioDispatcher) {
+            try {
+                val response = api.getMyStatus()
+                when {
+                    response.isSuccessful -> {
+                        Resource.success(response.body()!!)
+                    }
+                    else -> {
+                        Resource.error(null, "응답 에러")
+                    }
+                }
+            } catch (e: Exception) {
+                Resource.error(null, "통신 에러 $e")
+            }
+        }
+
+    override suspend fun editMyStatus(emotion: String, comment: String): Resource<BaseResponse> =
+        withContext(ioDispatcher) {
+            val request = EditStatusReq(emotion, comment)
+            try {
+                val response = api.editMyStatus(request)
+                when {
+                    response.isSuccessful -> {
+                        Log.d(TAG, "StatusRepositoryImpl - editMyStatus() success : ${response.body()}")
                         Resource.success(response.body()!!)
                     }
                     else -> {

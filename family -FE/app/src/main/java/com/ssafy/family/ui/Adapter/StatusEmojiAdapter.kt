@@ -16,7 +16,7 @@ class StatusEmojiAdapter(private val context: Context): RecyclerView.Adapter<Sta
 
     var datas = mutableListOf<String>()
     var checkSelected = mutableListOf<Boolean>()
-    lateinit var emojiSelected: String
+    var emojiSelected: String? = null
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(item:String){

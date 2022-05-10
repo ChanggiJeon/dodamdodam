@@ -1,11 +1,13 @@
 package com.ssafy.family.ui.status
 
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -62,9 +64,23 @@ class EditStatusFragment : Fragment() {
             emojiAdapter.datas.add(emojis[i])
             emojiAdapter.checkSelected.add(false)
         }
-        // 오늘의 한마디 입력
+        // 오늘의 한마디 초기값 입력
         statusViewModel.todaysMessage.observe(requireActivity()) {
-            binding.editStatusInputTodaysMessage.text
+            if (it.data?.todaysMessage == null){
+                binding.editStatusInputTodaysMessage.text = Editable.Factory.getInstance().newEditable("Default Message")
+            } else {
+                binding.editStatusInputTodaysMessage.text = Editable.Factory.getInstance().newEditable(it.data.todaysMessage)
+            }
+        }
+        // 확인 버튼 클릭이벤트 리스너 등록
+        binding.editStatusConfirmBtn.setOnClickListener {
+            val emojiSelected = emojiAdapter.emojiSelected
+            val todaysMessage = binding.editStatusInputTodaysMessage.text.toString()
+            if (emojiSelected == null) {
+                Toast.makeText(requireContext(), "오늘의 기분을 선택해주세요!", Toast.LENGTH_SHORT).show()
+            } else {
+                statusViewModel.editMyStatus(emotion = emojiSelected, comment = todaysMessage)
+            }
         }
     }
 }
