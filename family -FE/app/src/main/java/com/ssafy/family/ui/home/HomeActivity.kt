@@ -22,6 +22,7 @@ import com.ssafy.family.databinding.ActivityHomeBinding
 import com.ssafy.family.ui.main.MainActivity
 import com.ssafy.family.ui.schedule.AddScheduleFragment
 import com.ssafy.family.ui.startsetting.StartSettingActivity
+import com.ssafy.family.ui.status.StatusActivity
 import com.ssafy.family.util.LoginUtil
 import com.ssafy.family.util.PermissionUtil
 import com.ssafy.family.util.SharedPreferencesUtil
@@ -61,14 +62,14 @@ class HomeActivity : AppCompatActivity() {
             when (it.status) {
                 Status.SUCCESS -> {
                     dismissLoading()
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, StatusActivity::class.java))
                 }
                 Status.LOADING -> {
                     setLoading()
                 }
                 Status.ERROR -> {
                     dismissLoading()
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, StatusActivity::class.java))
                 }
             }
         }
