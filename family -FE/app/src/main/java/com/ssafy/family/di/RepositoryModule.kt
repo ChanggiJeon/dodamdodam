@@ -5,6 +5,7 @@ import com.ssafy.family.data.remote.api.AccountAPI
 import com.ssafy.family.data.remote.api.CalendarAPI
 import com.ssafy.family.data.repository.*
 import com.ssafy.family.data.remote.api.AlbumAPI
+import com.ssafy.family.data.remote.api.MainEventAPI
 import com.ssafy.family.data.repository.*
 import dagger.Module
 import dagger.Provides
@@ -50,6 +51,15 @@ object RepositoryModule {
         @DispatcherModule.MainDispatcher mainDispatcher: CoroutineDispatcher
     ): CalendarRepository
             = CalendarRepositoryImpl(apiAPI,ioDispatcher,mainDispatcher)
+
+    @Singleton
+    @Provides
+    fun provideMainEventRepository(
+        apiAPI: MainEventAPI,
+        @DispatcherModule.IoDispatcher ioDispatcher: CoroutineDispatcher,
+        @DispatcherModule.MainDispatcher mainDispatcher: CoroutineDispatcher
+    ): MainEventRepository
+            = MainEventRepositoryImpl(apiAPI,ioDispatcher,mainDispatcher)
 
 //    @Singleton
 //    @Provides
