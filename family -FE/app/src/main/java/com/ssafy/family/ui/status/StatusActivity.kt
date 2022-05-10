@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class StatusActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStatusBinding
     private val statusViewModel by viewModels<StatusViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStatusBinding.inflate(layoutInflater)
@@ -22,8 +23,9 @@ class StatusActivity : AppCompatActivity() {
             .replace(R.id.status_activity_fragment_layout, EditStatusFragment())
             .commit()
         statusViewModel.getFamilyPicture()
-        statusViewModel.familyPicture.observe(this) {
-            Log.d(TAG, "familyPicture : ${it.data?.dataset}")
-        }
+//        statusViewModel.familyPicture.observe(this) {
+//            Log.d(TAG, "familyPicture : ${it.data?.dataset}")
+//        }
+        statusViewModel.getMyStatus()
     }
 }
