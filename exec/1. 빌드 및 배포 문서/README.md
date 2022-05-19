@@ -4,20 +4,23 @@
 
 ### DevOps
 
-- AWS EC2
-- Ubuntu: 20.04.4 LTS
-- Docker: 20.10.14
-- Docker-compose: 1.29.2
-- Jenkins
+- AWS EC2 Server(AWS amazon-linux-2)
+- Jenkins Server(Ubuntu: 20.04.4 LTS)
 
-#### FE
+#### Android
 
-- node: 16.3.11
+- Kakao Login (v2) API : 2.9.1 
+- Firebase (푸시알림) : 21.1.1
+- Hilt (의존성 주입) : 2.41 
+- Android JetPack Calendar : 1.0.4 
+- Retrofit : 2.9.0 
+- Roulette : 1.0.0
 
 #### BE
 
 - Spring Boot: 2.6.6
 - openJdk 11
+- gradle 7.1
 
 #### DB
 
@@ -25,21 +28,14 @@
 
 #### IDE
 
-- IntelliJ Ultimate
+- IntelliJ Ultimate 21.3.1
 - Android Studio
 
 
 
 ## :two:  ENV(application.yml)
 
-- FE
-
-```
-- FE/frontend/.env.production -
-REACT_APP_API_URL='https://j6d202.p.ssafy.io/api'
-REACT_APP_MEDIA_URL='https://j6d202.p.ssafy.io/media'
-
-```
+#### 1. Android : 없음
 
 #### 2. BE
 
@@ -50,8 +46,6 @@ REACT_APP_MEDIA_URL='https://j6d202.p.ssafy.io/media'
      profiles:
        group:
          "local": "localdb, common"
-         "set1": "set1-port, server, common"
-         "set2": "set2-port, server, common"
    
    ---
    spring:
@@ -66,8 +60,7 @@ REACT_APP_MEDIA_URL='https://j6d202.p.ssafy.io/media'
      jpa:
        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
        properties.hibernate:
-         # 재시작 시 JPA Entity(DB 테이블 데이터)를 새로 생성할지 여부 (create:기존데이터 삭제 후 신규 생성, udpate:신규 데이터만 업데이트, none:아무 실행도 하지 않음)
-         hbm2ddl.auto: update
+         hbm2ddl.auto: none
          format_sql: true
          show_sql: true
          use_sql_comments: true
@@ -82,9 +75,6 @@ REACT_APP_MEDIA_URL='https://j6d202.p.ssafy.io/media'
        config:
          activate:
            on-profile: alpha
-   
-           # 프로젝트 환경의 upload 파일을 저장할 경로
-           #                  location: ./upload
    
      #업로드 파일 용량 제한.
      servlet:
@@ -171,7 +161,6 @@ REACT_APP_MEDIA_URL='https://j6d202.p.ssafy.io/media'
          on-profile: "local"
    
      datasource:
-       #    url: jdbc:mysql://dodamdodam-database.ck7amfqzdm1n.ap-northeast-2.rds.amazonaws.com:3306/dodamdodam
        url: jdbc:mysql://localhost:3306/dodamdodam
        driver-class-name: com.mysql.cj.jdbc.Driver
        username: root
@@ -184,45 +173,10 @@ REACT_APP_MEDIA_URL='https://j6d202.p.ssafy.io/media'
        #root: debug
        #com.ssafy.api: debug
        #org.hibernate.type.descriptor.sql: warn  # trace
-   
-   ---
-   spring:
-     config:
-       activate:
-         on-profile: "server"
-         
-     datasource:
-       url: jdbc:mysql://dodamdodam-database.ck7amfqzdm1n.ap-northeast-2.rds.amazonaws.com:3306/dodamdodam
-       driver-class-name: com.mysql.cj.jdbc.Driver
-       username: ssafy
-       password: Ssafy61!
-       hikari:
-         idle-timeout: 10000
-         connection-timeout: 10000
-         validation-timeout: 10000
-         max-lifetime: 580000
-         maximum-pool-size: 50
-   ---
-   spring:
-     config:
-       activate:
-         on-profile: "set1-port"
-   
-   server:
-     port: 8081
-   
-   ---
-   spring:
-     config:
-       activate:
-         on-profile: "set2-port"
-   
-   server:
-     port: 8082
    ```
-
    
-
+   
+   
 2) batch/main/resources
 
    ```
@@ -243,10 +197,10 @@ REACT_APP_MEDIA_URL='https://j6d202.p.ssafy.io/media'
        web-application-type: none
    
      datasource:
-       url: jdbc:mysql://dodamdodam-database.ck7amfqzdm1n.ap-northeast-2.rds.amazonaws.com:3306/dodamdodam
+       url: jdbc:mysql://localhost:3306/dodamdodam
        driver-class-name: com.mysql.cj.jdbc.Driver
-       username: ssafy
-       password: Ssafy61!
+       username: root
+       password: ssafy
    ```
 
    
@@ -540,7 +494,7 @@ http {
 
 ## :six:  DB 접속 정보
 
-※ 로컬에서 서버 DB 접속시 백엔드 팀원 IP포트만 개방해두었기 때문에, AWS RDS 인바운드 정책 변경 필수.
+※ 서버 DB 접속시 백엔드 팀원 IP포트만 개방해두었기 때문에, AWS RDS 인바운드 정책 변경 필수.
 
 ```
 datasource:
