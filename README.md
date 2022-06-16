@@ -102,7 +102,7 @@
 
 |데일리 미션|일정기능|채팅 기능|
 |:---:|:---:|:---:|
-|<img src="./Images/홈(패밀리).jpg" alt="function" style="zoom: 15%;" />|<img src="Images/일정 등록.jpg" alt="function" style="zoom: 15%;" />|<img src="./Images/채팅.jpg" alt="function" style="zoom: 15%;" />|
+|<img src="Images/홈(패밀리).jpg" alt="function" style="zoom: 15%;" />|<img src="Images/일정 등록.jpg" alt="function" style="zoom: 15%;" />|<img src="Images/채팅.jpg" alt="function" style="zoom: 15%;" />|
 
 
 ### 부가 기능
