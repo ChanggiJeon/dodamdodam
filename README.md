@@ -9,29 +9,17 @@
 <br>
 
 ## 👨‍👩‍👦팀원 소개
-**Chang Gi Jeon(전창기)**
 
-- :eyeglasses: Github: [@ChanggiJeon](https://github.com/ChanggiJeon)
 
-**SEOK GYU LEE(이석규)**
-
-- 🍒Github: [@likppi10](https://github.com/likppi10)
-
-**Yoon Jae Sung(윤재성)**
-
-- :horse:Github : [@Jaeseed](https://github.com/Jaeseed)
-
-**Jong Hyeon Kim(김종현)**
-
-- :coffee:Github: [@Jhon-Kim93](https://github.com/Jhon-Kim93)
-
-**Myoung woo Park(박명우)**
-
--  :fire:Github: [@myeongki](https://github.com/myeongki)
-
-**Suh Yeong Lee(이수형)**
-
-- :small_airplane:Github: [@eel0511](https://github.com/eel0511)
+|순번|이름|담당 역할|깃허브|
+|:--:|:---:|:---:|:---:|
+|1|**전창기(Chang Gi Jeon)**|팀장, 백엔드, 서버|[@ChanggiJeon](https://github.com/ChanggiJeon)|
+|2|**이석규(SEOK GYU LEE)**|부팀장, 안드로이드|[@likppi10](https://github.com/likppi10)|
+|3|**윤재성(Yoon Jae Sung)**|백엔드|[@Jaeseed](https://github.com/Jaeseed)|
+|4|**김종현(Jong Hyeon Kim)**|안드로이드, 발표|[@Jhon-Kim93](https://github.com/Jhon-Kim93)|
+|5|**박명우(Myoung woo Park)**|백엔드|[@myeongki](https://github.com/myeongki)|
+|6|**이수형(Suh Yeong Lee)**|안드로이드|[@eel0511](https://github.com/eel0511)|
+ 
 
 <br>
 
