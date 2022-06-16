@@ -106,21 +106,21 @@
 
   - Sample UI
 
-    - <img src="Images/알람창.JPG" alt="function" style="zoom: 20%;" />                           <img src="Images/오늘의상태.JPG" alt="function" style="zoom: 20%;" />
+    - <img src="Images/알람창.JPG" alt="function" style="zoom: 70%;" />                           <img src="Images/오늘의상태.JPG" alt="function" style="zoom: 70%;" />
 
-    - ​                           [알림 기능]                                                                       [오늘의 기분, 상태]
-
-      
-
-    - <img src="Images/홈(이벤트).JPG" alt="function" style="zoom: 20%;" />                           <img src="./Images/홈(패밀리).JPG" alt="function" style="zoom: 20%;" />
-
-    - ​                    [의견 제시 기능]                                                                        [데일리 미션]
+    - ​                    [알림 기능]                                                                [오늘의 기분, 상태]
 
       
 
-    - <img src="Images/일정 등록.JPG" alt="function" style="zoom: 20%;" />                           <img src="./Images/채팅.JPG" alt="function" style="zoom: 20%;" />
+    - <img src="Images/홈(이벤트).JPG" alt="function" style="zoom: 70%;" />                           <img src="./Images/홈(패밀리).JPG" alt="function" style="zoom: 70%;" />
 
-    - ​                           [일정 기능]                                                                             [채팅 기능]
+    - ​                [의견 제시 기능]                                                                [데일리 미션]
+
+      
+
+    - <img src="Images/일정 등록.JPG" alt="function" style="zoom: 70%;" />                           <img src="./Images/채팅.JPG" alt="function" style="zoom: 70%;" />
+
+    - ​                    [일정기능]                                                                        [채팅 기능]
 
 
 
@@ -144,15 +144,15 @@
   - 업데이트 예정입니다!
 
   - Sample U
-    - <img src="Images/소원나무.JPG" alt="function" style="zoom: 20%;" />                           <img src="Images/룰렛.JPG" alt="function" style="zoom: 20%;" />     
+    - <img src="Images/소원나무.JPG" alt="function" style="zoom: 70%;" />                           <img src="Images/룰렛.JPG" alt="function" style="zoom: 70%;" />     
     
-    - ​                           [소원나무]                                                                             [당번뽑기]
+    - ​                    [소원나무]                                                                        [당번뽑기] 
     
       
     
-    - <img src="Images/앨범.JPG" alt="function" style="zoom: 20%;" />                           <img src="Images/서프라이즈파티.JPG" alt="function" style="zoom: 20%;" />
+    - <img src="Images/앨범.JPG" alt="function" style="zoom: 70%;" />                           <img src="Images/서프라이즈파티.JPG" alt="function" style="zoom: 70%;" />
     
-    - ​                           [앨범 기능]                                                          [서프라이즈 파티기능(개발예정)]
+    - ​                    [앨범 기능]                                                        [서프라이즈 파티기능(개발예정)]
   
   
 
@@ -162,7 +162,7 @@
 
 <br>
 
-<img src="README.assets/자율_아키텍처.PNG" alt="statistics" style="zoom:50%;" />
+<img src="Images/자율_아키텍처.PNG" alt="statistics" style="zoom:50%;" />
 
 <br>
 
