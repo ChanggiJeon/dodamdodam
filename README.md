@@ -103,25 +103,18 @@
 - 채팅 기능
 
   - 알람 기능이 있다고 해도 채팅은 필요하죠? 걱정 마세요! 도담도담은 채팅 기능도 갖추고 있습니다!
+  
+<br>
 
-  - Sample UI
+- Sample UI
 
-    - <img src="Images/알람창.JPG" alt="function" style="zoom: 70%;" />                           <img src="Images/오늘의상태.JPG" alt="function" style="zoom: 70%;" />
+|알람 기능|오늘의 기분,상태|의견 제시|
+|:---:|:---:|:---:|
+|<img src="Images/알람창.jpg" alt="function" style="zoom: 15%;" />|<img src="Images/오늘의상태.jpg" alt="function" style="zoom: 15%;" />|<img src="Images/홈(이벤트).jpg" alt="function" style="zoom: 15%;" />|
 
-    - ​                    [알림 기능]                                                                [오늘의 기분, 상태]
-
-      
-
-    - <img src="Images/홈(이벤트).JPG" alt="function" style="zoom: 70%;" />                           <img src="./Images/홈(패밀리).JPG" alt="function" style="zoom: 70%;" />
-
-    - ​                [의견 제시 기능]                                                                [데일리 미션]
-
-      
-
-    - <img src="Images/일정 등록.JPG" alt="function" style="zoom: 70%;" />                           <img src="./Images/채팅.JPG" alt="function" style="zoom: 70%;" />
-
-    - ​                    [일정기능]                                                                        [채팅 기능]
-
+|데일리 미션|일정기능|채팅 기능|
+|:---:|:---:|:---:|
+|<img src="./Images/홈(패밀리).jpg" alt="function" style="zoom: 15%;" />|<img src="Images/일정 등록.jpg" alt="function" style="zoom: 15%;" />|<img src="./Images/채팅.jpg" alt="function" style="zoom: 15%;" />|
 
 
 ### 부가 기능
@@ -139,30 +132,23 @@
 
   - 가족과의 추억 저장소! 이모티콘으로 리액션을 편하게 등록해 보세요!
 
-- 서프라이즈 파티 기능
+<br>
 
-  - 업데이트 예정입니다!
+- Sample UI
 
-  - Sample U
-    - <img src="Images/소원나무.JPG" alt="function" style="zoom: 70%;" />                           <img src="Images/룰렛.JPG" alt="function" style="zoom: 70%;" />     
-    
-    - ​                    [소원나무]                                                                        [당번뽑기] 
-    
-      
-    
-    - <img src="Images/앨범.JPG" alt="function" style="zoom: 70%;" />                           <img src="Images/서프라이즈파티.JPG" alt="function" style="zoom: 70%;" />
-    
-    - ​                    [앨범 기능]                                                        [서프라이즈 파티기능(개발예정)]
-  
+|소원나무|당번뽑기|앨범 기능|
+|:---:|:---:|:---:|
+|<img src="Images/소원나무.jpg" alt="function" style="zoom: 15%;" />|<img src="Images/룰렛.jpg" alt="function" style="zoom: 15%;" />|<img src="Images/앨범.jpg" alt="function" style="zoom: 15%;" />|
+
   
 
 <br>
 
-## :grey_question: 서비스 아키텍쳐
+## 📐 서비스 아키텍쳐
 
 <br>
 
-<img src="Images/자율_아키텍처.PNG" alt="statistics" style="zoom:50%;" />
+<img src="Images/자율_아키텍처.PNG" alt="statistics" style="zoom:100%;" />
 
 <br>
 
